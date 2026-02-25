@@ -358,11 +358,11 @@ namespace Gumiho_Rts
             }
             if (Keyboard.current.downArrowKey.isPressed)
             {
-                moveData.y += cameraConfig.KeyboardPanSpeed;
+                moveData.y -= cameraConfig.KeyboardPanSpeed;
             }
             if (Keyboard.current.leftArrowKey.isPressed)
             {
-                moveData.x -= cameraConfig.KeyboardPanSpeed;
+                moveData.x += cameraConfig.KeyboardPanSpeed;
             }
             if (Keyboard.current.rightArrowKey.isPressed)
             {
