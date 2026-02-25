@@ -11,8 +11,8 @@ namespace GameDevTV.RTS.Units
         [SerializeField] private Transform leftElbowIKTarget;
         [SerializeField] private Transform rightElbowIKTarget;
 
-        [SerializeField] [Range(0, 1f)] private float handIKAmount = 1f;
-        [SerializeField] [Range(0, 1f)] private float elbowIKAmount = 1f;
+        [SerializeField][Range(0, 1f)] private float handIKAmount = 1f;
+        [SerializeField][Range(0, 1f)] private float elbowIKAmount = 1f;
 
         private Animator animator;
 
