@@ -68,5 +68,5 @@
     "*.slnx": "*.csproj"
   },
   "dotnet.defaultSolution": "RTS_Course.slnx",
-  "cSpell.words": ["Behaviour", "Cinemachine", "Gumiho", "Mathf"]
+  "cSpell.words": ["Behaviour", "Cinemachine", "Commandable", "Gumiho", "Mathf"]
 }

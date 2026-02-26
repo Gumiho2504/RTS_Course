@@ -77,7 +77,7 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
+  m_Height: 0.1
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
@@ -93,8 +93,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62cf893c502db4a07bdee8712029c7e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.Worker
-  target: {fileID: 0}
   decalProjector: {fileID: 2328338167376970769}
+  unitSO: {fileID: 11400000, guid: ccf4669290a214251a53bd58b2a67b7b, type: 2}
+  <CurrentHealth>k__BackingField: 0
+  <MaxHealth>k__BackingField: 0
 --- !u!136 &5214473086347703930
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -198,13 +198,6 @@ namespace Gumiho_Rts
                         }
 
                     }
-                    // foreach (ISelectable selectable in selectableUnits)
-                    // {
-                    //     if (selectable is IMoveable moveable)
-                    //     {
-                    //         moveable.Move(hit.point);
-                    //     }
-                    // }
                 }
             }
         }
