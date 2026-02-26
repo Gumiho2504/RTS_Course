@@ -1,3 +1,4 @@
+using Gumiho_Rts.Commands;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
 using UnityEngine;
@@ -9,8 +10,11 @@ namespace Gumiho_Rts.Units
     {
         [SerializeField] private DecalProjector decalProjector;
         [SerializeField] private UnitSO unitSO;
+
+    [field: SerializeField] public ActionBase[] AvailableCommands { get; private set; }
         [field: SerializeField] public int CurrentHealth { get; private set; }
         [field: SerializeField] public int MaxHealth { get; private set; }
+
 
         protected virtual void Start()
         {

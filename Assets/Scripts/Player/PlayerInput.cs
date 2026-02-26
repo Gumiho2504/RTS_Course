@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using Gumiho_Rts.Commands;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
 using Gumiho_Rts.Units;
@@ -163,6 +164,9 @@ namespace Gumiho_Rts
             Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
             if (Mouse.current.rightButton.wasReleasedThisFrame)
             {
+                // find applicable command
+
+                // issue command to all units
                 if (Physics.Raycast(ray, out RaycastHit hit, maxDistance: float.MaxValue, layerMask: floorLayerMask))
                 {
                     List<AbstractUnit> abstractUnits = new(selectableUnits.Count);
@@ -174,33 +178,25 @@ namespace Gumiho_Rts
                         }
                     }
 
-                    int unitsOnLayer = 0;
-                    int maxUnitsLayer = 1;
-                    float circleRadius = 0;
-                    float radiusOffset = 0;
-                    foreach (AbstractUnit unit in abstractUnits)
+
+                    for (int i = 0; i < abstractUnits.Count; i++)
                     {
-                        var targetPosition = new Vector3(
-                            hit.point.x + Mathf.Cos(radiusOffset * unitsOnLayer) * circleRadius,
-                            hit.point.y,
-                            hit.point.z + Mathf.Sin(radiusOffset * unitsOnLayer) * circleRadius
-                        );
-                        unit.Move(targetPosition);
-                        unitsOnLayer++;
-                        if (unitsOnLayer >= maxUnitsLayer)
+                        CommandContext context = new CommandContext(abstractUnits[i], hit, i);
+                        foreach (var command in abstractUnits[i].AvailableCommands)
                         {
-                            unitsOnLayer = 0;
-                            circleRadius += unit.AgentRadius * 3.5f;
-                            // The 3.5f is a spacing factor to ensure units don't overlap. Adjust as necessary.     
-                            //2 * 3.14 * 3.5 * 0.5 / 0.5 * 3.5 `= 10
-                            maxUnitsLayer = Mathf.FloorToInt(2 * Mathf.PI * circleRadius / (unit.AgentRadius * 3.5f));
-                            radiusOffset = 2 * Mathf.PI / maxUnitsLayer;
+                            if (command.CanHandle(context))
+                            {
+                                command.Handle(context);
+                                break;
+                            }
                         }
+
 
                     }
                 }
             }
         }
+
 
         private void HandleLeftMouseClick()
         {
@@ -220,6 +216,7 @@ namespace Gumiho_Rts
             }
 
         }
+
 
         private void HandleRotation()
         {
