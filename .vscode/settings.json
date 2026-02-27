@@ -73,6 +73,7 @@
     "Cinemachine",
     "Commandable",
     "Gumiho",
+    "interactable",
     "Mathf",
     "Scriptable"
   ]

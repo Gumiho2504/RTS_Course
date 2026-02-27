@@ -1,12 +1,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Gumiho_Rts.Commands;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
 using Gumiho_Rts.Units;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 namespace Gumiho_Rts
 {
@@ -32,6 +34,8 @@ namespace Gumiho_Rts
         public HashSet<AbstractUnit> AliveUnits = new(100);
         private HashSet<AbstractUnit> addedUnits = new(24);
         private List<ISelectable> selectableUnits = new(12);
+        private ActionBase activeAction;
+        private bool wasMouseDownOnUI;
 
         private void Awake()
         {
@@ -45,6 +49,28 @@ namespace Gumiho_Rts
             Bus<UnitSelectedEvent>.OnEvent += HandleUnitSelected;
             Bus<UnitDeselectedEvent>.OnEvent += HandleUnitDeselected;
             Bus<UnitSpawnEvent>.OnEvent += HandleUnitSpawned;
+            Bus<ActionSelectedEvent>.OnEvent += HandleActionSelected;
+        }
+
+
+
+        private void OnDestroy()
+        {
+            Bus<UnitSelectedEvent>.OnEvent -= HandleUnitSelected;
+            Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
+            Bus<UnitSpawnEvent>.OnEvent -= HandleUnitSpawned;
+            Bus<ActionSelectedEvent>.OnEvent -= HandleActionSelected;
+
+        }
+
+
+        private void HandleActionSelected(ActionSelectedEvent args)
+        {
+            activeAction = args.Action;
+            if (!activeAction.RequiresClickToActivate)
+            {
+                ActivateAction(new RaycastHit());
+            }
         }
 
         private void HandleUnitSpawned(UnitSpawnEvent args)
@@ -52,13 +78,6 @@ namespace Gumiho_Rts
             AliveUnits.Add(args.unit);
 
         }
-
-        private void OnDestroy()
-        {
-            Bus<UnitSelectedEvent>.OnEvent -= HandleUnitSelected;
-            Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
-        }
-
         private void HandleUnitDeselected(UnitDeselectedEvent args)
         {
             selectableUnits.Remove(args.Unit);
@@ -85,6 +104,7 @@ namespace Gumiho_Rts
 
         private void HandleDragSelection()
         {
+
             if (selectionBox == null) return;
             if (Mouse.current.leftButton.wasPressedThisFrame)
             {
@@ -103,7 +123,7 @@ namespace Gumiho_Rts
 
         private void HandleMouseUp()
         {
-            if (!Keyboard.current.shiftKey.isPressed)
+            if (!Keyboard.current.shiftKey.isPressed && activeAction == null)
             {
                 DeselectAllUnits();
             }
@@ -118,6 +138,7 @@ namespace Gumiho_Rts
 
         private void HandleDrag()
         {
+            if (activeAction != null || wasMouseDownOnUI) return;
             Bounds selectionBounds = ResizeSelectedBox();
             foreach (AbstractUnit unit in AliveUnits)
             {
@@ -136,6 +157,7 @@ namespace Gumiho_Rts
             selectionBox.gameObject.SetActive(true);
             startingMousePosition = Mouse.current.position.ReadValue();
             addedUnits.Clear();
+            wasMouseDownOnUI = EventSystem.current.IsPointerOverGameObject();
         }
 
         private void DeselectAllUnits()
@@ -160,6 +182,8 @@ namespace Gumiho_Rts
 
         private void HandleRightMuseClick()
         {
+            if (activeAction == null && !wasMouseDownOnUI) return;
+
             if (selectableUnits.Count == 0) return;
             Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
             if (Mouse.current.rightButton.wasReleasedThisFrame)
@@ -209,14 +233,40 @@ namespace Gumiho_Rts
             Ray ray = camera.ScreenPointToRay(mouseVector);
 
 
-            if (Physics.Raycast(ray, out RaycastHit hit, maxDistance: 100f, layerMask: selectableUnityLayerMask)
+            if (activeAction == null && Physics.Raycast(ray, out RaycastHit hit, maxDistance: 100f, layerMask: selectableUnityLayerMask)
             && hit.transform.TryGetComponent(out ISelectable selectable))
             {
                 selectable.Select();
             }
+            else if (activeAction != null
+            && !EventSystem.current.IsPointerOverGameObject()
+            && Physics.Raycast(ray, out hit, float.MaxValue, layerMask: floorLayerMask))
+            {
+                ActivateAction(hit);
+                // foreach(var selectableUnit  in selectableUnits)
+                // {
+                //     if(selectableUnit is AbstractUnit unit)
+                //     {
+                //         abstractUnits.Add(unit);
+                //     }
+                // }
+            }
 
         }
 
+        private void ActivateAction(RaycastHit hit)
+        {
+            List<AbstractCommandable> abstractCommandable = selectableUnits
+                .Where(selectableUnit => selectableUnit is AbstractCommandable)
+                .Cast<AbstractCommandable>()
+                .ToList();
+            for (int i = 0; i < abstractCommandable.Count; i++)
+            {
+                CommandContext context = new CommandContext(abstractCommandable[i], hit, i);
+                activeAction.Handle(context);
+            }
+            activeAction = null;
+        }
 
         private void HandleRotation()
         {

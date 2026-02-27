@@ -7,7 +7,7 @@ namespace Gumiho_Rts.Commands
     {
         [field: SerializeField] public Sprite Icon { get; private set; }
         [field: SerializeField] public int Slot { get; private set; }
-        [field: SerializeField] public bool ActivateCommand { get; private set; }
+        [field: SerializeField] public bool RequiresClickToActivate { get; private set; } = true;
         public abstract bool CanHandle(CommandContext context);
         public abstract void Handle(CommandContext context);
     }

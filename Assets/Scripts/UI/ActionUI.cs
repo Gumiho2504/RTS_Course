@@ -6,6 +6,7 @@ using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
 using Gumiho_Rts.Units;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Gumiho_Rts.UI
 {
@@ -20,9 +21,13 @@ namespace Gumiho_Rts.UI
         {
             Bus<UnitSelectedEvent>.OnEvent += HandleUnitSelected;
             Bus<UnitDeselectedEvent>.OnEvent += HandleUnitDeselected;
+        }
+
+        private void Start()
+        {
             foreach (UIActionButton button in actionButtons)
             {
-                button.SetIcon(null);
+                button.Disable();
             }
         }
         private void OnDestroy()
@@ -62,13 +67,18 @@ namespace Gumiho_Rts.UI
                 ActionBase actionBaseForSlot = availableCommands.Where(action => action.Slot == i).FirstOrDefault();
                 if (actionBaseForSlot != null)
                 {
-                    actionButtons[i].SetIcon(actionBaseForSlot.Icon);
+                    actionButtons[i].EnableFor(actionBaseForSlot, HandleClick(actionBaseForSlot));
                 }
                 else
                 {
-                    actionButtons[i].SetIcon(null);
+                    actionButtons[i].Disable();
                 }
             }
+        }
+
+        private UnityAction HandleClick(ActionBase action)
+        {
+                return () => Bus<ActionSelectedEvent>.Raise(new ActionSelectedEvent(action));
         }
 
     }
