@@ -123,7 +123,7 @@ namespace Gumiho_Rts
 
         private void HandleMouseUp()
         {
-            if (!Keyboard.current.shiftKey.isPressed && activeAction == null)
+            if (!Keyboard.current.shiftKey.isPressed && activeAction == null && !wasMouseDownOnUI)
             {
                 DeselectAllUnits();
             }

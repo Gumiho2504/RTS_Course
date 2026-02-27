@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Gumiho_Rts.Commands
 {
-    [CreateAssetMenu(fileName = "Move Command", menuName = "AI/Action/Move", order = 100)]
+    [CreateAssetMenu(fileName = "Move Command", menuName = "AI/Commands/Move", order = 100)]
     public class MoveCommand : ActionBase
     {
 

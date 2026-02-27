@@ -4,10 +4,10 @@ using System;
 using Gumiho_Rts.Commands;
 using UnityEngine.Events;
 
-namespace Gumiho_Rts.UI
+namespace Gumiho_Rts.UI.Components
 {
     [RequireComponent(typeof(Button))]
-    public class UIActionButton : MonoBehaviour
+    public class UIActionButton : MonoBehaviour,IUIElement<ActionBase, UnityAction>
     {
 
         [SerializeField] private Image icon;
@@ -35,5 +35,9 @@ namespace Gumiho_Rts.UI
             else this.icon.enabled = true;
             this.icon.sprite = icon;
         }
+    }
+
+    internal interface IUIElement<T1, T2>
+    {
     }
 }
