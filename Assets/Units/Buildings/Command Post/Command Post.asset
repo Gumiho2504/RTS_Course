@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Command Post
   m_EditorClassIdentifier: Assembly-CSharp::UnitSO
   <Health>k__BackingField: 400
-  <Prefab>k__BackingField: {fileID: 1589499662120937400, guid: 43943267dde60fe4a88cf5bd885c00e3, type: 3}
+  <Prefab>k__BackingField: {fileID: 6510919576379171628, guid: 883b9682b823cb84cac42e4ad43d41d2, type: 3}
   <BuildTime>k__BackingField: 5

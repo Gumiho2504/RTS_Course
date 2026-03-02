@@ -260,6 +260,7 @@ namespace Gumiho_Rts
                 .Where(selectableUnit => selectableUnit is AbstractCommandable)
                 .Cast<AbstractCommandable>()
                 .ToList();
+                
             for (int i = 0; i < abstractCommandable.Count; i++)
             {
                 CommandContext context = new CommandContext(abstractCommandable[i], hit, i);

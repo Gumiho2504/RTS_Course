@@ -1,13 +1,11 @@
 using UnityEngine.UI;
 using UnityEngine;
-
-using Gumiho_Rts.Commands;
 using UnityEngine.Events;
 
 namespace Gumiho_Rts.UI.Components
 {
     [RequireComponent(typeof(Button))]
-    public class UIActionButton : MonoBehaviour,IUIElement <ActionBase, UnityAction>
+    public class UIBuildQueueButton : MonoBehaviour, IUIElement<UnitSO, UnityAction>
     {
 
         [SerializeField] private Image icon;
@@ -15,22 +13,25 @@ namespace Gumiho_Rts.UI.Components
         private void Awake()
         {
             button = GetComponent<Button>();
+            Disable();
         }
 
-        public void EnableFor(ActionBase action, UnityAction onClick)
+        public void EnableFor(UnitSO unit, UnityAction onClick)
         {
-            SetIcon(action.Icon);
+            button.onClick.RemoveAllListeners();
             button.interactable = true;
             button.onClick.AddListener(onClick);
+            icon.gameObject.SetActive(true);
+            icon.sprite = unit.Icon;
         }
 
         public void Disable()
         {
-            SetIcon(null);
             button.interactable = false;
             button.onClick.RemoveAllListeners();
+            icon.gameObject.SetActive(false);
         }
-         void SetIcon(Sprite icon)
+        void SetIcon(Sprite icon)
         {
             if (!icon) this.icon.enabled = false;
             else this.icon.enabled = true;

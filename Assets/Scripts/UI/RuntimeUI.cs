@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
-using Gumiho_Rts.UI.Components;
 using Gumiho_Rts.UI.Containers;
 using Gumiho_Rts.Units;
 using UnityEngine;
@@ -21,6 +21,12 @@ namespace Gumiho_Rts.UI
 
         }
 
+        void Start()
+        {
+            actionUI.Disable();
+            buildingBuildingUI.Disable();
+        }
+
         void OnDestroy()
         {
             Bus<UnitSelectedEvent>.OnEvent -= HandleUnitSelected;
@@ -34,6 +40,10 @@ namespace Gumiho_Rts.UI
                 selectableUnits.Add(unit);
                 actionUI.EnableFor(selectableUnits);
             }
+            if (selectableUnits.Count == 1 && args.Unit is BaseBuilding building)
+            {
+                buildingBuildingUI.EnableFor(building);
+            }
 
         }
         private void HandleUnitDeselected(UnitDeselectedEvent args)
@@ -41,16 +51,25 @@ namespace Gumiho_Rts.UI
             if (args.Unit is AbstractCommandable unit)
             {
                 selectableUnits.Remove(unit);
-                // print(selectableUnits.Count);
-                // if (selectableUnits.Count > 0)
-                // {
-                //     actionUI.EnableFor(selectableUnits);
+                print(selectableUnits.Count);
+                if (selectableUnits.Count > 0)
+                {
+                    actionUI.EnableFor(selectableUnits);
+                    if (selectableUnits.Count == 1 && selectableUnits.First() is BaseBuilding building)
+                    {
+                        buildingBuildingUI.EnableFor(building);
+                    }
+                    else
+                    {
+                        buildingBuildingUI.Disable();
+                    }
 
-                // }
-                // else
-                // {
-                actionUI.Disable();
-                // }
+                }
+                else
+                {
+                    actionUI.Disable();
+                    buildingBuildingUI.Disable();
+                }
             }
         }
 

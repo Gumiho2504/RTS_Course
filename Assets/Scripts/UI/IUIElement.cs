@@ -5,7 +5,7 @@ namespace Gumiho_Rts.UI
         void EnableFor(T item);
         void Disable();
     }
-    public interface UIElement<T1, T2>
+    public interface IUIElement<T1, T2>
     {
         void EnableFor(T1 item,T2 callback);
         void Disable();

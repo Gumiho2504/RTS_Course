@@ -68,7 +68,7 @@ namespace Gumiho_Rts.UI.Containers
         //         RefreshButtons();
         //     }
         // }
-        int call = 0;
+
         private void RefreshButtons(HashSet<AbstractCommandable> selectedUnits)
         {
 
