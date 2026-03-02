@@ -13,3 +13,6 @@ MonoBehaviour:
   m_Name: Supply Hut
   m_EditorClassIdentifier: Assembly-CSharp::UnitSO
   <Health>k__BackingField: 100
+  <Prefab>k__BackingField: {fileID: 6964012305514025925, guid: 60174e2531fe1794a81f4a279e17f61d, type: 3}
+  <BuildTime>k__BackingField: 5
+  <Icon>k__BackingField: {fileID: 21300000, guid: 5b1043abe99f2d943b94b631a2aa42d9, type: 3}

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "UnitSO", menuName = "Scriptable Objects/UnitSO")]
+[CreateAssetMenu(fileName = "UnitSO", menuName = "Units/UnitSO")]
 public class UnitSO : ScriptableObject
 {
     [field: SerializeField] public int Health { get; private set; } = 100;
