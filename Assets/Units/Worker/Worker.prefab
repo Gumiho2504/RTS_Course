@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 14050117466326090}
   - component: {fileID: 863810960502844524}
   - component: {fileID: 5214473086347703930}
+  - component: {fileID: 5333726976716141168}
   m_Layer: 6
   m_Name: Worker
   m_TagString: Untagged
@@ -122,6 +123,35 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0.88, z: 0}
+--- !u!114 &5333726976716141168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6510919576379171628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.BehaviorGraphAgent
+  m_Graph: {fileID: 7263508801805294390, guid: 382b0a3129f044bbb9c5bb1588fa03f7, type: 2}
+  m_BlackboardVariableOverridesList:
+  - rid: 4656822117277630676
+  m_OriginalGraph: {fileID: 7263508801805294390, guid: 382b0a3129f044bbb9c5bb1588fa03f7, type: 2}
+  m_IsInitialised: 0
+  m_IsStarted: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 4656822117277630676
+      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 1
+          m_Value1: 0
+        Name: Self
+        m_Value: {fileID: 6510919576379171628}
 --- !u!1 &7113143914814652156
 GameObject:
   m_ObjectHideFlags: 0

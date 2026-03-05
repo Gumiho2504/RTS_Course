@@ -51,7 +51,6 @@ namespace Gumiho_Rts.UI
             if (args.Unit is AbstractCommandable unit)
             {
                 selectableUnits.Remove(unit);
-                print(selectableUnits.Count);
                 if (selectableUnits.Count > 0)
                 {
                     actionUI.EnableFor(selectableUnits);
