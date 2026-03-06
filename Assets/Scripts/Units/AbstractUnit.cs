@@ -11,21 +11,24 @@ namespace Gumiho_Rts.Units
     public abstract class AbstractUnit : AbstractCommandable, IMoveable
     {
         private NavMeshAgent navMeshAgent;
-        private BehaviorGraphAgent behaviorGraphAgent;
+        protected BehaviorGraphAgent behaviorGraphAgent;
         public float AgentRadius => navMeshAgent.radius;
 
+
+        protected const string TARGET_LOCATION = "TargetLocation";
+        protected const string COMMAND = "Command";
+        protected const string SUPPLY = "Supply";
 
         private void Awake()
         {
             navMeshAgent = GetComponent<NavMeshAgent>();
             behaviorGraphAgent = GetComponent<BehaviorGraphAgent>();
-            Move(transform.position);
+            behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.Stop);
         }
         protected override void Start()
         {
             base.Start();
             Bus<UnitSpawnEvent>.Raise(new UnitSpawnEvent(this));
-            Move(transform.position);
         }
 
 
@@ -33,10 +36,14 @@ namespace Gumiho_Rts.Units
         public void Move(Vector3 target)
         {
             //navMeshAgent.SetDestination(target);
-            behaviorGraphAgent.SetVariableValue("TargetLocation", target);
+            behaviorGraphAgent.SetVariableValue(TARGET_LOCATION, target);
+            behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.Move);
         }
 
-
+        public void Stop()
+        {
+            behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.Stop);
+        }
     }
 
 

@@ -2,8 +2,9 @@ using UnityEngine;
 
 namespace Gumiho_Rts.Units
 {
-    public  interface IMoveable
+    public interface IMoveable
     {
         void Move(Vector3 target);
+        void Stop();
     }
 }

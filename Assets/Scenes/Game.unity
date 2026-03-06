@@ -11238,6 +11238,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 863810960502844524, guid: 883b9682b823cb84cac42e4ad43d41d2, type: 3}
+      propertyPath: <AvailableCommands>k__BackingField.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 863810960502844524, guid: 883b9682b823cb84cac42e4ad43d41d2, type: 3}
+      propertyPath: '<AvailableCommands>k__BackingField.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: fc971762ced284102b42f4c540e7db07, type: 2}
     - target: {fileID: 4078631732461238711, guid: 883b9682b823cb84cac42e4ad43d41d2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.8946214

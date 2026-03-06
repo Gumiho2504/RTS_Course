@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Gumiho_Rts.Envoiroment
+namespace Gumiho_Rts.Environment
 {
     [CreateAssetMenu(fileName = "Supply", menuName = "Supply", order = 5)]
     public class SupplySO : ScriptableObject

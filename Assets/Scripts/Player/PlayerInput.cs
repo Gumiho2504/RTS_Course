@@ -7,6 +7,7 @@ using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
 using Gumiho_Rts.Units;
 using Unity.Cinemachine;
+using Unity.InferenceEngine;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -22,6 +23,7 @@ namespace Gumiho_Rts
         [SerializeField] private CameraConfig cameraConfig;
         [SerializeField] private LayerMask selectableUnityLayerMask;
         [SerializeField] private LayerMask floorLayerMask;
+        [SerializeField] private LayerMask interactableLayerMask;
         [SerializeField] private RectTransform selectionBox;
 
 
@@ -191,7 +193,7 @@ namespace Gumiho_Rts
                 // find applicable command
 
                 // issue command to all units
-                if (Physics.Raycast(ray, out RaycastHit hit, maxDistance: float.MaxValue, layerMask: floorLayerMask))
+                if (Physics.Raycast(ray, out RaycastHit hit, maxDistance: float.MaxValue, layerMask: floorLayerMask | interactableLayerMask))
                 {
                     List<AbstractUnit> abstractUnits = new(selectableUnits.Count);
                     foreach (ISelectable selectable in selectableUnits)
@@ -233,7 +235,7 @@ namespace Gumiho_Rts
             Ray ray = camera.ScreenPointToRay(mouseVector);
 
 
-            if (activeAction == null && Physics.Raycast(ray, out RaycastHit hit, maxDistance: 100f, layerMask: selectableUnityLayerMask)
+            if (activeAction == null && Physics.Raycast(ray, out RaycastHit hit, maxDistance: 100f, layerMask: selectableUnityLayerMask | interactableLayerMask)
             && hit.transform.TryGetComponent(out ISelectable selectable))
             {
                 selectable.Select();
@@ -260,11 +262,12 @@ namespace Gumiho_Rts
                 .Where(selectableUnit => selectableUnit is AbstractCommandable)
                 .Cast<AbstractCommandable>()
                 .ToList();
-                
+
             for (int i = 0; i < abstractCommandable.Count; i++)
             {
                 CommandContext context = new CommandContext(abstractCommandable[i], hit, i);
-                activeAction.Handle(context);
+                if (activeAction.CanHandle(context))
+                    activeAction.Handle(context);
             }
             activeAction = null;
         }

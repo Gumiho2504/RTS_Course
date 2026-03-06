@@ -1,5 +1,5 @@
 using UnityEngine;
-namespace Gumiho_Rts.Envoiroment
+namespace Gumiho_Rts.Environment
 {
 
     public interface IGatherable
