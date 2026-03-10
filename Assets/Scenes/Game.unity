@@ -1289,10 +1289,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4588847995564503031, guid: 5920905e7a5364c47864b79706cb5eca, type: 3}
-      propertyPath: <IsBusy>k__BackingField
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11232,6 +11228,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 14050117466326090, guid: 883b9682b823cb84cac42e4ad43d41d2, type: 3}
+      propertyPath: m_StoppingDistance
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 4078631732461238711, guid: 883b9682b823cb84cac42e4ad43d41d2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.8946214
@@ -21843,7 +21843,7 @@ GameObject:
   - component: {fileID: 1630118419}
   - component: {fileID: 1630118421}
   - component: {fileID: 1630118423}
-  m_Layer: 6
+  m_Layer: 10
   m_Name: World Collider Bounds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29316,15 +29316,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6018277380246554126, guid: 43943267dde60fe4a88cf5bd885c00e3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10.56
+      value: 9.7
       objectReference: {fileID: 0}
     - target: {fileID: 6018277380246554126, guid: 43943267dde60fe4a88cf5bd885c00e3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.71
+      value: 0.91
       objectReference: {fileID: 0}
     - target: {fileID: 6018277380246554126, guid: 43943267dde60fe4a88cf5bd885c00e3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -53.87
+      value: -56.67
       objectReference: {fileID: 0}
     - target: {fileID: 6018277380246554126, guid: 43943267dde60fe4a88cf5bd885c00e3, type: 3}
       propertyPath: m_LocalRotation.w

@@ -16,6 +16,7 @@ namespace Gumiho_Rts.Environment
 
         public bool BeginGather()
         {
+            print("Begin Gather");
             if (IsBusy) return false;
             IsBusy = true;
             return true;
@@ -23,10 +24,12 @@ namespace Gumiho_Rts.Environment
 
         public int EndGather()
         {
+
             IsBusy = false;
             int amountGathered = Math.Min(Supply.AmountPerGather, Amount);
             Amount -= amountGathered;
             if (Amount <= 0) Destroy(gameObject);
+            print("End Gather");
             return amountGathered;
         }
     }

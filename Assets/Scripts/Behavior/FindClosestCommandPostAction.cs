@@ -20,8 +20,9 @@ namespace Gumiho_Rts.Behavoir
 
         protected override Status OnStart()
         {
-            Collider[] colliders = Physics.OverlapSphere(Unit.Value.transform.position, SearchRadius.Value, LayerMask.GetMask("Buildings"));
+            Collider[] colliders = Physics.OverlapSphere(Unit.Value.transform.position, SearchRadius, LayerMask.GetMask("Buildings"));
             List<BaseBuilding> nearbyCommandPost = new();
+
             foreach (var collider in colliders)
             {
                 if (collider.TryGetComponent(out BaseBuilding building) && building.UnitSO.Equals(CommandPostBuilding.Value))
@@ -32,6 +33,7 @@ namespace Gumiho_Rts.Behavoir
             }
             if (nearbyCommandPost.Count == 0)
             {
+                Debug.Log("No command post found");
                 return Status.Failure;
             }
             CommandPost.Value = nearbyCommandPost[0].gameObject;

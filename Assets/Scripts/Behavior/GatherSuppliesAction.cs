@@ -27,12 +27,15 @@ namespace Gumiho_Rts.Behavoir
 
         protected override Status OnUpdate()
         {
-            if (enterTime + GatherableSupply.Value.Supply.BaseGatherTime <= Time.time)
+            if (GatherableSupply.Value.Supply.BaseGatherTime + enterTime <= Time.time)
             {
-                int amountGather = GatherableSupply.Value.EndGather();
+                int gatheredAmount = GatherableSupply.Value.EndGather();
+                Amount.Value += gatheredAmount;
                 return Status.Success;
             }
+
             return Status.Running;
+
         }
 
         protected override void OnEnd()

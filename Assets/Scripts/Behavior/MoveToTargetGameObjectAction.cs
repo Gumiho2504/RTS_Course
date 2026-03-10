@@ -21,22 +21,26 @@ namespace Gumiho_Rts.Behavoir
             {
                 return Status.Failure;
             }
+
             Vector3 targetPosition = GetTargetPosition();
+            Debug.DrawLine(agent.transform.position, targetPosition, color: Color.blue);
             if (Vector3.Distance(agent.transform.position, targetPosition) <= agent.stoppingDistance)
             {
+
                 return Status.Success;
             }
+
             agent.SetDestination(targetPosition);
             return Status.Running;
         }
 
-
-
         protected override Status OnUpdate()
         {
+            Debug.DrawLine(agent.transform.position, agent.destination, color: Color.red);
             if (agent.remainingDistance <= agent.stoppingDistance)
             {
-                // Debug.Log($"{agent == null}");
+                Debug.Log("Finished  Moving .... Unity work in progress");
+
                 return Status.Success;
             }
             return Status.Running;
@@ -45,14 +49,14 @@ namespace Gumiho_Rts.Behavoir
         private Vector3 GetTargetPosition()
         {
             Vector3 targetPosition;
-            if (TargetGameObject.Value.TryGetComponent(out Collider collider))
-            {
-                targetPosition = collider.ClosestPoint(agent.transform.position);
-            }
-            else
-            {
-                targetPosition = TargetGameObject.Value.transform.position;
-            }
+            // if (TargetGameObject.Value.TryGetComponent(out Collider collider))
+            // {
+            //     targetPosition = collider.ClosestPoint(agent.transform.position);
+            // }
+            // else
+            // {
+            targetPosition = TargetGameObject.Value.transform.position;
+            //  }
 
             return targetPosition;
         }
