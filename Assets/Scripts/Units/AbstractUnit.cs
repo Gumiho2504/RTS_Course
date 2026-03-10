@@ -18,6 +18,7 @@ namespace Gumiho_Rts.Units
         protected const string TARGET_LOCATION = "TargetLocation";
         protected const string COMMAND = "Command";
         protected const string SUPPLY = "Supply";
+        protected const string TARGET_GAME_OBJECT = "TargetGameObject";
 
         private void Awake()
         {

@@ -146,9 +146,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.BaseBuilding
   decalProjector: {fileID: 7194412501631988654}
-  unitSO: {fileID: 11400000, guid: 04432984a182447d78d78435bfc8ce13, type: 2}
+  <UnitSO>k__BackingField: {fileID: 11400000, guid: 04432984a182447d78d78435bfc8ce13, type: 2}
+  <AvailableCommands>k__BackingField: []
   <CurrentHealth>k__BackingField: 0
   <MaxHealth>k__BackingField: 0
+  <CurrentQueueStartTime>k__BackingField: 0
+  <BuildingUnit>k__BackingField: {fileID: 0}
 --- !u!1001 &4498428509526723367
 PrefabInstance:
   m_ObjectHideFlags: 0

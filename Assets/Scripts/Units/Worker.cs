@@ -9,7 +9,7 @@ namespace Gumiho_Rts.Units
         public void Gather(GatherableSupply supply)
         {
             behaviorGraphAgent.SetVariableValue(SUPPLY, supply);
-            behaviorGraphAgent.SetVariableValue(TARGET_LOCATION, supply.transform.position);
+            behaviorGraphAgent.SetVariableValue(TARGET_GAME_OBJECT, supply.gameObject);
             behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.Gather);
 
         }

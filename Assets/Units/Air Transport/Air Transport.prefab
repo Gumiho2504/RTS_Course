@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6373942607041070935}
   - component: {fileID: 4998999097916986450}
   - component: {fileID: 9065312445302724172}
+  - component: {fileID: 2115234063178354583}
   m_Layer: 6
   m_Name: Air Transport
   m_TagString: Untagged
@@ -145,9 +146,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.Worker
   decalProjector: {fileID: 5256939506563389180}
-  unitSO: {fileID: 11400000, guid: 06d8609859f1b41008965e3e48c077fe, type: 2}
+  <UnitSO>k__BackingField: {fileID: 11400000, guid: 06d8609859f1b41008965e3e48c077fe, type: 2}
+  <AvailableCommands>k__BackingField: []
   <CurrentHealth>k__BackingField: 0
   <MaxHealth>k__BackingField: 0
+--- !u!114 &2115234063178354583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076983579694789324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.BehaviorGraphAgent
+  m_Graph: {fileID: 0}
+  m_BlackboardVariableOverridesList: []
+  m_OriginalGraph: {fileID: 0}
+  m_IsInitialised: 0
+  m_IsStarted: 0
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &5742520385410641420
 GameObject:
   m_ObjectHideFlags: 0
