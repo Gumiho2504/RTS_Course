@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Gumiho_Rts.Commands;
+using Gumiho_Rts.Environment;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
 using Gumiho_Rts.Units;
 using Unity.Cinemachine;
-using Unity.InferenceEngine;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -233,7 +233,7 @@ namespace Gumiho_Rts
             }
             var mouseVector = Mouse.current.position.ReadValue();
             Ray ray = camera.ScreenPointToRay(mouseVector);
-
+          //  Debug.Log($"{Physics.Raycast(ray, out RaycastHit ht, float.MaxValue, layerMask: floorLayerMask | interactableLayerMask)} | {ht.transform.name} | {ht.transform.TryGetComponent(out GatherableSupply s)} | {s}");
 
             if (activeAction == null && Physics.Raycast(ray, out RaycastHit hit, maxDistance: 100f, layerMask: selectableUnityLayerMask | interactableLayerMask)
             && hit.transform.TryGetComponent(out ISelectable selectable))
@@ -242,7 +242,7 @@ namespace Gumiho_Rts
             }
             else if (activeAction != null
             && !EventSystem.current.IsPointerOverGameObject()
-            && Physics.Raycast(ray, out hit, float.MaxValue, layerMask: floorLayerMask))
+            && Physics.Raycast(ray, out hit, float.MaxValue, layerMask: floorLayerMask | interactableLayerMask))
             {
                 ActivateAction(hit);
                 // foreach(var selectableUnit  in selectableUnits)

@@ -10,7 +10,7 @@ namespace Gumiho_Rts.Commands
         public override bool CanHandle(CommandContext context)
         {
             return context.Commandable is Worker
-              && !context.Hit.collider
+              && context.Hit.collider
               && context.Hit.collider.TryGetComponent(out GatherableSupply _);
         }
 
@@ -18,6 +18,7 @@ namespace Gumiho_Rts.Commands
         {
             Worker worker = context.Commandable as Worker;
             GatherableSupply gatherableSupply = context.Hit.collider.GetComponent<GatherableSupply>();
+
             worker.Gather(gatherableSupply);
         }
     }
