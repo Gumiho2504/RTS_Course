@@ -11,12 +11,22 @@ namespace Gumiho_Rts.Units
     [RequireComponent(typeof(NavMeshAgent))]
     public class Worker : AbstractUnit
     {
+        public bool HasSupplies
+        {
+            get
+            {
+                if (behaviorGraphAgent != null && behaviorGraphAgent.GetVariable(SUPPLY_AMOUNT_HELD, out BlackboardVariable<int> supplyAmountVariable))
+                {
+                    return supplyAmountVariable.Value > 0;
+                }
+                return false;
+            }
+        }
         protected override void Start()
         {
             base.Start();
             if (behaviorGraphAgent.GetVariable(GATHER_SUPPLIES_EVENT, out BlackboardVariable<GatherSuppliesEventChannel> eventChannelVariable))
             {
-                Debug.Log("Found GatherSuppliesEventChannel");
                 eventChannelVariable.Value.Event += HandleGatherSupplies;
             }
         }
@@ -30,10 +40,18 @@ namespace Gumiho_Rts.Units
             behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.Gather);
 
         }
+        public void ReturnSupplies(GameObject commandPost)
+        {
+            Debug.Log("Worker Return Supplies");
+            behaviorGraphAgent.SetVariableValue(COMMAND, commandPost);
+            behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.ReturnSupplies);
+        }
 
         private void HandleGatherSupplies(GameObject self, int amount, SupplySO supply)
         {
             Bus<SupplyEvent>.Raise(new SupplyEvent(amount, supply));
         }
+
+
     }
 }

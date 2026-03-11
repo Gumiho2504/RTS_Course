@@ -20,6 +20,7 @@ namespace Gumiho_Rts.Units
         protected const string SUPPLY = "Supply";
         protected const string TARGET_GAME_OBJECT = "TargetGameObject";
         protected const string GATHER_SUPPLIES_EVENT = "GatherSuppliesEventChannel";
+        protected const string SUPPLY_AMOUNT_HELD = "SupplyAmountHeld";
 
         private void Awake()
         {

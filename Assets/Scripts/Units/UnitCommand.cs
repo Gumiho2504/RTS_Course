@@ -8,6 +8,7 @@ namespace Gumiho_Rts.Units
 	{
 		Stop,
 		Move,
-		Gather
+		Gather,
+		ReturnSupplies
 	}
 }
