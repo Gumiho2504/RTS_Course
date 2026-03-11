@@ -25,6 +25,11 @@ namespace Gumiho_Rts
         [SerializeField] private LayerMask floorLayerMask;
         [SerializeField] private LayerMask interactableLayerMask;
         [SerializeField] private RectTransform selectionBox;
+        [SerializeField] private SupplySO mineralsSO;
+        [SerializeField] private SupplySO gasSO;
+
+        private int minerals;
+        private int gas;
 
 
         private CinemachineFollow cinemachineFollow;
@@ -52,6 +57,7 @@ namespace Gumiho_Rts
             Bus<UnitDeselectedEvent>.OnEvent += HandleUnitDeselected;
             Bus<UnitSpawnEvent>.OnEvent += HandleUnitSpawned;
             Bus<ActionSelectedEvent>.OnEvent += HandleActionSelected;
+            Bus<SupplyEvent>.OnEvent += HandleSupplyEvent;
         }
 
 
@@ -62,9 +68,21 @@ namespace Gumiho_Rts
             Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
             Bus<UnitSpawnEvent>.OnEvent -= HandleUnitSpawned;
             Bus<ActionSelectedEvent>.OnEvent -= HandleActionSelected;
+            Bus<SupplyEvent>.OnEvent -= HandleSupplyEvent;
 
         }
-
+        private void HandleSupplyEvent(SupplyEvent args)
+        {
+            if (args.Supply.Equals(mineralsSO))
+            {
+                minerals += args.Amount;
+            }
+            else if (args.Supply.Equals(gasSO))
+            {
+                gas += args.Amount;
+            }
+            Debug.Log($"Minerals: {minerals} Gas: {gas}");
+        }
 
         private void HandleActionSelected(ActionSelectedEvent args)
         {

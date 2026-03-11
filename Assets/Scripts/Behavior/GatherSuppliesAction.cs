@@ -16,6 +16,7 @@ namespace Gumiho_Rts.Behavoir
         [SerializeReference] public BlackboardVariable<GameObject> Unit;
         [SerializeReference] public BlackboardVariable<int> Amount;
         [SerializeReference] public BlackboardVariable<GatherableSupply> GatherableSupply;
+        [SerializeReference] public BlackboardVariable<SupplySO> SupplySO;
 
         private float enterTime;
         private Animator animator;
@@ -30,6 +31,7 @@ namespace Gumiho_Rts.Behavoir
             }
 
             GatherableSupply.Value.BeginGather();
+            SupplySO.Value = GatherableSupply.Value.Supply;
             //Debug.Log($"Start Success - ${GatherableSupply.Value.IsBusy}- ${Time.time.ToString()}");
             return Status.Running;
         }
