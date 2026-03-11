@@ -32,5 +32,6 @@ namespace Gumiho_Rts.Environment
             print("End Gather");
             return amountGathered;
         }
+        public void AbortGather() => IsBusy = false;
     }
 }

@@ -20,6 +20,7 @@ namespace Gumiho_Rts.Behavoir
 
         protected override Status OnStart()
         {
+            if (GatherableSupply.Value == null) return Status.Failure;
             enterTime = Time.time;
             GatherableSupply.Value.BeginGather();
             return Status.Running;
@@ -30,16 +31,23 @@ namespace Gumiho_Rts.Behavoir
             if (GatherableSupply.Value.Supply.BaseGatherTime + enterTime <= Time.time)
             {
                 int gatheredAmount = GatherableSupply.Value.EndGather();
-                Amount.Value += gatheredAmount;
                 return Status.Success;
             }
-
             return Status.Running;
 
         }
 
         protected override void OnEnd()
         {
+            if (GatherableSupply.Value == null) return;
+            if (CurrentStatus == Status.Success)
+            {
+                Amount.Value = GatherableSupply.Value.EndGather();
+            }
+            else
+            {
+                GatherableSupply.Value.AbortGather();
+            }
         }
     }
 

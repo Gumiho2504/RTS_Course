@@ -9,5 +9,6 @@ namespace Gumiho_Rts.Environment
         public bool IsBusy { get; }
         public bool BeginGather();
         public int EndGather();
+        public void AbortGather();
     }
 }

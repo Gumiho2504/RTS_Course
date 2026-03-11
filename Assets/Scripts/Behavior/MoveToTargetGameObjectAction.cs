@@ -17,7 +17,7 @@ namespace Gumiho_Rts.Behavoir
         private NavMeshAgent agent;
         protected override Status OnStart()
         {
-            if (!Agent.Value.TryGetComponent(out agent))
+            if (!Agent.Value.TryGetComponent(out agent) || TargetGameObject.Value == null)
             {
                 return Status.Failure;
             }
