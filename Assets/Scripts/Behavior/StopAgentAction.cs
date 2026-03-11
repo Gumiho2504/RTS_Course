@@ -4,6 +4,7 @@ using UnityEngine;
 using Action = Unity.Behavior.Action;
 using Unity.Properties;
 using UnityEngine.AI;
+using Gumiho_Rts.Utilities;
 
 namespace Gumiho_Rts.Behavoir
 {
@@ -17,6 +18,10 @@ namespace Gumiho_Rts.Behavoir
         {
             if (Agent.Value.TryGetComponent(out NavMeshAgent agent))
             {
+                if (agent.TryGetComponent<Animator>(out Animator animator))
+                {
+                    animator.SetFloat(AnimationConstants.SPEED, 0);
+                }
                 agent.ResetPath();
                 return Status.Success;
             }

@@ -23,6 +23,7 @@ namespace Gumiho_Rts.Behavoir
         private NavMeshAgent agent;
         private LayerMask supplyLayerMask;
         private SupplySO supplySO;
+        private Animator animator;
         private const string SUPPLY_MASK = "Supplies";
         protected override Status OnStart()
         {
@@ -30,18 +31,45 @@ namespace Gumiho_Rts.Behavoir
 
             if (!HasValidInput()) return Status.Failure;
 
+            agent.TryGetComponent<Animator>(out animator);
+
             Vector3 targetPosition = GetTargetPosition();
-
-
-
-
 
             agent.SetDestination(targetPosition);
             return Status.Running;
 
-
-
         }
+
+
+        protected override Status OnUpdate()
+        {
+            if (animator != null) animator.SetFloat(AnimationConstants.SPEED, agent.velocity.magnitude);
+            if (agent.remainingDistance >= agent.stoppingDistance)
+            {
+                return Status.Running;
+
+            }
+            if (!Supply.Value.IsBusy && Supply.Value.Amount > 0)
+            {
+                return Status.Success;
+            }
+            Collider[] colliders = FindNearbyNotBusyCollider();
+            if (colliders.Length > 0)
+            {
+                Array.Sort(colliders, new ClosetColliderCompare(agent.transform.position));
+                Supply.Value = colliders[0].GetComponent<GatherableSupply>();
+                agent.SetDestination(GetTargetPosition());
+                return Status.Running;
+
+            }
+            return Status.Failure;
+        }
+
+        protected override void OnEnd()
+        {
+            if (animator != null) animator.SetFloat(AnimationConstants.SPEED, 0);
+        }
+
 
         private bool HasValidInput()
         {
@@ -67,29 +95,6 @@ namespace Gumiho_Rts.Behavoir
             return true;
         }
 
-        protected override Status OnUpdate()
-        {
-            if (agent.remainingDistance >= agent.stoppingDistance)
-            {
-                return Status.Running;
-
-            }
-            if (!Supply.Value.IsBusy && Supply.Value.Amount > 0)
-            {
-                return Status.Success;
-            }
-            Collider[] colliders = FindNearbyNotBusyCollider();
-            if (colliders.Length > 0)
-            {
-                Array.Sort(colliders, new ClosetColliderCompare(agent.transform.position));
-                Supply.Value = colliders[0].GetComponent<GatherableSupply>();
-                agent.SetDestination(GetTargetPosition());
-                return Status.Running;
-
-            }
-            return Status.Failure;
-        }
-
         private Collider[] FindNearbyNotBusyCollider()
         {
             return Physics.OverlapSphere(agent.transform.position, SearchRadius, supplyLayerMask)
@@ -105,6 +110,7 @@ namespace Gumiho_Rts.Behavoir
             Vector3 targetPosition;
             if (Supply.Value.TryGetComponent(out Collider collider))
             {
+                //Debug.Log("Closest Point: " + collider.ClosestPoint(agent.transform.position));
                 targetPosition = collider.ClosestPoint(agent.transform.position);
             }
             else
@@ -114,6 +120,8 @@ namespace Gumiho_Rts.Behavoir
 
             return targetPosition;
         }
+
+
     }
 
 

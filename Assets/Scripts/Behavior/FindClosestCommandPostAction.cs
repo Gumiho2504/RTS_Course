@@ -33,10 +33,10 @@ namespace Gumiho_Rts.Behavoir
             }
             if (nearbyCommandPost.Count == 0)
             {
-                Debug.Log("No command post found");
                 return Status.Failure;
             }
             CommandPost.Value = nearbyCommandPost[0].gameObject;
+          //  Debug.Log("Found Command Post " + CommandPost.Value.name);
             return Status.Success;
         }
 

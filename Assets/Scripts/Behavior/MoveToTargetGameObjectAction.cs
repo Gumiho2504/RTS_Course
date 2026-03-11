@@ -4,6 +4,7 @@ using UnityEngine;
 using Action = Unity.Behavior.Action;
 using Unity.Properties;
 using UnityEngine.AI;
+using Gumiho_Rts.Utilities;
 namespace Gumiho_Rts.Behavoir
 {
 
@@ -14,6 +15,7 @@ namespace Gumiho_Rts.Behavoir
     {
         [SerializeReference] public BlackboardVariable<GameObject> Agent;
         [SerializeReference] public BlackboardVariable<GameObject> TargetGameObject;
+        private Animator animator;
         private NavMeshAgent agent;
         protected override Status OnStart()
         {
@@ -22,41 +24,49 @@ namespace Gumiho_Rts.Behavoir
                 return Status.Failure;
             }
 
+            agent.TryGetComponent<Animator>(out animator);
+
+
             Vector3 targetPosition = GetTargetPosition();
-            Debug.DrawLine(agent.transform.position, targetPosition, color: Color.blue);
             if (Vector3.Distance(agent.transform.position, targetPosition) <= agent.stoppingDistance)
             {
-
+              //  Debug.Log("Already there On Start");
                 return Status.Success;
             }
 
             agent.SetDestination(targetPosition);
+//            Debug.Log("Moving to " + targetPosition.ToString());
             return Status.Running;
         }
 
         protected override Status OnUpdate()
         {
-            Debug.DrawLine(agent.transform.position, agent.destination, color: Color.red);
-            if (agent.remainingDistance <= agent.stoppingDistance)
+            if (animator != null) animator.SetFloat(AnimationConstants.SPEED, agent.velocity.magnitude);
+            Vector3 targetPosition = GetTargetPosition();
+            if (Vector3.Distance(agent.transform.position, targetPosition) <= agent.stoppingDistance)
             {
-                Debug.Log("Finished  Moving .... Unity work in progress");
-
+                //Debug.Log($"Already there On Update - ${Time.time} - agent.remainingDistance  {agent.remainingDistance} -distance :  {Vector3.Distance(agent.transform.position, targetPosition)}");
                 return Status.Success;
             }
             return Status.Running;
         }
 
+        protected override void OnEnd()
+        {
+            if (animator != null) animator.SetFloat(AnimationConstants.SPEED, 0);
+        }
+
         private Vector3 GetTargetPosition()
         {
             Vector3 targetPosition;
-            // if (TargetGameObject.Value.TryGetComponent(out Collider collider))
-            // {
-            //     targetPosition = collider.ClosestPoint(agent.transform.position);
-            // }
-            // else
-            // {
-            targetPosition = TargetGameObject.Value.transform.position;
-            //  }
+            if (TargetGameObject.Value.TryGetComponent(out Collider collider))
+            {
+                targetPosition = collider.ClosestPoint(agent.transform.position);
+            }
+            else
+            {
+                targetPosition = TargetGameObject.Value.transform.position;
+            }
 
             return targetPosition;
         }
