@@ -95,7 +95,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.Worker
   decalProjector: {fileID: 2328338167376970769}
-  <UnitSO>k__BackingField: {fileID: 11400000, guid: ccf4669290a214251a53bd58b2a67b7b, type: 2}
+  <UnitSO>k__BackingField: {fileID: 11400000, guid: c4923a796b20548b2a2a1cbd2bbb8f32, type: 2}
   <AvailableCommands>k__BackingField:
   - {fileID: 11400000, guid: fc971762ced284102b42f4c540e7db07, type: 2}
   - {fileID: 11400000, guid: da9ca1647b00f40b594dcd7d05650cc5, type: 2}

@@ -31,17 +31,17 @@ namespace Gumiho_Rts.Commands
             Worker worker = context.Commandable as Worker;
             if (context.Hit.collider.TryGetComponent(out GatherableSupply gatherableSupply))
             {
-                Debug.Log("Gather Supplies");
+                // Debug.Log("Gather Supplies");
                 worker.Gather(gatherableSupply);
             }
             else if (IsCommandPost(context.Hit.collider) && worker.HasSupplies)
             {
-                Debug.Log("Return Supplies");
+                //Debug.Log("Return Supplies");
                 worker.ReturnSupplies(context.Hit.collider.gameObject);
             }
             else
             {
-                Debug.Log("Move");
+                //  Debug.Log("Move");
                 worker.Move(context.Hit.collider.transform.position);
             }
 

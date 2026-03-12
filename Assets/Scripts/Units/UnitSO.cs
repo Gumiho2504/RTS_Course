@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "UnitSO", menuName = "Units/UnitSO")]
-public class UnitSO : ScriptableObject
+
+public abstract class UnitSO : ScriptableObject
 {
     [field: SerializeField] public int Health { get; private set; } = 100;
     [field: SerializeField] public GameObject Prefab { get; private set; }

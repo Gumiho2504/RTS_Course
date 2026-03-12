@@ -16,7 +16,7 @@ namespace Gumiho_Rts.Behavoir
         [SerializeReference] public BlackboardVariable<GameObject> Unit;
         [SerializeReference] public BlackboardVariable<GameObject> CommandPost;
         [SerializeReference] public BlackboardVariable<float> SearchRadius = new(10);
-        [SerializeReference] public BlackboardVariable<UnitSO> CommandPostBuilding;
+        [SerializeReference] public BlackboardVariable<BuildingUnitSO> CommandPostBuilding;
 
         protected override Status OnStart()
         {
@@ -36,7 +36,7 @@ namespace Gumiho_Rts.Behavoir
                 return Status.Failure;
             }
             CommandPost.Value = nearbyCommandPost[0].gameObject;
-          //  Debug.Log("Found Command Post " + CommandPost.Value.name);
+            //  Debug.Log("Found Command Post " + CommandPost.Value.name);
             return Status.Success;
         }
 

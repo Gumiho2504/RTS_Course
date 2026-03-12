@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Gumiho_Rts.Commands
 {
-    [CreateAssetMenu(menuName = " Building/Command/Build Unit", fileName = "Build Unit")]
+    [CreateAssetMenu(menuName = " Buildings/Command/Build Unit", fileName = "Build Unit", order = 200)]
     public class BuildUnitCommand : ActionBase
     {
         [field: SerializeField] public UnitSO Unit { get; private set; }

@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee3184c6a8ec54ba6bd63bed9ad823bd, type: 3}
+  m_Script: {fileID: 11500000, guid: 982115db077f04efcaf5f60a6aded5ae, type: 3}
   m_Name: Grenadier
-  m_EditorClassIdentifier: Assembly-CSharp::UnitSO
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.Unit
   <Health>k__BackingField: 100
   <Prefab>k__BackingField: {fileID: 1813055781741166138, guid: d606f67b2169916478d3b1364e1b4428, type: 3}
   <BuildTime>k__BackingField: 5
