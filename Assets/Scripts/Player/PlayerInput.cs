@@ -89,8 +89,11 @@ namespace Gumiho_Rts
 
         private void HandleUnitSelected(UnitSelectedEvent evt)
         {
+            if (!selectableUnits.Contains(evt.Unit))
+            {
+                selectableUnits.Add(evt.Unit);
+            }
 
-            selectableUnits.Add(evt.Unit);
         }
 
 

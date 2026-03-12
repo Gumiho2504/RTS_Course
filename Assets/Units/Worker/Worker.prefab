@@ -100,6 +100,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fc971762ced284102b42f4c540e7db07, type: 2}
   - {fileID: 11400000, guid: da9ca1647b00f40b594dcd7d05650cc5, type: 2}
   - {fileID: 11400000, guid: bd2406fc6901a4556bc421dec2a8bc30, type: 2}
+  - {fileID: 11400000, guid: bc134dd4ff1f54ed9ae094a1a2122cf6, type: 2}
   <CurrentHealth>k__BackingField: 0
   <MaxHealth>k__BackingField: 0
 --- !u!136 &5214473086347703930
