@@ -14,9 +14,15 @@ namespace Gumiho_Rts.Units
         public delegate void QueueUpdatedEvent(UnitSO[] unitsInQueue);
         public event QueueUpdatedEvent OnQueueUpdated;
 
+        [SerializeField] private Material mainMaterial;
 
         private List<UnitSO> buildingQueue = new(MAX_QUEUE_SIZE);
         private const int MAX_QUEUE_SIZE = 5;
+        private BuildingUnitSO buildingUnitSO;
+        private void Awake()
+        {
+            buildingUnitSO = UnitSO as BuildingUnitSO;
+        }
 
         public void BuildUnit(UnitSO unit)
         {
@@ -70,6 +76,11 @@ namespace Gumiho_Rts.Units
             }
             OnQueueUpdated?.Invoke(buildingQueue.ToArray());
 
+        }
+        
+        public void ShowBuildingVisualEffect()
+        {
+            mainMaterial = buildingUnitSO.BuildingGhostPlacement;
         }
     }
 }

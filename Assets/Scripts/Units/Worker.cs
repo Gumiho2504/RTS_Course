@@ -9,7 +9,7 @@ using UnityEngine.AI;
 namespace Gumiho_Rts.Units
 {
     [RequireComponent(typeof(NavMeshAgent))]
-    public class Worker : AbstractUnit
+    public class Worker : AbstractUnit,IBuildingBuilder
     {
         public bool HasSupplies
         {
@@ -52,6 +52,18 @@ namespace Gumiho_Rts.Units
             Bus<SupplyEvent>.Raise(new SupplyEvent(amount, supply));
         }
 
-
+        public void Build(BuildingUnitSO building, Vector3 position)
+        {
+           var instance = Instantiate(building.Prefab,position,Quaternion.identity);
+            if(instance.TryGetComponent(out BaseBuilding baseBuilding))
+            {
+                baseBuilding.ShowBuildingVisualEffect();
+            }
+            else
+            {
+                Debug.LogError($"Missing Building Prefab on BuildingSO name:{building.name}! Can not build!");
+                return;
+            }
+        }
     }
 }

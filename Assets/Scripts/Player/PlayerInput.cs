@@ -38,6 +38,8 @@ namespace Gumiho_Rts
         private ActionBase activeAction;
         private bool wasMouseDownOnUI;
 
+        private GameObject ghostInstance;
+
         private void Awake()
         {
             if (!cinemachineCamera.TryGetComponent(out cinemachineFollow))
@@ -73,6 +75,9 @@ namespace Gumiho_Rts
             if (!activeAction.RequiresClickToActivate)
             {
                 ActivateAction(new RaycastHit());
+            } else if (activeAction.GhostPrefab != null)
+            {
+                ghostInstance = Instantiate(activeAction.GhostPrefab);
             }
         }
 
@@ -101,11 +106,25 @@ namespace Gumiho_Rts
         // Update is called once per frame
         void Update()
         {
-            // HandlePanning();
+            HandlePanning();
             HandleZooming();
             HandleRotation();
+            HandleGhostPrefab();
             HandleRightMuseClick();
             HandleDragSelection();
+        }
+        private void HandleGhostPrefab()
+        {
+            if (ghostInstance != null)
+            {
+                var mouseVector = Mouse.current.position.ReadValue();
+                Ray ray = camera.ScreenPointToRay(mouseVector);
+                if(Physics.Raycast(ray, out RaycastHit hit,float.MaxValue,floorLayerMask))
+                {
+                    ghostInstance.transform.position = hit.point;
+                }
+               
+            }
         }
 
         private void HandleDragSelection()
