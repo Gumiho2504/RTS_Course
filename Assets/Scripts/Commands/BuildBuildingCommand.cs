@@ -17,5 +17,5 @@ namespace Gumiho_Rts.Commands
            IBuildingBuilder builder = context.Commandable as IBuildingBuilder;
             builder.Build(BuildingSO, context.Hit.point);
         }
-    }
+    } 
 }

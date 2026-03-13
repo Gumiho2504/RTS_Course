@@ -75,7 +75,8 @@ namespace Gumiho_Rts
             if (!activeAction.RequiresClickToActivate)
             {
                 ActivateAction(new RaycastHit());
-            } else if (activeAction.GhostPrefab != null)
+            }
+            else if (activeAction.GhostPrefab != null)
             {
                 ghostInstance = Instantiate(activeAction.GhostPrefab);
             }
@@ -109,22 +110,28 @@ namespace Gumiho_Rts
             HandlePanning();
             HandleZooming();
             HandleRotation();
-            HandleGhostPrefab();
+            HandleGhostAction();
             HandleRightMuseClick();
             HandleDragSelection();
         }
-        private void HandleGhostPrefab()
+        private void HandleGhostAction()
         {
-            if (ghostInstance != null)
+            if (ghostInstance == null) return;
+            if (Keyboard.current.deleteKey.wasPressedThisFrame)
             {
-                var mouseVector = Mouse.current.position.ReadValue();
-                Ray ray = camera.ScreenPointToRay(mouseVector);
-                if(Physics.Raycast(ray, out RaycastHit hit,float.MaxValue,floorLayerMask))
-                {
-                    ghostInstance.transform.position = hit.point;
-                }
-               
+                Destroy(ghostInstance);
+                ghostInstance = null;
+                activeAction = null;
+                return;
             }
+            var mouseVector = Mouse.current.position.ReadValue();
+            Ray ray = camera.ScreenPointToRay(mouseVector);
+            if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, floorLayerMask))
+            {
+                ghostInstance.transform.position = hit.point;
+            }
+
+
         }
 
         private void HandleDragSelection()
@@ -281,6 +288,11 @@ namespace Gumiho_Rts
 
         private void ActivateAction(RaycastHit hit)
         {
+            if (ghostInstance != null)
+            {
+                Destroy(ghostInstance);
+                ghostInstance = null;
+            }
             List<AbstractCommandable> abstractCommandable = selectableUnits
                 .Where(selectableUnit => selectableUnit is AbstractCommandable)
                 .Cast<AbstractCommandable>()
