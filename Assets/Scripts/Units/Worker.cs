@@ -1,5 +1,6 @@
 using System;
 using Gumiho_Rts.Behavoir;
+using Gumiho_Rts.Commands;
 using Gumiho_Rts.Environment;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
@@ -22,6 +23,7 @@ namespace Gumiho_Rts.Units
                 return false;
             }
         }
+        [SerializeField] private ActionBase CancelBuildingCommand;
         protected override void Start()
         {
             base.Start();
@@ -64,12 +66,32 @@ namespace Gumiho_Rts.Units
                 Debug.LogError($"Missing Building Prefab on BuildingSO name:{building.name}! Can not build!");
                 return null;
             }
-            Debug.Log($"Building ---");
+
+
             behaviorGraphAgent.SetVariableValue(BUILDINGSO, building);
             behaviorGraphAgent.SetVariableValue(TARGET_LOCATION, position);
             behaviorGraphAgent.SetVariableValue(GHOST, instance);
             behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.BuildBuilding);
+
+            SetCommandOverride(new ActionBase[] { CancelBuildingCommand });
+            Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
+
             return instance;
+        }
+
+        public void CancelBuilding()
+        {
+            if (behaviorGraphAgent.GetVariable(GHOST, out BlackboardVariable<GameObject> ghostVariable) && ghostVariable.Value != null)
+            {
+                Destroy(ghostVariable.Value);
+            }
+            if (behaviorGraphAgent.GetVariable(BUILDING_UNDER_CONSTRUCTION, out BlackboardVariable<BaseBuilding> building) && building.Value != null)
+            {
+                Destroy(building.Value.gameObject);
+            }
+            SetCommandOverride(Array.Empty<ActionBase>());
+
+            Stop();
         }
     }
 }

@@ -30,22 +30,24 @@ namespace Gumiho_Rts.Behavoir
             }
 
             startBuildTime = Time.time;
-             GameObject building = GameObject.Instantiate(BuildingSO.Value.Prefab, TargetLocation.Value, Quaternion.identity);
-         //   GameObject building = GameObject.Instantiate(BuildingSO.Value.Prefab);
+            GameObject building = GameObject.Instantiate(BuildingSO.Value.Prefab, TargetLocation.Value, Quaternion.identity);
+            //   GameObject building = GameObject.Instantiate(BuildingSO.Value.Prefab);
             if (!building.TryGetComponent(out completedBuilding) || completedBuilding.MainMeshRenderer == null) return Status.Failure;
-            BuildingUnderConstruction.Value = completedBuilding;
 
             buildingRenderer = completedBuilding.MainMeshRenderer;
+            BuildingUnderConstruction.Value = completedBuilding;
+
             startPosition = TargetLocation.Value - Vector3.up * buildingRenderer.bounds.size.y;
             buildingRenderer.transform.position = startPosition;
-            Debug.Log($"Building");
-            return Status.Running;
+
+            return OnUpdate();
         }
 
 
 
         protected override Status OnUpdate()
         {
+
             float normalizedTime = (Time.time - startBuildTime) / BuildingSO.Value.BuildTime;
             buildingRenderer.transform.position = Vector3.Lerp(startPosition, TargetLocation.Value, normalizedTime);
             return normalizedTime >= 1 ? Status.Success : Status.Running;

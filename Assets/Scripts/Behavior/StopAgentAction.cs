@@ -20,11 +20,19 @@ namespace Gumiho_Rts.Behavoir
             {
                 if (agent.TryGetComponent<Animator>(out Animator animator))
                 {
+
                     animator.SetFloat(AnimationConstants.SPEED, 0);
                 }
+
+                //  agent.Stop();
+
+                agent.isStopped = true;
                 agent.ResetPath();
+                agent.velocity = Vector3.zero;
                 return Status.Success;
+
             }
+            Debug.Log("Stop Agent Failed");
             return Status.Failure;
         }
 

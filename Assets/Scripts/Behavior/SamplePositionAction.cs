@@ -14,7 +14,7 @@ namespace Gumiho_Rts.Behavior
     {
         [SerializeReference] public BlackboardVariable<Vector3> TargetLocation;
         [SerializeReference] public BlackboardVariable<GameObject> Target;
-        [SerializeReference] public BlackboardVariable<float> Radius = new(5f);
+        [SerializeReference] public BlackboardVariable<float> Radius = new(7f);
 
         protected override Status OnStart()
         {

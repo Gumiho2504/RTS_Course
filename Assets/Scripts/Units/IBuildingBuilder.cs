@@ -7,5 +7,6 @@ namespace Gumiho_Rts.Units
     {
 
         public GameObject Build(BuildingUnitSO building, Vector3 position);
+        public void CancelBuilding();
     }
 }

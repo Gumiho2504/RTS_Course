@@ -95,7 +95,7 @@ namespace Gumiho_Rts
 
         private void HandleUnitSelected(UnitSelectedEvent evt)
         {
-            
+
             if (!selectableUnits.Contains(evt.Unit))
             {
                 selectableUnits.Add(evt.Unit);
@@ -108,7 +108,7 @@ namespace Gumiho_Rts
         // Update is called once per frame
         void Update()
         {
-            HandlePanning();
+            /// HandlePanning();
             HandleZooming();
             HandleRotation();
             HandleGhostAction();

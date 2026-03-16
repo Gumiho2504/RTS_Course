@@ -23,6 +23,7 @@ namespace Gumiho_Rts.Units
         protected const string SUPPLY_AMOUNT_HELD = "SupplyAmountHeld";
         protected const string GHOST = "Ghost";
         protected const string BUILDINGSO = "BuildingSO";
+        protected const string BUILDING_UNDER_CONSTRUCTION = "BuildingUnderConstruction";
 
         private void Awake()
         {
