@@ -6,6 +6,6 @@ namespace Gumiho_Rts.Units
     public interface IBuildingBuilder
     {
 
-        public void Build(BuildingUnitSO building, Vector3 position);
+        public GameObject Build(BuildingUnitSO building, Vector3 position);
     }
 }

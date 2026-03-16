@@ -9,6 +9,7 @@ namespace Gumiho_Rts.Units
 		Stop,
 		Move,
 		Gather,
-		ReturnSupplies
+		ReturnSupplies,
+		BuildBuilding
 	}
 }

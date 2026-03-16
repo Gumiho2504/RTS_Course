@@ -95,6 +95,7 @@ namespace Gumiho_Rts
 
         private void HandleUnitSelected(UnitSelectedEvent evt)
         {
+            
             if (!selectableUnits.Contains(evt.Unit))
             {
                 selectableUnits.Add(evt.Unit);
@@ -117,8 +118,9 @@ namespace Gumiho_Rts
         private void HandleGhostAction()
         {
             if (ghostInstance == null) return;
-            if (Keyboard.current.deleteKey.wasPressedThisFrame)
+            if (Keyboard.current.aKey.wasPressedThisFrame)
             {
+                print("Activating");
                 Destroy(ghostInstance);
                 ghostInstance = null;
                 activeAction = null;

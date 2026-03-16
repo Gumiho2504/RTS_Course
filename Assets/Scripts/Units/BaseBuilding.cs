@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Gumiho_Rts.Units
 {
@@ -14,14 +15,24 @@ namespace Gumiho_Rts.Units
         public delegate void QueueUpdatedEvent(UnitSO[] unitsInQueue);
         public event QueueUpdatedEvent OnQueueUpdated;
 
-        [SerializeField] private MeshRenderer mainMesh;
+        [field: SerializeField] public MeshRenderer MainMeshRenderer { get; private set; }
 
         private List<UnitSO> buildingQueue = new(MAX_QUEUE_SIZE);
         private const int MAX_QUEUE_SIZE = 5;
         private BuildingUnitSO buildingUnitSO;
+        [SerializeField] private NavMeshObstacle navMeshObstacle;
+        [SerializeField] private Material primaryMaterial;
         private void Awake()
         {
             buildingUnitSO = UnitSO as BuildingUnitSO;
+        }
+
+        protected override void Start()
+        {
+            if (MainMeshRenderer != null)
+            {
+                MainMeshRenderer.material = primaryMaterial;
+            }
         }
 
         public void BuildUnit(UnitSO unit)
@@ -80,7 +91,7 @@ namespace Gumiho_Rts.Units
 
         public void ShowBuildingVisualEffect()
         {
-            mainMesh.material = buildingUnitSO.BuildingGhostPlacement;
+            MainMeshRenderer.material = buildingUnitSO.BuildingGhostPlacement;
         }
     }
 }

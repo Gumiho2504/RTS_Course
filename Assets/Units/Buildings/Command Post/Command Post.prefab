@@ -124,7 +124,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1589499662120937400}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f2ecd2884187a4f0dbb3d51c30577ffd, type: 3}
   m_Name: 
@@ -137,7 +137,9 @@ MonoBehaviour:
   <MaxHealth>k__BackingField: 0
   <CurrentQueueStartTime>k__BackingField: 0
   <BuildingUnit>k__BackingField: {fileID: 0}
-  mainMesh: {fileID: 4728886198864161701}
+  <MainMeshRenderer>k__BackingField: {fileID: 4728886198864161701}
+  navMeshObstacle: {fileID: 8988252152151198159}
+  primaryMaterial: {fileID: 2100000, guid: b35c532178876e94f917ff0196f65258, type: 2}
 --- !u!208 &8988252152151198159
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -217,7 +219,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 981dc53f9c78ccd4eb6a545f083bc814, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: b35c532178876e94f917ff0196f65258, type: 2}
+      objectReference: {fileID: 2100000, guid: df83892de47974b2d8f424ae85ebe3ee, type: 2}
     - target: {fileID: -7511558181221131132, guid: 981dc53f9c78ccd4eb6a545f083bc814, type: 3}
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
