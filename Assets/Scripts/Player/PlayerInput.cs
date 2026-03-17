@@ -53,6 +53,7 @@ namespace Gumiho_Rts
             Bus<UnitDeselectedEvent>.OnEvent += HandleUnitDeselected;
             Bus<UnitSpawnEvent>.OnEvent += HandleUnitSpawned;
             Bus<ActionSelectedEvent>.OnEvent += HandleActionSelected;
+            Bus<UnitDeathEvent>.OnEvent += HandleUnitDeath;
 
         }
 
@@ -64,9 +65,11 @@ namespace Gumiho_Rts
             Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
             Bus<UnitSpawnEvent>.OnEvent -= HandleUnitSpawned;
             Bus<ActionSelectedEvent>.OnEvent -= HandleActionSelected;
+            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
 
 
         }
+
 
 
         private void HandleActionSelected(ActionSelectedEvent args)
@@ -84,7 +87,7 @@ namespace Gumiho_Rts
 
         private void HandleUnitSpawned(UnitSpawnEvent args)
         {
-            AliveUnits.Add(args.unit);
+            AliveUnits.Add(args.Unit);
 
         }
         private void HandleUnitDeselected(UnitDeselectedEvent args)
@@ -101,6 +104,12 @@ namespace Gumiho_Rts
                 selectableUnits.Add(evt.Unit);
             }
 
+        }
+
+        private void HandleUnitDeath(UnitDeathEvent args)
+        {
+            selectableUnits.Remove(args.Unit);
+            AliveUnits.Remove(args.Unit);
         }
 
 

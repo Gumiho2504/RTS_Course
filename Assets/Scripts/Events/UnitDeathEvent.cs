@@ -3,10 +3,10 @@ using Gumiho_Rts.Units;
 
 namespace Gumiho_Rts.Events
 {
-    public struct UnitSpawnEvent : IEvents
+    public struct UnitDeathEvent : IEvents
     {
         public AbstractUnit Unit { get; private set; }
-        public UnitSpawnEvent(AbstractUnit unit)
+        public UnitDeathEvent(AbstractUnit unit)
         {
             this.Unit = unit;
         }

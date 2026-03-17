@@ -50,6 +50,11 @@ namespace Gumiho_Rts.Units
         {
             behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.Stop);
         }
+
+        private void OnDestroy()
+        {
+            Bus<UnitDeathEvent>.Raise(new UnitDeathEvent(this));
+        }
     }
 
 

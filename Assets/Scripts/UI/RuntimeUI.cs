@@ -18,8 +18,10 @@ namespace Gumiho_Rts.UI
         {
             Bus<UnitSelectedEvent>.OnEvent += HandleUnitSelected;
             Bus<UnitDeselectedEvent>.OnEvent += HandleUnitDeselected;
+            Bus<UnitDeathEvent>.OnEvent += HandleUnitDeath;
 
         }
+
 
         void Start()
         {
@@ -31,6 +33,7 @@ namespace Gumiho_Rts.UI
         {
             Bus<UnitSelectedEvent>.OnEvent -= HandleUnitSelected;
             Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
+            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
         }
 
         private void HandleUnitSelected(UnitSelectedEvent args)
@@ -48,30 +51,38 @@ namespace Gumiho_Rts.UI
         }
         private void HandleUnitDeselected(UnitDeselectedEvent args)
         {
-            if (args.Unit is AbstractCommandable unit)
+            if (args.Unit is AbstractCommandable commandable)
             {
-                selectableUnits.Remove(unit);
-                if (selectableUnits.Count > 0)
-                {
-                    actionUI.EnableFor(selectableUnits);
-                    if (selectableUnits.Count == 1 && selectableUnits.First() is BaseBuilding building)
-                    {
-                        buildingBuildingUI.EnableFor(building);
-                    }
-                    else
-                    {
-                        buildingBuildingUI.Disable();
-                    }
-
-                }
-                else
-                {
-                    actionUI.Disable();
-                    buildingBuildingUI.Disable();
-                }
+                selectableUnits.Remove(commandable);
+                RefreshUI();
             }
         }
 
+        private void RefreshUI()
+        {
+            if (selectableUnits.Count > 0)
+            {
+                actionUI.EnableFor(selectableUnits);
+                if (selectableUnits.Count == 1 && selectableUnits.First() is BaseBuilding building)
+                {
+                    buildingBuildingUI.EnableFor(building);
+                }
+                else
+                {
+                    buildingBuildingUI.Disable();
+                }
 
+            }
+            else
+            {
+                actionUI.Disable();
+                buildingBuildingUI.Disable();
+            }
+        }
+        private void HandleUnitDeath(UnitDeathEvent args)
+        {
+            selectableUnits.Remove(args.Unit);
+            RefreshUI();
+        }
     }
 }
