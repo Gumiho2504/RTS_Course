@@ -38,7 +38,7 @@ namespace Gumiho_Rts.Behavoir
             }
 
             agent.SetDestination(targetPosition);
-            Debug.Log("Moving to " + targetPosition.ToString());
+            ///Debug.Log("Moving to " + targetPosition.ToString());
             return Status.Running;
         }
 
@@ -48,7 +48,8 @@ namespace Gumiho_Rts.Behavoir
             Vector3 targetPosition = GetTargetPosition();
             if (Vector3.Distance(agent.transform.position, targetPosition) <= agent.stoppingDistance)
             {
-                Debug.Log($"Already there On Update - ${Time.time} - agent.remainingDistance  {agent.remainingDistance} -distance :  {Vector3.Distance(agent.transform.position, targetPosition)}");
+                Debug.Log("Already there On Update Success");
+                //Debug.Log($"Already there On Update - ${Time.time} - agent.remainingDistance  {agent.remainingDistance} -distance :  {Vector3.Distance(agent.transform.position, targetPosition)}");
                 return Status.Success;
             }
             return Status.Running;
