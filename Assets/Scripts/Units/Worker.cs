@@ -57,16 +57,11 @@ namespace Gumiho_Rts.Units
         public GameObject Build(BuildingUnitSO building, Vector3 position)
         {
             var instance = Instantiate(building.Prefab, position, Quaternion.identity);
-            if (instance.TryGetComponent(out BaseBuilding baseBuilding))
-            {
-                baseBuilding.ShowBuildingVisualEffect();
-            }
-            else
+            if (!instance.TryGetComponent(out BaseBuilding _))
             {
                 Debug.LogError($"Missing Building Prefab on BuildingSO name:{building.name}! Can not build!");
                 return null;
             }
-
 
             behaviorGraphAgent.SetVariableValue(BUILDINGSO, building);
             behaviorGraphAgent.SetVariableValue(TARGET_LOCATION, position);
@@ -92,6 +87,19 @@ namespace Gumiho_Rts.Units
             SetCommandOverride(Array.Empty<ActionBase>());
 
             Stop();
+        }
+
+        public void ResumeBuilding(BaseBuilding building)
+        {
+            behaviorGraphAgent.SetVariableValue(TARGET_LOCATION, building.transform.position);
+            behaviorGraphAgent.SetVariableValue(BUILDING_UNDER_CONSTRUCTION, building);
+            behaviorGraphAgent.SetVariableValue(BUILDINGSO, building.BuildingSO);
+            behaviorGraphAgent.SetVariableValue<GameObject>(GHOST, null);
+            behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.BuildBuilding);
+
+            SetCommandOverride(new ActionBase[] { CancelBuildingCommand });
+            Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
+
         }
     }
 }

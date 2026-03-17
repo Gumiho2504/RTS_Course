@@ -249,7 +249,7 @@ namespace Gumiho_Rts
                     for (int i = 0; i < abstractUnits.Count; i++)
                     {
                         CommandContext context = new CommandContext(abstractUnits[i], hit, i);
-                        foreach (var command in abstractUnits[i].AvailableCommands)
+                        foreach (var command in GetAvailableCommands(abstractUnits[i]))
                         {
                             if (command.CanHandle(context))
                             {
@@ -262,6 +262,17 @@ namespace Gumiho_Rts
                     }
                 }
             }
+        }
+        private List<ActionBase> GetAvailableCommands(AbstractUnit unit)
+        {
+            OverrideCommandsCommand[] overrideCommandsCommands = unit.AvailableCommands.Where(command => command is OverrideCommandsCommand).Cast<OverrideCommandsCommand>().ToArray();
+            List<ActionBase> allAvailableCommands = new();
+            foreach (OverrideCommandsCommand overrideCommand in overrideCommandsCommands)
+            {
+                allAvailableCommands.AddRange(overrideCommand.commands.Where(command => command is not OverrideCommandsCommand));
+            }
+            allAvailableCommands.AddRange(unit.AvailableCommands.Where(command => command is not OverrideCommandsCommand));
+            return allAvailableCommands;
         }
 
 
@@ -312,8 +323,8 @@ namespace Gumiho_Rts
             for (int i = 0; i < abstractCommandable.Count; i++)
             {
                 CommandContext context = new CommandContext(abstractCommandable[i], hit, i);
-                if (activeAction.CanHandle(context))
-                    activeAction.Handle(context);
+                //  if (activeAction.CanHandle(context))
+                activeAction.Handle(context);
             }
             activeAction = null;
         }

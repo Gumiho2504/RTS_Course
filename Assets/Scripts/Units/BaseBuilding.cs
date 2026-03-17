@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Gumiho_Rts.EventBus;
+using Gumiho_Rts.Events;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,20 +14,23 @@ namespace Gumiho_Rts.Units
         public UnitSO[] Queue => buildingQueue.ToArray();
         [field: SerializeField] public float CurrentQueueStartTime { get; private set; }
         [field: SerializeField] public UnitSO BuildingUnit { get; private set; }
+        [field: SerializeField] public BuildingProgress Progress { get; private set; } = new BuildingProgress(0, 0, BuildingProgress.BuildingState.Destroy);
+
 
         public delegate void QueueUpdatedEvent(UnitSO[] unitsInQueue);
         public event QueueUpdatedEvent OnQueueUpdated;
 
         [field: SerializeField] public MeshRenderer MainMeshRenderer { get; private set; }
 
+        private IBuildingBuilder unitBuildingThis;
         private List<UnitSO> buildingQueue = new(MAX_QUEUE_SIZE);
         private const int MAX_QUEUE_SIZE = 5;
-        private BuildingUnitSO buildingUnitSO;
+       [field:SerializeField] public  BuildingUnitSO BuildingSO { get; private set; }
         [SerializeField] private NavMeshObstacle navMeshObstacle;
         [SerializeField] private Material primaryMaterial;
         private void Awake()
         {
-            buildingUnitSO = UnitSO as BuildingUnitSO;
+            BuildingSO = UnitSO as BuildingUnitSO;
         }
 
         protected override void Start()
@@ -33,7 +39,11 @@ namespace Gumiho_Rts.Units
             {
                 MainMeshRenderer.material = primaryMaterial;
             }
+            Progress = new BuildingProgress(Progress.StartTime, 1, BuildingProgress.BuildingState.Completed);
+            unitBuildingThis = null;
+            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
         }
+
 
         public void BuildUnit(UnitSO unit)
         {
@@ -89,9 +99,28 @@ namespace Gumiho_Rts.Units
 
         }
 
-        public void ShowBuildingVisualEffect()
+        public void StartBuilding(IBuildingBuilder buildingBuilder)
         {
-            MainMeshRenderer.material = buildingUnitSO.BuildingGhostPlacement;
+            unitBuildingThis = buildingBuilder;
+            MainMeshRenderer.material = BuildingSO.BuildingGhostPlacement;
+
+            Progress = new BuildingProgress(Time.time - BuildingSO.BuildTime * Progress.Progress, Progress.Progress, BuildingProgress.BuildingState.Building);
+            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
+            Bus<UnitDeathEvent>.OnEvent += HandleUnitDeath;
+        }
+
+        private void HandleUnitDeath(UnitDeathEvent args)
+        {
+            if (args.Unit.TryGetComponent(out IBuildingBuilder builder) && builder == unitBuildingThis)
+            {
+                Progress = new BuildingProgress(Progress.StartTime, (Time.time - Progress.StartTime) / BuildingSO.BuildTime, BuildingProgress.BuildingState.Paused);
+                Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
         }
     }
 }

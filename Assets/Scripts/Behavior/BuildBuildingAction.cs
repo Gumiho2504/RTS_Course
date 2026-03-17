@@ -28,11 +28,20 @@ namespace Gumiho_Rts.Behavoir
                 Debug.Log($"Building Failed");
                 return Status.Failure;
             }
-
-            startBuildTime = Time.time;
-            GameObject building = GameObject.Instantiate(BuildingSO.Value.Prefab, TargetLocation.Value, Quaternion.identity);
+            if(BuildingUnderConstruction.Value == null)
+            {
+                GameObject building = GameObject.Instantiate(BuildingSO.Value.Prefab, TargetLocation.Value, Quaternion.identity);
+                if (!building.TryGetComponent(out completedBuilding) || completedBuilding.MainMeshRenderer == null) return Status.Failure;
+            }
+            else
+            {
+                completedBuilding = BuildingUnderConstruction.Value;
+            }
+            completedBuilding.StartBuilding(Self.Value.GetComponent<IBuildingBuilder>());
+            startBuildTime = completedBuilding.Progress.StartTime;
+          
             //   GameObject building = GameObject.Instantiate(BuildingSO.Value.Prefab);
-            if (!building.TryGetComponent(out completedBuilding) || completedBuilding.MainMeshRenderer == null) return Status.Failure;
+           
 
             buildingRenderer = completedBuilding.MainMeshRenderer;
             BuildingUnderConstruction.Value = completedBuilding;
