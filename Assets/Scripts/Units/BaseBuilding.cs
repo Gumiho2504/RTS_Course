@@ -25,16 +25,18 @@ namespace Gumiho_Rts.Units
         private IBuildingBuilder unitBuildingThis;
         private List<UnitSO> buildingQueue = new(MAX_QUEUE_SIZE);
         private const int MAX_QUEUE_SIZE = 5;
-       [field:SerializeField] public  BuildingUnitSO BuildingSO { get; private set; }
+        [field: SerializeField] public BuildingUnitSO BuildingSO { get; private set; }
         [SerializeField] private NavMeshObstacle navMeshObstacle;
         [SerializeField] private Material primaryMaterial;
         private void Awake()
         {
             BuildingSO = UnitSO as BuildingUnitSO;
         }
+     
 
         protected override void Start()
         {
+            base.Start();
             if (MainMeshRenderer != null)
             {
                 MainMeshRenderer.material = primaryMaterial;

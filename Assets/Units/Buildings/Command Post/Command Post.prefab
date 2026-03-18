@@ -137,7 +137,12 @@ MonoBehaviour:
   <MaxHealth>k__BackingField: 0
   <CurrentQueueStartTime>k__BackingField: 0
   <BuildingUnit>k__BackingField: {fileID: 0}
+  <Progress>k__BackingField:
+    <StartTime>k__BackingField: 0
+    <Progress>k__BackingField: 0
+    <State>k__BackingField: 3
   <MainMeshRenderer>k__BackingField: {fileID: 4728886198864161701}
+  <BuildingSO>k__BackingField: {fileID: 0}
   navMeshObstacle: {fileID: 8988252152151198159}
   primaryMaterial: {fileID: 2100000, guid: b35c532178876e94f917ff0196f65258, type: 2}
 --- !u!208 &8988252152151198159
@@ -147,7 +152,7 @@ NavMeshObstacle:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1589499662120937400}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Shape: 1
   m_Extents: {x: 1.575, y: 1.885, z: 1.555}

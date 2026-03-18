@@ -7,6 +7,7 @@ namespace Gumiho_Rts.Commands
     public class BuildBuildingCommand : ActionBase
     {
         [field: SerializeField] public BuildingUnitSO BuildingSO { get; private set; }
+        [field: SerializeField] public BuildingRestrictionSO Restriction { get; private set; }
         public override bool CanHandle(CommandContext context)
         {
             if (context.Commandable is not IBuildingBuilder) return false;
@@ -16,6 +17,7 @@ namespace Gumiho_Rts.Commands
                  && BuildingSO == building.BuildingSO
                  && (building.Progress.State == BuildingProgress.BuildingState.Paused || building.Progress.State == BuildingProgress.BuildingState.Destroy);
             }
+            Debug.Log($"Hit {context.Hit.collider.gameObject.name}");
             return true;
         }
 
@@ -24,10 +26,12 @@ namespace Gumiho_Rts.Commands
             IBuildingBuilder builder = context.Commandable as IBuildingBuilder;
             if (context.Hit.collider != null && context.Hit.collider.TryGetComponent(out BaseBuilding building))
             {
+                Debug.Log("Resume Building");
                 builder.ResumeBuilding(building);
             }
             else
             {
+                Debug.Log("Build Building");
                 builder.Build(BuildingSO, context.Hit.point);
             }
         }

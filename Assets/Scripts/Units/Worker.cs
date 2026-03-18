@@ -91,10 +91,12 @@ namespace Gumiho_Rts.Units
 
         public void ResumeBuilding(BaseBuilding building)
         {
+            Debug.Log("Resume Building" + building.name);
             behaviorGraphAgent.SetVariableValue(TARGET_LOCATION, building.transform.position);
             behaviorGraphAgent.SetVariableValue(BUILDING_UNDER_CONSTRUCTION, building);
-            behaviorGraphAgent.SetVariableValue(BUILDINGSO, building.BuildingSO);
             behaviorGraphAgent.SetVariableValue<GameObject>(GHOST, null);
+            behaviorGraphAgent.SetVariableValue(BUILDINGSO, building.BuildingSO);
+
             behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.BuildBuilding);
 
             SetCommandOverride(new ActionBase[] { CancelBuildingCommand });

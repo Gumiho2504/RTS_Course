@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Gumiho_Rts.Commands;
-using Gumiho_Rts.Environment;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
 using Gumiho_Rts.Units;
@@ -227,15 +226,17 @@ namespace Gumiho_Rts
         {
             if (activeAction == null && !wasMouseDownOnUI) return;
 
-            if (selectableUnits.Count == 0) return;
+             if (selectableUnits.Count == 0) return;
             Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
             if (Mouse.current.rightButton.wasReleasedThisFrame)
             {
+
                 // find applicable command
 
                 // issue command to all units
                 if (Physics.Raycast(ray, out RaycastHit hit, maxDistance: float.MaxValue, layerMask: floorLayerMask | interactableLayerMask))
                 {
+                    print("Clicked on " + hit.transform.name);
                     List<AbstractUnit> abstractUnits = new(selectableUnits.Count);
                     foreach (ISelectable selectable in selectableUnits)
                     {
@@ -249,6 +250,7 @@ namespace Gumiho_Rts
                     for (int i = 0; i < abstractUnits.Count; i++)
                     {
                         CommandContext context = new CommandContext(abstractUnits[i], hit, i);
+                        print(abstractUnits[i].gameObject.name);
                         foreach (var command in GetAvailableCommands(abstractUnits[i]))
                         {
                             if (command.CanHandle(context))
@@ -290,6 +292,7 @@ namespace Gumiho_Rts
             if (activeAction == null && Physics.Raycast(ray, out RaycastHit hit, maxDistance: 100f, layerMask: selectableUnityLayerMask | interactableLayerMask)
             && hit.transform.TryGetComponent(out ISelectable selectable))
             {
+
                 selectable.Select();
             }
             else if (activeAction != null

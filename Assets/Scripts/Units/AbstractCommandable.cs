@@ -14,7 +14,7 @@ namespace Gumiho_Rts.Units
         [field: SerializeField] public ActionBase[] AvailableCommands { get; private set; }
         [field: SerializeField] public int CurrentHealth { get; private set; }
         [field: SerializeField] public int MaxHealth { get; private set; }
-        private ActionBase[] initialCommands;
+        [field: SerializeField] private ActionBase[] initialCommands;
 
         protected virtual void Start()
         {
@@ -25,6 +25,7 @@ namespace Gumiho_Rts.Units
 
         public void Select()
         {
+            // if (!this.enabled) return;
             decalProjector.gameObject.SetActive(true);
             Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
         }
@@ -32,17 +33,20 @@ namespace Gumiho_Rts.Units
         public void Deselect()
         {
             decalProjector.gameObject.SetActive(false);
-            SetCommandOverride(null);
+            SetCommandOverride();
             Bus<UnitDeselectedEvent>.Raise(new UnitDeselectedEvent(this));
         }
-        public void SetCommandOverride(ActionBase[] command)
+        public void SetCommandOverride(ActionBase[] command = null)
         {
+
             if (command == null || command.Length == 0)
             {
                 AvailableCommands = initialCommands;
             }
             else
+            {
                 AvailableCommands = command;
+            }
             Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
         }
     }
