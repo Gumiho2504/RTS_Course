@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Gumiho_Rts.Commands
 {
-    [CreateAssetMenu(menuName = " Buildings/Command/Build Unit", fileName = "Build Unit", order = 200)]
+    [CreateAssetMenu(fileName = "Build Unit", menuName = " Buildings/Commands/Build Unit")]
     public class BuildUnitCommand : ActionBase
     {
         [field: SerializeField] public UnitSO Unit { get; private set; }
@@ -14,10 +14,10 @@ namespace Gumiho_Rts.Commands
 
         public override void Handle(CommandContext context)
         {
-            Debug.Log("Starting  Building .... Unity work in progress");
+           // Debug.Log("Starting  Building .... Unity work in progress");
             BaseBuilding building = (BaseBuilding)context.Commandable;
             building.BuildUnit(Unit);
-            Debug.Log("Finished  Building .... Unity work in progress");
+            //Debug.Log("Finished  Building .... Unity work in progress");
         }
     }
 }

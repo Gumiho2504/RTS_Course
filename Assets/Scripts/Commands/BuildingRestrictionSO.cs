@@ -3,6 +3,7 @@ using UnityEngine.AI;
 
 namespace Gumiho_Rts.Commands
 {
+    [CreateAssetMenu(fileName = "Building Restriction", menuName = "Buildings/Restriction")]
     public class BuildingRestrictionSO : ScriptableObject
     {
         [field:SerializeField] public bool MustBeFullOnNavMesh {get;private set;} = true;

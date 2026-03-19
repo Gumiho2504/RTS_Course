@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using UnityEngine;
 using Gumiho_Rts.Units;
+using System.Linq;
 namespace Gumiho_Rts.Commands
 {
     [CreateAssetMenu(fileName = "Build Building", menuName = "Units/Commands/Build Building")]
     public class BuildBuildingCommand : ActionBase
     {
         [field: SerializeField] public BuildingUnitSO BuildingSO { get; private set; }
-        [field: SerializeField] public BuildingRestrictionSO Restriction { get; private set; }
+        [field: SerializeField] public BuildingRestrictionSO[] Restrictions { get; private set; }
         public override bool CanHandle(CommandContext context)
         {
             if (context.Commandable is not IBuildingBuilder) return false;
@@ -17,8 +18,7 @@ namespace Gumiho_Rts.Commands
                  && BuildingSO == building.BuildingSO
                  && (building.Progress.State == BuildingProgress.BuildingState.Paused || building.Progress.State == BuildingProgress.BuildingState.Destroy);
             }
-            Debug.Log($"Hit {context.Hit.collider.gameObject.name}");
-            return true;
+            return AllRestrictionsPass(context.Hit.point);
         }
 
         public override void Handle(CommandContext context)
@@ -29,11 +29,12 @@ namespace Gumiho_Rts.Commands
                 Debug.Log("Resume Building");
                 builder.ResumeBuilding(building);
             }
-            else
+            else if (AllRestrictionsPass(context.Hit.point))
             {
                 Debug.Log("Build Building");
                 builder.Build(BuildingSO, context.Hit.point);
             }
         }
+        private bool AllRestrictionsPass(Vector3 point) => Restrictions.Length == 0 || Restrictions.All(restriction => restriction.CanPlace(point));
     }
 }
