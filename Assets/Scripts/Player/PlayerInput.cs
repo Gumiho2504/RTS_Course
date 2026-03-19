@@ -7,6 +7,7 @@ using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
 using Gumiho_Rts.Units;
 using Unity.Cinemachine;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -24,6 +25,10 @@ namespace Gumiho_Rts
         [SerializeField] private LayerMask floorLayerMask;
         [SerializeField] private LayerMask interactableLayerMask;
         [SerializeField] private RectTransform selectionBox;
+        [SerializeField][ColorUsage(showAlpha: true,hdr: true)] private Color errorTintColor = Color.red;
+        [SerializeField] [ColorUsage(showAlpha: true,hdr: true)] private Color errorFresnelColor = new(4, 1.7f, 0, 2);
+        [SerializeField] [ColorUsage(showAlpha: true,hdr: true)] private Color availableToPlaceTintColor = new(0.2f, 0.65f, 1, 2);
+        [SerializeField] [ColorUsage(showAlpha: true,hdr: true)] private Color availableToPlaceFresnelColor = new(4, 1.7f, 0, 2);
 
         private CinemachineFollow cinemachineFollow;
         private float zoomStartTime;
@@ -38,6 +43,9 @@ namespace Gumiho_Rts
         private bool wasMouseDownOnUI;
 
         private GameObject ghostInstance;
+        private MeshRenderer ghostRenderer;
+        private static readonly int TINT = Shader.PropertyToID("_Tint");
+        private static readonly int FRESNEL = Shader.PropertyToID("_FresnelColor");
 
         private void Awake()
         {
@@ -81,6 +89,7 @@ namespace Gumiho_Rts
             else if (activeAction.GhostPrefab != null)
             {
                 ghostInstance = Instantiate(activeAction.GhostPrefab);
+                ghostRenderer = ghostInstance.GetComponentInChildren<MeshRenderer>();
             }
         }
 
@@ -139,6 +148,11 @@ namespace Gumiho_Rts
             if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, floorLayerMask))
             {
                 ghostInstance.transform.position = hit.point;
+                bool allRestrictionsPass = activeAction.AllRestrictionsPass(hit.point);
+                ghostRenderer.material.SetColor(TINT, allRestrictionsPass ? availableToPlaceTintColor : errorTintColor);
+                ghostRenderer.material.SetColor(FRESNEL, allRestrictionsPass ? availableToPlaceFresnelColor : errorFresnelColor);
+            
+            
             }
 
 
@@ -226,7 +240,7 @@ namespace Gumiho_Rts
         {
             if (activeAction == null && !wasMouseDownOnUI) return;
 
-             if (selectableUnits.Count == 0) return;
+            if (selectableUnits.Count == 0) return;
             Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
             if (Mouse.current.rightButton.wasReleasedThisFrame)
             {
