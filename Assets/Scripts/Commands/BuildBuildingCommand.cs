@@ -2,6 +2,7 @@
 using UnityEngine;
 using Gumiho_Rts.Units;
 using System.Linq;
+using Gumiho_Rts.Player;
 namespace Gumiho_Rts.Commands
 {
     [CreateAssetMenu(fileName = "Build Building", menuName = "Units/Commands/Build Building")]
@@ -18,7 +19,7 @@ namespace Gumiho_Rts.Commands
                  && BuildingSO == building.BuildingSO
                  && (building.Progress.State == BuildingProgress.BuildingState.Paused || building.Progress.State == BuildingProgress.BuildingState.Destroy);
             }
-            return AllRestrictionsPass(context.Hit.point);
+            return AllRestrictionsPass(context.Hit.point) && HasEnoughSupply();
         }
 
         public override void Handle(CommandContext context)
@@ -29,12 +30,12 @@ namespace Gumiho_Rts.Commands
                 Debug.Log("Resume Building");
                 builder.ResumeBuilding(building);
             }
-            else if (AllRestrictionsPass(context.Hit.point))
+            else if (AllRestrictionsPass(context.Hit.point) && HasEnoughSupply())
             {
                 Debug.Log("Build Building");
                 builder.Build(BuildingSO, context.Hit.point);
             }
         }
-      
+        private bool HasEnoughSupply() => BuildingSO.Cost.Minerals <= Supplies.Minerals && BuildingSO.Cost.Gas <= Supplies.Gas;
     }
 }

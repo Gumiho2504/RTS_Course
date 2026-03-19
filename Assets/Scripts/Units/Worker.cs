@@ -70,6 +70,8 @@ namespace Gumiho_Rts.Units
 
             SetCommandOverride(new ActionBase[] { CancelBuildingCommand });
             Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
+            Bus<SupplyEvent>.Raise(new SupplyEvent(-building.Cost.Minerals, building.Cost.MineralsSO));
+            Bus<SupplyEvent>.Raise(new SupplyEvent(-building.Cost.Gas, building.Cost.GasSO));
 
             return instance;
         }
@@ -83,6 +85,10 @@ namespace Gumiho_Rts.Units
             if (behaviorGraphAgent.GetVariable(BUILDING_UNDER_CONSTRUCTION, out BlackboardVariable<BaseBuilding> building) && building.Value != null)
             {
                 Destroy(building.Value.gameObject);
+
+                BuildingUnitSO buildingUnitSO = building.Value.BuildingSO;
+                Bus<SupplyEvent>.Raise(new SupplyEvent(Mathf.FloorToInt(buildingUnitSO.Cost.Minerals * 0.75f), buildingUnitSO.Cost.MineralsSO));
+                Bus<SupplyEvent>.Raise(new SupplyEvent(Mathf.FloorToInt(buildingUnitSO.Cost.Gas * 0.75f), buildingUnitSO.Cost.GasSO));
             }
             SetCommandOverride(Array.Empty<ActionBase>());
 

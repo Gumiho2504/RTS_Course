@@ -32,7 +32,7 @@ namespace Gumiho_Rts.Units
         {
             BuildingSO = UnitSO as BuildingUnitSO;
         }
-     
+
 
         protected override void Start()
         {
@@ -54,6 +54,10 @@ namespace Gumiho_Rts.Units
                 Debug.LogError("BuildUnit called when the queue was already full ! This is not supported!");
                 return;
             }
+            
+            Bus<SupplyEvent>.Raise(new SupplyEvent(-unit.Cost.Minerals, unit.Cost.MineralsSO));
+            Bus<SupplyEvent>.Raise(new SupplyEvent(-unit.Cost.Gas, unit.Cost.GasSO));
+
             buildingQueue.Add(unit);
             if (buildingQueue.Count == 1)
                 StartCoroutine(DoBuildUnits());
@@ -68,6 +72,11 @@ namespace Gumiho_Rts.Units
                 Debug.LogError("CancelBuildUnit called with an invalid index");
                 return;
             }
+            
+            UnitSO unitSO = buildingQueue[index];
+            Bus<SupplyEvent>.Raise(new SupplyEvent(unitSO.Cost.Minerals, unitSO.Cost.MineralsSO));
+            Bus<SupplyEvent>.Raise(new SupplyEvent(unitSO.Cost.Gas, unitSO.Cost.GasSO));
+
             buildingQueue.RemoveAt(index);
             if (index == 0)
             {
