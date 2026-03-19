@@ -13723,6 +13723,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 896
   selectionBox: {fileID: 689788064}
+  errorTintColor: {r: 1, g: 0, b: 0, a: 1}
+  errorFresnelColor: {r: 4, g: 1.7, b: 0, a: 2}
+  availableToPlaceTintColor: {r: 0.2, g: 0.65, b: 1, a: 2}
+  availableToPlaceFresnelColor: {r: 4, g: 1.7, b: 0, a: 2}
 --- !u!114 &1072601484
 MonoBehaviour:
   m_ObjectHideFlags: 0

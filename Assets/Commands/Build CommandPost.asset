@@ -16,4 +16,7 @@ MonoBehaviour:
   <Slot>k__BackingField: 0
   <RequiresClickToActivate>k__BackingField: 1
   <GhostPrefab>k__BackingField: {fileID: 8369938181539895083, guid: 1588c320b7cc24b0493f06f8673686c7, type: 3}
+  <Restrictions>k__BackingField:
+  - {fileID: 11400000, guid: 1ec3308ae40f94e6e886cebc808b5a80, type: 2}
+  - {fileID: 11400000, guid: 28c9a47aed62049908e2404a5168f56a, type: 2}
   <BuildingSO>k__BackingField: {fileID: 11400000, guid: 4806c17484ea44fc291bb4d4ab047493, type: 2}
