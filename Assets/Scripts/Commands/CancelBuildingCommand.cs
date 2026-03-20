@@ -5,7 +5,7 @@ namespace Gumiho_Rts.Commands
 {
 
     [CreateAssetMenu(fileName = "Cancel Building", menuName = "Units/Commands/Cancel Building")]
-    public class CancelBuildingCommand : ActionBase
+    public class CancelBuildingCommand : BaseCommand
     {
         public override bool CanHandle(CommandContext context)
         {

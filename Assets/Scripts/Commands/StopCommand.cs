@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Gumiho_Rts.Commands
 {
     [CreateAssetMenu(fileName = "StopCommand", menuName = "Units/Commands/Stop", order = 101)]
-    public class StopCommand : ActionBase
+    public class StopCommand : BaseCommand
     {
         public override bool CanHandle(CommandContext context)
         {

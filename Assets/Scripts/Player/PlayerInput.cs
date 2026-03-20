@@ -25,10 +25,10 @@ namespace Gumiho_Rts
         [SerializeField] private LayerMask floorLayerMask;
         [SerializeField] private LayerMask interactableLayerMask;
         [SerializeField] private RectTransform selectionBox;
-        [SerializeField][ColorUsage(showAlpha: true,hdr: true)] private Color errorTintColor = Color.red;
-        [SerializeField] [ColorUsage(showAlpha: true,hdr: true)] private Color errorFresnelColor = new(4, 1.7f, 0, 2);
-        [SerializeField] [ColorUsage(showAlpha: true,hdr: true)] private Color availableToPlaceTintColor = new(0.2f, 0.65f, 1, 2);
-        [SerializeField] [ColorUsage(showAlpha: true,hdr: true)] private Color availableToPlaceFresnelColor = new(4, 1.7f, 0, 2);
+        [SerializeField][ColorUsage(showAlpha: true, hdr: true)] private Color errorTintColor = Color.red;
+        [SerializeField][ColorUsage(showAlpha: true, hdr: true)] private Color errorFresnelColor = new(4, 1.7f, 0, 2);
+        [SerializeField][ColorUsage(showAlpha: true, hdr: true)] private Color availableToPlaceTintColor = new(0.2f, 0.65f, 1, 2);
+        [SerializeField][ColorUsage(showAlpha: true, hdr: true)] private Color availableToPlaceFresnelColor = new(4, 1.7f, 0, 2);
 
         private CinemachineFollow cinemachineFollow;
         private float zoomStartTime;
@@ -39,7 +39,7 @@ namespace Gumiho_Rts
         public HashSet<AbstractUnit> AliveUnits = new(100);
         private HashSet<AbstractUnit> addedUnits = new(24);
         private List<ISelectable> selectableUnits = new(12);
-        private ActionBase activeAction;
+        private BaseCommand activeCommand;
         private bool wasMouseDownOnUI;
 
         private GameObject ghostInstance;
@@ -59,7 +59,7 @@ namespace Gumiho_Rts
             Bus<UnitSelectedEvent>.OnEvent += HandleUnitSelected;
             Bus<UnitDeselectedEvent>.OnEvent += HandleUnitDeselected;
             Bus<UnitSpawnEvent>.OnEvent += HandleUnitSpawned;
-            Bus<ActionSelectedEvent>.OnEvent += HandleActionSelected;
+            Bus<CommandSelectedEvent>.OnEvent += HandleActionSelected;
             Bus<UnitDeathEvent>.OnEvent += HandleUnitDeath;
 
         }
@@ -71,7 +71,7 @@ namespace Gumiho_Rts
             Bus<UnitSelectedEvent>.OnEvent -= HandleUnitSelected;
             Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
             Bus<UnitSpawnEvent>.OnEvent -= HandleUnitSpawned;
-            Bus<ActionSelectedEvent>.OnEvent -= HandleActionSelected;
+            Bus<CommandSelectedEvent>.OnEvent -= HandleActionSelected;
             Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
 
 
@@ -79,16 +79,16 @@ namespace Gumiho_Rts
 
 
 
-        private void HandleActionSelected(ActionSelectedEvent args)
+        private void HandleActionSelected(CommandSelectedEvent args)
         {
-            activeAction = args.Action;
-            if (!activeAction.RequiresClickToActivate)
+            activeCommand = args.Command;
+            if (!activeCommand.RequiresClickToActivate)
             {
                 ActivateAction(new RaycastHit());
             }
-            else if (activeAction.GhostPrefab != null)
+            else if (activeCommand.GhostPrefab != null)
             {
-                ghostInstance = Instantiate(activeAction.GhostPrefab);
+                ghostInstance = Instantiate(activeCommand.GhostPrefab);
                 ghostRenderer = ghostInstance.GetComponentInChildren<MeshRenderer>();
             }
         }
@@ -140,7 +140,7 @@ namespace Gumiho_Rts
                 print("Activating");
                 Destroy(ghostInstance);
                 ghostInstance = null;
-                activeAction = null;
+                activeCommand = null;
                 return;
             }
             var mouseVector = Mouse.current.position.ReadValue();
@@ -148,11 +148,11 @@ namespace Gumiho_Rts
             if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, floorLayerMask))
             {
                 ghostInstance.transform.position = hit.point;
-                bool allRestrictionsPass = activeAction.AllRestrictionsPass(hit.point);
+                bool allRestrictionsPass = activeCommand.AllRestrictionsPass(hit.point);
                 ghostRenderer.material.SetColor(TINT, allRestrictionsPass ? availableToPlaceTintColor : errorTintColor);
                 ghostRenderer.material.SetColor(FRESNEL, allRestrictionsPass ? availableToPlaceFresnelColor : errorFresnelColor);
-            
-            
+
+
             }
 
 
@@ -179,7 +179,7 @@ namespace Gumiho_Rts
 
         private void HandleMouseUp()
         {
-            if (!Keyboard.current.shiftKey.isPressed && activeAction == null && !wasMouseDownOnUI)
+            if (!Keyboard.current.shiftKey.isPressed && activeCommand == null && !wasMouseDownOnUI)
             {
                 DeselectAllUnits();
             }
@@ -194,7 +194,7 @@ namespace Gumiho_Rts
 
         private void HandleDrag()
         {
-            if (activeAction != null || wasMouseDownOnUI) return;
+            if (activeCommand != null || wasMouseDownOnUI) return;
             Bounds selectionBounds = ResizeSelectedBox();
             foreach (AbstractUnit unit in AliveUnits)
             {
@@ -238,7 +238,7 @@ namespace Gumiho_Rts
 
         private void HandleRightMuseClick()
         {
-            if (activeAction == null && !wasMouseDownOnUI) return;
+            if (activeCommand == null && !wasMouseDownOnUI) return;
 
             if (selectableUnits.Count == 0) return;
             Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
@@ -279,10 +279,10 @@ namespace Gumiho_Rts
                 }
             }
         }
-        private List<ActionBase> GetAvailableCommands(AbstractUnit unit)
+        private List<BaseCommand> GetAvailableCommands(AbstractUnit unit)
         {
             OverrideCommandsCommand[] overrideCommandsCommands = unit.AvailableCommands.Where(command => command is OverrideCommandsCommand).Cast<OverrideCommandsCommand>().ToArray();
-            List<ActionBase> allAvailableCommands = new();
+            List<BaseCommand> allAvailableCommands = new();
             foreach (OverrideCommandsCommand overrideCommand in overrideCommandsCommands)
             {
                 allAvailableCommands.AddRange(overrideCommand.commands.Where(command => command is not OverrideCommandsCommand));
@@ -303,13 +303,13 @@ namespace Gumiho_Rts
             Ray ray = camera.ScreenPointToRay(mouseVector);
             //  Debug.Log($"{Physics.Raycast(ray, out RaycastHit ht, float.MaxValue, layerMask: floorLayerMask | interactableLayerMask)} | {ht.transform.name} | {ht.transform.TryGetComponent(out GatherableSupply s)} | {s}");
 
-            if (activeAction == null && Physics.Raycast(ray, out RaycastHit hit, maxDistance: 100f, layerMask: selectableUnityLayerMask | interactableLayerMask)
+            if (activeCommand == null && Physics.Raycast(ray, out RaycastHit hit, maxDistance: 100f, layerMask: selectableUnityLayerMask | interactableLayerMask)
             && hit.transform.TryGetComponent(out ISelectable selectable))
             {
 
                 selectable.Select();
             }
-            else if (activeAction != null
+            else if (activeCommand != null
             && !EventSystem.current.IsPointerOverGameObject()
             && Physics.Raycast(ray, out hit, float.MaxValue, layerMask: floorLayerMask | interactableLayerMask))
             {
@@ -341,9 +341,9 @@ namespace Gumiho_Rts
             {
                 CommandContext context = new CommandContext(abstractCommandable[i], hit, i);
                 //  if (activeAction.CanHandle(context))
-                activeAction.Handle(context);
+                activeCommand.Handle(context);
             }
-            activeAction = null;
+            activeCommand = null;
         }
 
         private void HandleRotation()

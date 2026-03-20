@@ -2,9 +2,9 @@ using UnityEngine;
 namespace Gumiho_Rts.Commands
 {
     [CreateAssetMenu(fileName = "Override Commands", menuName = "Units/Commands/Override Commands", order = 110)]
-    public class OverrideCommandsCommand : ActionBase
+    public class OverrideCommandsCommand : BaseCommand
     {
-        [field: SerializeField] public ActionBase[] commands { get; private set; }
+        [field: SerializeField] public BaseCommand[] commands { get; private set; }
         public override bool CanHandle(CommandContext context)
         {
             return context.Commandable != null;

@@ -23,7 +23,7 @@ namespace Gumiho_Rts.Units
                 return false;
             }
         }
-        [SerializeField] private ActionBase CancelBuildingCommand;
+        [SerializeField] private BaseCommand CancelBuildingCommand;
         protected override void Start()
         {
             base.Start();
@@ -68,7 +68,7 @@ namespace Gumiho_Rts.Units
             behaviorGraphAgent.SetVariableValue(GHOST, instance);
             behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.BuildBuilding);
 
-            SetCommandOverride(new ActionBase[] { CancelBuildingCommand });
+            SetCommandOverride(new BaseCommand[] { CancelBuildingCommand });
             Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
             Bus<SupplyEvent>.Raise(new SupplyEvent(-building.Cost.Minerals, building.Cost.MineralsSO));
             Bus<SupplyEvent>.Raise(new SupplyEvent(-building.Cost.Gas, building.Cost.GasSO));
@@ -90,7 +90,7 @@ namespace Gumiho_Rts.Units
                 Bus<SupplyEvent>.Raise(new SupplyEvent(Mathf.FloorToInt(buildingUnitSO.Cost.Minerals * 0.75f), buildingUnitSO.Cost.MineralsSO));
                 Bus<SupplyEvent>.Raise(new SupplyEvent(Mathf.FloorToInt(buildingUnitSO.Cost.Gas * 0.75f), buildingUnitSO.Cost.GasSO));
             }
-            SetCommandOverride(Array.Empty<ActionBase>());
+            SetCommandOverride(Array.Empty<BaseCommand>());
 
             Stop();
         }
@@ -105,7 +105,7 @@ namespace Gumiho_Rts.Units
 
             behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.BuildBuilding);
 
-            SetCommandOverride(new ActionBase[] { CancelBuildingCommand });
+            SetCommandOverride(new BaseCommand[] { CancelBuildingCommand });
             Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
 
         }

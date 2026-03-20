@@ -6,10 +6,10 @@ using Gumiho_Rts.Player;
 namespace Gumiho_Rts.Commands
 {
     [CreateAssetMenu(fileName = "Build Building", menuName = "Units/Commands/Build Building")]
-    public class BuildBuildingCommand : ActionBase
+    public class BuildBuildingCommand : BaseCommand
     {
         [field: SerializeField] public BuildingUnitSO BuildingSO { get; private set; }
-     
+
         public override bool CanHandle(CommandContext context)
         {
             if (context.Commandable is not IBuildingBuilder) return false;

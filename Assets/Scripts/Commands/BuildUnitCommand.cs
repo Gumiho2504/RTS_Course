@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Gumiho_Rts.Commands
 {
     [CreateAssetMenu(fileName = "Build Unit", menuName = " Buildings/Commands/Build Unit")]
-    public class BuildUnitCommand : ActionBase
+    public class BuildUnitCommand : BaseCommand
     {
         [field: SerializeField] public UnitSO Unit { get; private set; }
         public override bool CanHandle(CommandContext context)

@@ -72,14 +72,14 @@ namespace Gumiho_Rts.UI.Containers
         private void RefreshButtons(HashSet<AbstractCommandable> selectedUnits)
         {
 
-            HashSet<ActionBase> availableCommands = new(9);
+            HashSet<BaseCommand> availableCommands = new(9);
             foreach (AbstractCommandable commandable in selectedUnits)
             {
                 availableCommands.UnionWith(commandable.AvailableCommands);
             }
             for (int i = 0; i < actionButtons.Length; i++)
             {
-                ActionBase actionBaseForSlot = availableCommands.Where(action => action.Slot == i).FirstOrDefault();
+                BaseCommand actionBaseForSlot = availableCommands.Where(action => action.Slot == i).FirstOrDefault();
                 if (actionBaseForSlot != null)
                 {
                     actionButtons[i].EnableFor(actionBaseForSlot, HandleClick(actionBaseForSlot));
@@ -91,9 +91,9 @@ namespace Gumiho_Rts.UI.Containers
             }
         }
 
-        private UnityAction HandleClick(ActionBase action)
+        private UnityAction HandleClick(BaseCommand action)
         {
-            return () => Bus<ActionSelectedEvent>.Raise(new ActionSelectedEvent(action));
+            return () => Bus<CommandSelectedEvent>.Raise(new CommandSelectedEvent(action));
         }
 
 

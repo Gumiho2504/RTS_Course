@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Gumiho_Rts.Commands
 {
-    public abstract class ActionBase : ScriptableObject, ICommand
+    public abstract class BaseCommand : ScriptableObject, ICommand
     {
         [field: SerializeField] public Sprite Icon { get; private set; }
         [field: SerializeField] public int Slot { get; private set; }
@@ -13,7 +13,7 @@ namespace Gumiho_Rts.Commands
         [field: SerializeField] public BuildingRestrictionSO[] Restrictions { get; private set; }
         public abstract bool CanHandle(CommandContext context);
         public abstract void Handle(CommandContext context);
-        public  bool AllRestrictionsPass(Vector3 point) => Restrictions.Length == 0 || Restrictions.All(restriction => restriction.CanPlace(point));
+        public bool AllRestrictionsPass(Vector3 point) => Restrictions.Length == 0 || Restrictions.All(restriction => restriction.CanPlace(point));
     }
 
 }

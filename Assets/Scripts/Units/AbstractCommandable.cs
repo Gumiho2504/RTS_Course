@@ -11,10 +11,10 @@ namespace Gumiho_Rts.Units
         [SerializeField] private DecalProjector decalProjector;
         [field: SerializeField] public UnitSO UnitSO { get; private set; }
 
-        [field: SerializeField] public ActionBase[] AvailableCommands { get; private set; }
+        [field: SerializeField] public BaseCommand[] AvailableCommands { get; private set; }
         [field: SerializeField] public int CurrentHealth { get; private set; }
         [field: SerializeField] public int MaxHealth { get; private set; }
-        [field: SerializeField] private ActionBase[] initialCommands;
+        [field: SerializeField] private BaseCommand[] initialCommands;
 
         protected virtual void Start()
         {
@@ -36,7 +36,7 @@ namespace Gumiho_Rts.Units
             SetCommandOverride();
             Bus<UnitDeselectedEvent>.Raise(new UnitDeselectedEvent(this));
         }
-        public void SetCommandOverride(ActionBase[] command = null)
+        public void SetCommandOverride(BaseCommand[] command = null)
         {
 
             if (command == null || command.Length == 0)

@@ -7,7 +7,7 @@ using UnityEngine.Events;
 namespace Gumiho_Rts.UI.Components
 {
     [RequireComponent(typeof(Button))]
-    public class UIActionButton : MonoBehaviour,IUIElement <ActionBase, UnityAction>
+    public class UIActionButton : MonoBehaviour, IUIElement<BaseCommand, UnityAction>
     {
 
         [SerializeField] private Image icon;
@@ -17,7 +17,7 @@ namespace Gumiho_Rts.UI.Components
             button = GetComponent<Button>();
         }
 
-        public void EnableFor(ActionBase action, UnityAction onClick)
+        public void EnableFor(BaseCommand action, UnityAction onClick)
         {
             SetIcon(action.Icon);
             button.interactable = true;
@@ -30,7 +30,7 @@ namespace Gumiho_Rts.UI.Components
             button.interactable = false;
             button.onClick.RemoveAllListeners();
         }
-         void SetIcon(Sprite icon)
+        void SetIcon(Sprite icon)
         {
             if (!icon) this.icon.enabled = false;
             else this.icon.enabled = true;
