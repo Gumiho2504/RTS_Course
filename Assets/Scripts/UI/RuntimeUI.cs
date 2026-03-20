@@ -19,6 +19,7 @@ namespace Gumiho_Rts.UI
             Bus<UnitSelectedEvent>.OnEvent += HandleUnitSelected;
             Bus<UnitDeselectedEvent>.OnEvent += HandleUnitDeselected;
             Bus<UnitDeathEvent>.OnEvent += HandleUnitDeath;
+            Bus<SupplyEvent>.OnEvent += HandleSupplyChangeEvent;
 
         }
 
@@ -34,7 +35,10 @@ namespace Gumiho_Rts.UI
             Bus<UnitSelectedEvent>.OnEvent -= HandleUnitSelected;
             Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
             Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
+            Bus<SupplyEvent>.OnEvent -= HandleSupplyChangeEvent;
         }
+
+
 
         private void HandleUnitSelected(UnitSelectedEvent args)
         {
@@ -83,6 +87,11 @@ namespace Gumiho_Rts.UI
         {
             selectableUnits.Remove(args.Unit);
             RefreshUI();
+        }
+
+        private void HandleSupplyChangeEvent(SupplyEvent args)
+        {
+            actionUI.EnableFor(selectableUnits);
         }
     }
 }

@@ -17,6 +17,7 @@ namespace Gumiho_Rts.Commands
             IBuildingBuilder building = context.Commandable as IBuildingBuilder;
             building.CancelBuilding();
         }
+        public override bool IsLocked(CommandContext context) => false;
 
     }
 }

@@ -20,7 +20,7 @@ namespace Gumiho_Rts.UI.Components
         public void EnableFor(BaseCommand action, UnityAction onClick)
         {
             SetIcon(action.Icon);
-            button.interactable = true;
+            button.interactable = !action.IsLocked(new CommandContext());
             button.onClick.AddListener(onClick);
         }
 

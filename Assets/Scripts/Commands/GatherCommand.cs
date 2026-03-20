@@ -48,6 +48,8 @@ namespace Gumiho_Rts.Commands
 
 
         }
+
+        public override bool IsLocked(CommandContext context) => false;
     }
 
 }

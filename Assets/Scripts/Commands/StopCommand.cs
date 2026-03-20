@@ -18,6 +18,7 @@ namespace Gumiho_Rts.Commands
             var unit = context.Commandable as AbstractUnit;
             unit.Stop();
         }
+        public override bool IsLocked(CommandContext context) => false;
     }
 
 

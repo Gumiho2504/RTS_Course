@@ -36,6 +36,9 @@ namespace Gumiho_Rts.Commands
                 builder.Build(BuildingSO, context.Hit.point);
             }
         }
+
+        public override bool IsLocked(CommandContext context) => !HasEnoughSupply();
+
         private bool HasEnoughSupply() => BuildingSO.Cost.Minerals <= Supplies.Minerals && BuildingSO.Cost.Gas <= Supplies.Gas;
     }
 }

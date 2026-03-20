@@ -20,6 +20,9 @@ namespace Gumiho_Rts.Commands
             building.BuildUnit(Unit);
             //Debug.Log("Finished  Building .... Unity work in progress");
         }
+
+        public override bool IsLocked(CommandContext context) => !HasEnoughSupply();
+
         private bool HasEnoughSupply() => Unit.Cost.Minerals <= Supplies.Minerals && Unit.Cost.Gas <= Supplies.Gas;
 
     }

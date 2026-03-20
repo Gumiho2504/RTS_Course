@@ -14,5 +14,6 @@ namespace Gumiho_Rts.Commands
         {
             context.Commandable.SetCommandOverride(commands);
         }
+        public override bool IsLocked(CommandContext context) => false;
     }
 }

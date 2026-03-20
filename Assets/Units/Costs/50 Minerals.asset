@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: 50 Minerals
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.SupplyCostSO
   <Minerals>k__BackingField: 50
-  <MineralsSO>k__BackingField: {fileID: 0}
+  <MineralsSO>k__BackingField: {fileID: 11400000, guid: 0a0867adda2df4ca796938b8d5ffb76f, type: 2}
   <Gas>k__BackingField: 0
-  <GasSO>k__BackingField: {fileID: 0}
+  <GasSO>k__BackingField: {fileID: 11400000, guid: 077dc110d0da34fd981c575ca14abde6, type: 2}

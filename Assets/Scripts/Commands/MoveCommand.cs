@@ -48,5 +48,6 @@ namespace Gumiho_Rts.Commands
                 radiusOffset = 2 * Mathf.PI / maxUnitsLayer;
             }
         }
+        public override bool IsLocked(CommandContext context) => false;
     }
 }
