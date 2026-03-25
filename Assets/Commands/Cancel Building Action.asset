@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5f9382d209224bde8e8ebb9d60c0ca6, type: 3}
   m_Name: Cancel Building Action
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Commands.CancelBuildingCommand
+  <Name>k__BackingField: Cancel
   <Icon>k__BackingField: {fileID: 21300000, guid: 1a3a199fa1bcd2642a8472336cb43de1, type: 3}
   <Slot>k__BackingField: 8
   <RequiresClickToActivate>k__BackingField: 0
   <GhostPrefab>k__BackingField: {fileID: 0}
+  <Restrictions>k__BackingField: []
