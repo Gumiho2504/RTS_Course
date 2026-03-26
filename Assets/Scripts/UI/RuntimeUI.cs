@@ -12,7 +12,11 @@ namespace Gumiho_Rts.UI
     public class RuntimeUI : MonoBehaviour
     {
         [SerializeField] private ActionUI actionUI;
-        [SerializeField] private BuildingBuildingUI buildingBuildingUI;
+        [SerializeField] private BuildingSelectedUI buildingSelectedUI;
+        [SerializeField] private UnitIconUI unitIconUI;
+        [SerializeField] private SingleUnitSelectedUI singleUnitSelectedUI;
+
+
         private HashSet<AbstractCommandable> selectableUnits = new(12);
         void Awake()
         {
@@ -27,7 +31,10 @@ namespace Gumiho_Rts.UI
         void Start()
         {
             actionUI.Disable();
-            buildingBuildingUI.Disable();
+            unitIconUI.Disable();
+            singleUnitSelectedUI.Disable();
+            buildingSelectedUI.Disable();
+
         }
 
         void OnDestroy()
@@ -45,12 +52,13 @@ namespace Gumiho_Rts.UI
             if (args.Unit is AbstractCommandable unit)
             {
                 selectableUnits.Add(unit);
-                actionUI.EnableFor(selectableUnits);
+                // actionUI.EnableFor(selectableUnits);
+                RefreshUI();
             }
-            if (selectableUnits.Count == 1 && args.Unit is BaseBuilding building)
-            {
-                buildingBuildingUI.EnableFor(building);
-            }
+            // if (selectableUnits.Count == 1 && args.Unit is BaseBuilding building)
+            // {
+            //     buildingBuildingUI.EnableFor(building);
+            // }
 
         }
         private void HandleUnitDeselected(UnitDeselectedEvent args)
@@ -67,20 +75,47 @@ namespace Gumiho_Rts.UI
             if (selectableUnits.Count > 0)
             {
                 actionUI.EnableFor(selectableUnits);
-                if (selectableUnits.Count == 1 && selectableUnits.First() is BaseBuilding building)
+
+                if (selectableUnits.Count == 1)
                 {
-                    buildingBuildingUI.EnableFor(building);
+                    AbstractCommandable commandable = selectableUnits.First();
+                    unitIconUI.EnableFor(commandable);
+
+                    if (commandable is BaseBuilding baseBuilding)
+                    {
+                        singleUnitSelectedUI.Disable();
+                        buildingSelectedUI.EnableFor(baseBuilding);
+                    }
+                    else
+                    {
+                        buildingSelectedUI.Disable();
+                        singleUnitSelectedUI.EnableFor(commandable);
+                    }
                 }
                 else
                 {
-                    buildingBuildingUI.Disable();
+                    unitIconUI.Disable();
+                    singleUnitSelectedUI.Disable();
+                    buildingSelectedUI.Disable();
                 }
+
+                // if (selectableUnits.Count == 1 && selectableUnits.First() is BaseBuilding building)
+                // {
+                //     buildingSelectedUI.EnableFor(building);
+                // }
+                // else
+                // {
+                //     buildingSelectedUI.Disable();
+                // }
 
             }
             else
             {
                 actionUI.Disable();
-                buildingBuildingUI.Disable();
+                buildingSelectedUI.Disable();
+                unitIconUI.Disable();
+                singleUnitSelectedUI.Disable();
+
             }
         }
         private void HandleUnitDeath(UnitDeathEvent args)
