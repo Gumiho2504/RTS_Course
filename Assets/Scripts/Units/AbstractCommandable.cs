@@ -9,14 +9,16 @@ namespace Gumiho_Rts.Units
     public abstract class AbstractCommandable : MonoBehaviour, ISelectable
     {
         [SerializeField] private DecalProjector decalProjector;
+        [field: SerializeField] public bool IsSelected { get; private set; }
         [field: SerializeField] public UnitSO UnitSO { get; private set; }
+
 
         [field: SerializeField] public BaseCommand[] AvailableCommands { get; private set; }
         [field: SerializeField] public int CurrentHealth { get; protected set; }
         [field: SerializeField] public int MaxHealth { get; protected set; }
         [field: SerializeField] private BaseCommand[] initialCommands;
 
-        public delegate void HeathUpdatedEvent(AbstractCommandable commandable,int lastHealth, int newHealth);
+        public delegate void HeathUpdatedEvent(AbstractCommandable commandable, int lastHealth, int newHealth);
         public event HeathUpdatedEvent OnHealthUpdated;
 
         protected virtual void Start()
@@ -27,13 +29,18 @@ namespace Gumiho_Rts.Units
         public void Select()
         {
             // if (!this.enabled) return;
-            decalProjector.gameObject.SetActive(true);
+            if (decalProjector != null)
+                decalProjector.gameObject.SetActive(true);
+            IsSelected = true;
             Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
+
         }
 
         public void Deselect()
         {
-            decalProjector.gameObject.SetActive(false);
+            if (decalProjector != null)
+                decalProjector.gameObject.SetActive(false);
+            IsSelected = false;
             SetCommandOverride();
             Bus<UnitDeselectedEvent>.Raise(new UnitDeselectedEvent(this));
         }
@@ -48,7 +55,8 @@ namespace Gumiho_Rts.Units
             {
                 AvailableCommands = command;
             }
-            Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
+            if (IsSelected)
+                Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
         }
         public void Heal(int amount)
         {
