@@ -135,8 +135,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3e5ad58471a0047878039e2fb7030f26, type: 2}
   <CurrentHealth>k__BackingField: 0
   <MaxHealth>k__BackingField: 0
+  initialCommands: []
   <CurrentQueueStartTime>k__BackingField: 0
-  <BuildingUnit>k__BackingField: {fileID: 0}
+  <BuildingUnit>k__BackingField: {fileID: 11400000, guid: 4806c17484ea44fc291bb4d4ab047493, type: 2}
   <Progress>k__BackingField:
     <StartTime>k__BackingField: 0
     <Progress>k__BackingField: 0

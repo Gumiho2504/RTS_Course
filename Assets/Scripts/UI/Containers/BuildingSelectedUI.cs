@@ -1,4 +1,6 @@
 using System;
+using Gumiho_Rts.EventBus;
+using Gumiho_Rts.Events;
 using Gumiho_Rts.UI;
 using Gumiho_Rts.UI.Containers;
 using Gumiho_Rts.Units;
@@ -30,6 +32,8 @@ public class BuildingSelectedUI : MonoBehaviour, IUIElement<BaseBuilding>
             singleUnitSelectedUI.Disable();
             buildingBuildingUI.Disable();
 
+            Bus<BuildingSpawnEvent>.OnEvent += HandleBuildingSpawn;
+
         }
     }
 
@@ -40,6 +44,7 @@ public class BuildingSelectedUI : MonoBehaviour, IUIElement<BaseBuilding>
         singleUnitSelectedUI.Disable();
         buildingBuildingUI.Disable();
         buildingUnderConstructorUI.Disable();
+        Bus<BuildingSpawnEvent>.OnEvent -= HandleBuildingSpawn;
         if (selectedBuilding != null)
         {
             selectedBuilding.OnQueueUpdated -= OnBuildingQueueUpdated;
@@ -59,6 +64,15 @@ public class BuildingSelectedUI : MonoBehaviour, IUIElement<BaseBuilding>
         {
             buildingBuildingUI.EnableFor(selectedBuilding);
             singleUnitSelectedUI.Disable();
+        }
+    }
+    private void HandleBuildingSpawn(BuildingSpawnEvent args)
+    {
+        if (args.Unit == selectedBuilding)
+        {
+            buildingUnderConstructorUI.Disable();
+           OnBuildingQueueUpdated();
+            Bus<BuildingSpawnEvent>.OnEvent -= HandleBuildingSpawn;
         }
     }
 

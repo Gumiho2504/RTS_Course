@@ -15,7 +15,12 @@ namespace Gumiho_Rts.UI.Containers
         {
             gameObject.SetActive(true);
             unitNameText.SetText(building.UnitSO.Name);
-            StartCoroutine(AnimateBuildingProgress(building as BaseBuilding));
+
+            if (building is BaseBuilding baseBuilding)
+            {
+                Debug.Log("Enabling building UI for " + building.UnitSO.Name);
+                StartCoroutine(AnimateBuildingProgress(baseBuilding));
+            }
 
         }
 
@@ -26,14 +31,26 @@ namespace Gumiho_Rts.UI.Containers
 
         private IEnumerator AnimateBuildingProgress(BaseBuilding building)
         {
+            if (building == null)
+            {
+                Debug.LogError("Building is null in AnimateBuildingProgress");
+                yield break;
+
+            }
             while (enabled && building.Progress.State == BuildingProgress.BuildingState.Building)
             {
+
+
+
+
+
                 if (building.Progress.State != BuildingProgress.BuildingState.Building)
                 {
                     yield return null;
                     continue;
                 }
                 float startTime = building.Progress.StartTime;
+
                 float endTime = startTime + building.BuildingUnit.BuildTime;
 
                 progressBar.SetProgress(Mathf.Clamp01((Time.time - startTime) / (endTime - startTime)));

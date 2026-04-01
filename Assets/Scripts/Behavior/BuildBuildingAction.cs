@@ -20,6 +20,7 @@ namespace Gumiho_Rts.Behavoir
         private BaseBuilding completedBuilding;
         private Renderer buildingRenderer;
         private Vector3 startPosition;
+        private float targetHealth;
 
         protected override Status OnStart()
         {
@@ -28,7 +29,7 @@ namespace Gumiho_Rts.Behavoir
                 Debug.Log($"Building Failed");
                 return Status.Failure;
             }
-            if(BuildingUnderConstruction.Value == null)
+            if (BuildingUnderConstruction.Value == null)
             {
                 GameObject building = GameObject.Instantiate(BuildingSO.Value.Prefab, TargetLocation.Value, Quaternion.identity);
                 if (!building.TryGetComponent(out completedBuilding) || completedBuilding.MainMeshRenderer == null) return Status.Failure;
@@ -39,9 +40,9 @@ namespace Gumiho_Rts.Behavoir
             }
             completedBuilding.StartBuilding(Self.Value.GetComponent<IBuildingBuilder>());
             startBuildTime = completedBuilding.Progress.StartTime;
-          
+
             //   GameObject building = GameObject.Instantiate(BuildingSO.Value.Prefab);
-           
+
 
             buildingRenderer = completedBuilding.MainMeshRenderer;
             BuildingUnderConstruction.Value = completedBuilding;
@@ -58,7 +59,17 @@ namespace Gumiho_Rts.Behavoir
         {
 
             float normalizedTime = (Time.time - startBuildTime) / BuildingSO.Value.BuildTime;
+            targetHealth += Time.deltaTime * (BuildingSO.Value.Health / BuildingSO.Value.BuildTime);
+            if(targetHealth > 1)
+            {
+                int healthAmount = Mathf.FloorToInt(targetHealth);
+                completedBuilding.Heal(healthAmount);
+                targetHealth -= healthAmount;
+            }
+
             buildingRenderer.transform.position = Vector3.Lerp(startPosition, TargetLocation.Value, normalizedTime);
+            Mathf.Lerp(1, BuildingSO.Value.Health, normalizedTime);
+
             return normalizedTime >= 1 ? Status.Success : Status.Running;
         }
 

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3fc77b51dbcb45278d3f1592b5d07cd, type: 3}
   m_Name: Command Post
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.BuildingUnitSO
-  <Name>k__BackingField: Base Building'
+  <Name>k__BackingField: Building
   <Health>k__BackingField: 400
   <Prefab>k__BackingField: {fileID: 1589499662120937400, guid: 43943267dde60fe4a88cf5bd885c00e3, type: 3}
   <BuildTime>k__BackingField: 8

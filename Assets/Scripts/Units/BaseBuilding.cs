@@ -20,6 +20,9 @@ namespace Gumiho_Rts.Units
         public delegate void QueueUpdatedEvent(UnitSO[] unitsInQueue);
         public event QueueUpdatedEvent OnQueueUpdated;
 
+        public delegate void HealthUpdatedEvent(AbstractCommandable commandable,int lastHealth, int newHealth);
+        public event HealthUpdatedEvent OnHealthUpdated;
+
         [field: SerializeField] public MeshRenderer MainMeshRenderer { get; private set; }
 
         private IBuildingBuilder unitBuildingThis;
@@ -31,6 +34,7 @@ namespace Gumiho_Rts.Units
         private void Awake()
         {
             BuildingSO = UnitSO as BuildingUnitSO;
+            MaxHealth = BuildingSO.Health;
         }
 
 
@@ -44,6 +48,7 @@ namespace Gumiho_Rts.Units
             Progress = new BuildingProgress(Progress.StartTime, 1, BuildingProgress.BuildingState.Completed);
             unitBuildingThis = null;
             Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
+            Bus<BuildingSpawnEvent>.Raise(new BuildingSpawnEvent(this));
         }
 
 
@@ -112,10 +117,15 @@ namespace Gumiho_Rts.Units
 
         public void StartBuilding(IBuildingBuilder buildingBuilder)
         {
+            Awake();
             unitBuildingThis = buildingBuilder;
             MainMeshRenderer.material = BuildingSO.BuildingGhostPlacement;
 
             Progress = new BuildingProgress(Time.time - BuildingSO.BuildTime * Progress.Progress, Progress.Progress, BuildingProgress.BuildingState.Building);
+            if(Progress.Progress == 0)
+            {
+                Heal(1);
+            }
             Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
             Bus<UnitDeathEvent>.OnEvent += HandleUnitDeath;
         }
@@ -133,5 +143,6 @@ namespace Gumiho_Rts.Units
         {
             Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
         }
+       
     }
 }
