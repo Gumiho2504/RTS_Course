@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using Gumiho_Rts.Units;
-using System.Linq;
 using Gumiho_Rts.Player;
+using UnityEngine.InputSystem.LowLevel;
 namespace Gumiho_Rts.Commands
 {
     [CreateAssetMenu(fileName = "Build Building", menuName = "Units/Commands/Build Building")]
@@ -12,11 +11,10 @@ namespace Gumiho_Rts.Commands
 
         public override bool CanHandle(CommandContext context)
         {
-            if (context.Commandable is not IBuildingBuilder) return false;
-            if (context.Hit.collider != null)
+            if (context.Commandable is not IBuildingBuilder builder || builder.IsBuilding) return false;
+            if (context.Hit.collider != null && context.MouseButton == MouseButton.Right)
             {
-                return context.Hit.collider.TryGetComponent(out BaseBuilding building)
-                 && BuildingSO == building.BuildingSO
+                return context.Hit.collider.TryGetComponent(out BaseBuilding building) && BuildingSO == building.BuildingSO
                  && (building.Progress.State == BuildingProgress.BuildingState.Paused || building.Progress.State == BuildingProgress.BuildingState.Destroy);
             }
             return AllRestrictionsPass(context.Hit.point) && HasEnoughSupply();

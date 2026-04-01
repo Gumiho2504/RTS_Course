@@ -10,6 +10,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 namespace Gumiho_Rts
 {
 
@@ -269,6 +270,10 @@ namespace Gumiho_Rts
                             if (command.CanHandle(context))
                             {
                                 command.Handle(context);
+                                if (command.IsSingleUnitCommand)
+                                {
+                                    return;
+                                }
                                 break;
                             }
                         }
@@ -338,9 +343,16 @@ namespace Gumiho_Rts
 
             for (int i = 0; i < abstractCommandable.Count; i++)
             {
-                CommandContext context = new CommandContext(abstractCommandable[i], hit, i);
-                //  if (activeAction.CanHandle(context))
-                activeCommand.Handle(context);
+                CommandContext context = new CommandContext(abstractCommandable[i], hit, i, MouseButton.Right);
+                if (activeCommand.CanHandle(context))
+                {
+                    activeCommand.Handle(context);
+                    if (activeCommand.IsSingleUnitCommand)
+                    {
+                        break;
+                    }
+                }
+
             }
             activeCommand = null;
         }

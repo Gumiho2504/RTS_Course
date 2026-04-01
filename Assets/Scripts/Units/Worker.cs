@@ -12,6 +12,7 @@ namespace Gumiho_Rts.Units
     [RequireComponent(typeof(NavMeshAgent))]
     public class Worker : AbstractUnit, IBuildingBuilder
     {
+        public bool IsBuilding => behaviorGraphAgent.GetVariable(COMMAND, out BlackboardVariable<UnitCommand> command) && command.Value.Equals(UnitCommand.BuildBuilding);
         public bool HasSupplies
         {
             get
