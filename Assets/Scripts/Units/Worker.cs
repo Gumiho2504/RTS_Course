@@ -5,7 +5,7 @@ using Gumiho_Rts.Environment;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
 using Unity.Behavior;
-using Unity.VisualScripting;
+
 using UnityEngine;
 using UnityEngine.AI;
 namespace Gumiho_Rts.Units
@@ -98,7 +98,7 @@ namespace Gumiho_Rts.Units
                 return null;
             }
 
-            behaviorGraphAgent.SetVariableValue(BUILDINGSO, building);
+            behaviorGraphAgent.SetVariableValue(BUILDING_SO, building);
             behaviorGraphAgent.SetVariableValue(TARGET_LOCATION, position);
             behaviorGraphAgent.SetVariableValue(GHOST, instance);
             behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.BuildBuilding);
@@ -137,7 +137,7 @@ namespace Gumiho_Rts.Units
             behaviorGraphAgent.SetVariableValue(TARGET_LOCATION, building.transform.position);
             behaviorGraphAgent.SetVariableValue(BUILDING_UNDER_CONSTRUCTION, building);
             behaviorGraphAgent.SetVariableValue<GameObject>(GHOST, null);
-            behaviorGraphAgent.SetVariableValue(BUILDINGSO, building.BuildingSO);
+            behaviorGraphAgent.SetVariableValue(BUILDING_SO, building.BuildingSO);
 
             behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.BuildBuilding);
 

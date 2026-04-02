@@ -40,7 +40,7 @@ namespace Gumiho_Rts.Behavoir
         {
             if (GatherableSupply.Value.Supply.BaseGatherTime + enterTime <= Time.time)
             {
-                Debug.Log($"End Success - ${GatherableSupply.Value.IsBusy}- ${Time.time.ToString()}");
+                //                Debug.Log($"End Success - ${GatherableSupply.Value.IsBusy}- ${Time.time.ToString()}");
                 return Status.Success;
             }
 
