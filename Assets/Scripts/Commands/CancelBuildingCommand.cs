@@ -9,7 +9,7 @@ namespace Gumiho_Rts.Commands
     {
         public override bool CanHandle(CommandContext context)
         {
-            return context.Commandable is IBuildingBuilder;
+            return context.Commandable is IBuildingBuilder && context.MouseButton == UnityEngine.InputSystem.LowLevel.MouseButton.Left;
         }
 
         public override void Handle(CommandContext context)

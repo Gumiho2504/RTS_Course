@@ -8,8 +8,8 @@ namespace Gumiho_Rts.Units
 {
     public abstract class AbstractCommandable : MonoBehaviour, ISelectable
     {
-        [SerializeField] private DecalProjector decalProjector;
-        [field: SerializeField] public bool IsSelected { get; private set; }
+        [SerializeField] protected DecalProjector decalProjector;
+        [field: SerializeField] public bool IsSelected { get; protected set; }
         [field: SerializeField] public UnitSO UnitSO { get; private set; }
 
 
@@ -26,7 +26,7 @@ namespace Gumiho_Rts.Units
             initialCommands = AvailableCommands;
         }
 
-        public void Select()
+        public virtual void Select()
         {
             // if (!this.enabled) return;
             if (decalProjector != null)
@@ -36,7 +36,7 @@ namespace Gumiho_Rts.Units
 
         }
 
-        public void Deselect()
+        public virtual void Deselect()
         {
             if (decalProjector != null)
                 decalProjector.gameObject.SetActive(false);

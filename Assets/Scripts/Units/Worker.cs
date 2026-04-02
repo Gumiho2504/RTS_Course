@@ -42,6 +42,19 @@ namespace Gumiho_Rts.Units
 
 
 
+        public override void Deselect()
+        {
+    
+            if (decalProjector != null)
+                decalProjector.gameObject.SetActive(false);
+            IsSelected = false;
+            if (IsBuilding)
+                SetCommandOverride();
+            Bus<UnitDeselectedEvent>.Raise(new UnitDeselectedEvent(this));
+        }
+
+
+
         public void Gather(GatherableSupply supply)
         {
             behaviorGraphAgent.SetVariableValue(SUPPLY, supply);
@@ -77,13 +90,9 @@ namespace Gumiho_Rts.Units
                     SetCommandOverride(new BaseCommand[] { CancelBuildingCommand });
                     break;
                 case BuildingEventType.Cancel:
-                    //CancelBuilding();
-                    //SetCommandOverride(new BaseCommand[] { CancelBuildingCommand });
-                    break;
                 case BuildingEventType.Abort:
-                    SetCommandOverride(null);
-                    break;
                 case BuildingEventType.Competed:
+                    SetCommandOverride(null);
                     break;
                 default: break;
             }
