@@ -6,11 +6,12 @@ using UnityEngine.Rendering.Universal;
 
 namespace Gumiho_Rts.Units
 {
-    public abstract class AbstractCommandable : MonoBehaviour, ISelectable
+    public abstract class AbstractCommandable : MonoBehaviour, ISelectable, IDamageable
     {
         [SerializeField] protected DecalProjector decalProjector;
         [field: SerializeField] public bool IsSelected { get; protected set; }
         [field: SerializeField] public UnitSO UnitSO { get; private set; }
+        public Transform Transform => transform;
 
 
         [field: SerializeField] public BaseCommand[] AvailableCommands { get; private set; }
@@ -57,6 +58,23 @@ namespace Gumiho_Rts.Units
             }
             if (IsSelected)
                 Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
+        }
+
+        public void TakeDamage(int damage)
+        {
+            int lastHealth = CurrentHealth;
+            
+            CurrentHealth = Mathf.Clamp(CurrentHealth - damage, 0, CurrentHealth);
+
+            OnHealthUpdated?.Invoke(this, lastHealth, CurrentHealth);
+            if (CurrentHealth == 0)
+            {
+                Die();
+            }
+        }
+        public void Die()
+        {
+            Destroy(gameObject);
         }
         public void Heal(int amount)
         {
