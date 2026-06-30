@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 863810960502844524}
   - component: {fileID: 5214473086347703930}
   - component: {fileID: 5333726976716141168}
+  - component: {fileID: 2848588386947716457}
   m_Layer: 6
   m_Name: Worker
   m_TagString: Untagged
@@ -95,6 +96,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.Worker
   decalProjector: {fileID: 2328338167376970769}
+  <IsSelected>k__BackingField: 0
   <UnitSO>k__BackingField: {fileID: 11400000, guid: c4923a796b20548b2a2a1cbd2bbb8f32, type: 2}
   <AvailableCommands>k__BackingField:
   - {fileID: 11400000, guid: fc971762ced284102b42f4c540e7db07, type: 2}
@@ -103,6 +105,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bc134dd4ff1f54ed9ae094a1a2122cf6, type: 2}
   <CurrentHealth>k__BackingField: 0
   <MaxHealth>k__BackingField: 0
+  initialCommands: []
   CancelBuildingCommand: {fileID: 11400000, guid: 97cbe75b2338b421b904ebd79c168616, type: 2}
 --- !u!136 &5214473086347703930
 CapsuleCollider:
@@ -156,6 +159,33 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 6510919576379171628}
+--- !u!54 &2848588386947716457
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6510919576379171628}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &7113143914814652156
 GameObject:
   m_ObjectHideFlags: 0

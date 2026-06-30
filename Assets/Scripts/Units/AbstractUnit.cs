@@ -8,12 +8,13 @@ using UnityEngine.AI;
 namespace Gumiho_Rts.Units
 {
     [RequireComponent(typeof(NavMeshAgent), typeof(BehaviorGraphAgent))]
-    public abstract class AbstractUnit : AbstractCommandable, IMoveable
+    public abstract class AbstractUnit : AbstractCommandable, IMoveable, IAttacker
     {
         private NavMeshAgent navMeshAgent;
         protected BehaviorGraphAgent behaviorGraphAgent;
         public float AgentRadius => navMeshAgent.radius;
 
+        [SerializeField] private DamageableSensor DamageableSensor;
 
         protected const string TARGET_LOCATION = "TargetLocation";
         protected const string COMMAND = "Command";
@@ -38,6 +39,12 @@ namespace Gumiho_Rts.Units
             CurrentHealth = UnitSO.Health;
             MaxHealth = UnitSO.Health;
             Bus<UnitSpawnEvent>.Raise(new UnitSpawnEvent(this));
+
+            if (DamageableSensor != null)
+            {
+                DamageableSensor.OnUnitEnter += HandleUnitEnter;
+                DamageableSensor.OnUnitExit += HandleUnitExit;
+            }
         }
 
 
@@ -56,10 +63,43 @@ namespace Gumiho_Rts.Units
             behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.Stop);
         }
 
+
+        public void HandleUnitEnter(IDamageable damageable)
+        {
+            Debug.Log($"Detected unit enter! {DamageableSensor.Damageables.Count} nearby damageables");
+        }
+
+        public void HandleUnitExit(IDamageable damageable)
+        {
+            Debug.Log($"Detected unit exit! {DamageableSensor.Damageables.Count} nearby damageables");
+        }
+
+
+
+        public void Attack(IDamageable damageable)
+        {
+            behaviorGraphAgent.SetVariableValue("TargetGameObject", damageable.Transform.gameObject);
+            behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.Attack);
+        }
+        public void Attack(Vector3 location)
+        {
+
+        }
+
+
         private void OnDestroy()
         {
             Bus<UnitDeathEvent>.Raise(new UnitDeathEvent(this));
+
+            if (DamageableSensor != null)
+            {
+                DamageableSensor.OnUnitEnter -= HandleUnitEnter;
+                DamageableSensor.OnUnitExit -= HandleUnitExit;
+            }
         }
+
+
+
     }
 
 

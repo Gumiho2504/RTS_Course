@@ -10,6 +10,7 @@ namespace Gumiho_Rts.Units
 		Move,
 		Gather,
 		ReturnSupplies,
-		BuildBuilding
+		BuildBuilding,
+		Attack
 	}
 }

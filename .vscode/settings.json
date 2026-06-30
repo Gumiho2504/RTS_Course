@@ -72,6 +72,8 @@
     "Behaviour",
     "Cinemachine",
     "Commandable",
+    "damageables",
+    "demageable",
     "Gumiho",
     "interactable",
     "Mathf",
