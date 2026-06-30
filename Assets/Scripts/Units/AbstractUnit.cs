@@ -1,6 +1,9 @@
+using System.Collections.Generic;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
+using Gumiho_Rts.Utilities;
 using Unity.Behavior;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -16,6 +19,8 @@ namespace Gumiho_Rts.Units
 
         [SerializeField] private DamageableSensor DamageableSensor;
 
+        protected Unit unitSO;
+
         protected const string TARGET_LOCATION = "TargetLocation";
         protected const string COMMAND = "Command";
         protected const string SUPPLY = "Supply";
@@ -30,8 +35,14 @@ namespace Gumiho_Rts.Units
         private void Awake()
         {
             navMeshAgent = GetComponent<NavMeshAgent>();
+
+            unitSO = UnitSO as Unit;
+
             behaviorGraphAgent = GetComponent<BehaviorGraphAgent>();
             behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.Stop);
+            behaviorGraphAgent.SetVariableValue("AttackConfig", unitSO.AttackConfig);
+
+
         }
         protected override void Start()
         {
@@ -42,8 +53,9 @@ namespace Gumiho_Rts.Units
 
             if (DamageableSensor != null)
             {
-                DamageableSensor.OnUnitEnter += HandleUnitEnter;
-                DamageableSensor.OnUnitExit += HandleUnitExit;
+                DamageableSensor.OnUnitEnter += HandleUnitEnterOrExit;
+                DamageableSensor.OnUnitExit += HandleUnitEnterOrExit;
+                DamageableSensor.SetupFrom(unitSO.AttackConfig);
             }
         }
 
@@ -64,20 +76,18 @@ namespace Gumiho_Rts.Units
         }
 
 
-        public void HandleUnitEnter(IDamageable damageable)
+        public void HandleUnitEnterOrExit(IDamageable damageable)
         {
-            Debug.Log($"Detected unit enter! {DamageableSensor.Damageables.Count} nearby damageables");
-        }
+            List<GameObject> nearbyEnemies = DamageableSensor.Damageables.ConvertAll(damageable => damageable.Transform.gameObject);
+            nearbyEnemies.Sort(new ClosestGameObjectCompare(transform.position));
 
-        public void HandleUnitExit(IDamageable damageable)
-        {
-            Debug.Log($"Detected unit exit! {DamageableSensor.Damageables.Count} nearby damageables");
+            behaviorGraphAgent.SetVariableValue("NearbyEnemies", nearbyEnemies);
         }
-
 
 
         public void Attack(IDamageable damageable)
         {
+            Debug.Log($"{name} should attack {damageable.Transform.name}");
             behaviorGraphAgent.SetVariableValue("TargetGameObject", damageable.Transform.gameObject);
             behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.Attack);
         }
@@ -93,8 +103,8 @@ namespace Gumiho_Rts.Units
 
             if (DamageableSensor != null)
             {
-                DamageableSensor.OnUnitEnter -= HandleUnitEnter;
-                DamageableSensor.OnUnitExit -= HandleUnitExit;
+                DamageableSensor.OnUnitEnter -= HandleUnitEnterOrExit;
+                DamageableSensor.OnUnitExit -= HandleUnitEnterOrExit;
             }
         }
 

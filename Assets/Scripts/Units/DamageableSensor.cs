@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 namespace Gumiho_Rts.Units
 {
-    [RequireComponent(typeof(Collider))]
+    [RequireComponent(typeof(SphereCollider))]
     public class DamageableSensor : MonoBehaviour
     {
         private HashSet<IDamageable> damageables = new();
@@ -12,22 +12,33 @@ namespace Gumiho_Rts.Units
         public delegate void UnitDetectionEvent(IDamageable damageable);
         public event UnitDetectionEvent OnUnitEnter;
         public event UnitDetectionEvent OnUnitExit;
+
+        private new SphereCollider collider;
+
+        private void Awake() {
+            collider = GetComponent<SphereCollider>();
+        }
         void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent<IDamageable>(out IDamageable damageable))
+            if (other != null && other.TryGetComponent<IDamageable>(out IDamageable damageable))
             {
                 damageables.Add(damageable);
-                OnUnitEnter.Invoke(damageable);
+                OnUnitEnter?.Invoke(damageable);
             }
         }
 
         void OnTriggerExit(Collider other)
         {
-            if (other.TryGetComponent<IDamageable>(out IDamageable damageable))
+            if (other != null && other.TryGetComponent<IDamageable>(out IDamageable damageable))
             {
                 damageables.Remove(damageable);
-                OnUnitExit.Invoke(damageable);
+                OnUnitExit?.Invoke(damageable);
             }
+        }
+
+        public void SetupFrom(AttackConfigSO attackConfig)
+        {
+            collider.radius = attackConfig.AttackRange;
         }
     }
 }

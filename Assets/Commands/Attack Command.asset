@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58a87747733cd834ea078a80ce4dd773, type: 3}
+  m_Name: Attack Command
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Commands.AttackCommand
+  <Name>k__BackingField: Attack
+  <Icon>k__BackingField: {fileID: 21300000, guid: c733cf57b895c374da5e25ba49b63a46, type: 3}
+  <Slot>k__BackingField: 2
+  <RequiresClickToActivate>k__BackingField: 1
+  <IsSingleUnitCommand>k__BackingField: 0
+  <GhostPrefab>k__BackingField: {fileID: 0}
+  <Restrictions>k__BackingField: []

@@ -1092,7 +1092,7 @@ GameObject:
   - component: {fileID: 82566641}
   - component: {fileID: 82566642}
   - component: {fileID: 82566643}
-  m_Layer: 6
+  m_Layer: 11
   m_Name: Damageable Sensor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13756,7 +13756,7 @@ MonoBehaviour:
     m_Bits: 384
   interactableLayerMask:
     serializedVersion: 2
-    m_Bits: 896
+    m_Bits: 960
   selectionBox: {fileID: 689788064}
   errorTintColor: {r: 1, g: 0, b: 0, a: 1}
   errorFresnelColor: {r: 4, g: 1.7, b: 0, a: 2}
@@ -14853,9 +14853,17 @@ PrefabInstance:
       propertyPath: DamageableSensor
       value: 
       objectReference: {fileID: 82566643}
+    - target: {fileID: 4906276269732094364, guid: 89fa1dbd1317d914a9727e0841043e2c, type: 3}
+      propertyPath: <AvailableCommands>k__BackingField.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4906276269732094364, guid: 89fa1dbd1317d914a9727e0841043e2c, type: 3}
+      propertyPath: '<AvailableCommands>k__BackingField.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: adfc3b573df23f142805e97d777d6237, type: 2}
     - target: {fileID: 5550838747094831301, guid: 89fa1dbd1317d914a9727e0841043e2c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.3
+      value: -18.91
       objectReference: {fileID: 0}
     - target: {fileID: 5550838747094831301, guid: 89fa1dbd1317d914a9727e0841043e2c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -14863,7 +14871,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5550838747094831301, guid: 89fa1dbd1317d914a9727e0841043e2c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -46.8
+      value: -48.16
       objectReference: {fileID: 0}
     - target: {fileID: 5550838747094831301, guid: 89fa1dbd1317d914a9727e0841043e2c, type: 3}
       propertyPath: m_LocalRotation.w
