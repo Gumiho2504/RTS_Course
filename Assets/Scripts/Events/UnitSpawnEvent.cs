@@ -5,10 +5,10 @@ namespace Gumiho_Rts.Events
 {
     public struct UnitSpawnEvent : IEvents
     {
-        public AbstractUnit unit { get; private set; }
+        public AbstractUnit Unit { get; private set; }
         public UnitSpawnEvent(AbstractUnit unit)
         {
-            this.unit = unit;
+            this.Unit = unit;
         }
     }
 }

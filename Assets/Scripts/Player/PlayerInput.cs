@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Gumiho_Rts.Commands;
-using Gumiho_Rts.Environment;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
 using Gumiho_Rts.Units;
@@ -11,6 +10,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 namespace Gumiho_Rts
 {
 
@@ -25,6 +25,10 @@ namespace Gumiho_Rts
         [SerializeField] private LayerMask floorLayerMask;
         [SerializeField] private LayerMask interactableLayerMask;
         [SerializeField] private RectTransform selectionBox;
+        [SerializeField][ColorUsage(showAlpha: true, hdr: true)] private Color errorTintColor = Color.red;
+        [SerializeField][ColorUsage(showAlpha: true, hdr: true)] private Color errorFresnelColor = new(4, 1.7f, 0, 2);
+        [SerializeField][ColorUsage(showAlpha: true, hdr: true)] private Color availableToPlaceTintColor = new(0.2f, 0.65f, 1, 2);
+        [SerializeField][ColorUsage(showAlpha: true, hdr: true)] private Color availableToPlaceFresnelColor = new(4, 1.7f, 0, 2);
 
         private CinemachineFollow cinemachineFollow;
         private float zoomStartTime;
@@ -35,8 +39,13 @@ namespace Gumiho_Rts
         public HashSet<AbstractUnit> AliveUnits = new(100);
         private HashSet<AbstractUnit> addedUnits = new(24);
         private List<ISelectable> selectableUnits = new(12);
-        private ActionBase activeAction;
+        private BaseCommand activeCommand;
         private bool wasMouseDownOnUI;
+
+        private GameObject ghostInstance;
+        private MeshRenderer ghostRenderer;
+        private static readonly int TINT = Shader.PropertyToID("_Tint");
+        private static readonly int FRESNEL = Shader.PropertyToID("_FresnelColor");
 
         private void Awake()
         {
@@ -50,7 +59,8 @@ namespace Gumiho_Rts
             Bus<UnitSelectedEvent>.OnEvent += HandleUnitSelected;
             Bus<UnitDeselectedEvent>.OnEvent += HandleUnitDeselected;
             Bus<UnitSpawnEvent>.OnEvent += HandleUnitSpawned;
-            Bus<ActionSelectedEvent>.OnEvent += HandleActionSelected;
+            Bus<CommandSelectedEvent>.OnEvent += HandleActionSelected;
+            Bus<UnitDeathEvent>.OnEvent += HandleUnitDeath;
 
         }
 
@@ -61,24 +71,31 @@ namespace Gumiho_Rts
             Bus<UnitSelectedEvent>.OnEvent -= HandleUnitSelected;
             Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
             Bus<UnitSpawnEvent>.OnEvent -= HandleUnitSpawned;
-            Bus<ActionSelectedEvent>.OnEvent -= HandleActionSelected;
+            Bus<CommandSelectedEvent>.OnEvent -= HandleActionSelected;
+            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
 
 
         }
 
 
-        private void HandleActionSelected(ActionSelectedEvent args)
+
+        private void HandleActionSelected(CommandSelectedEvent args)
         {
-            activeAction = args.Action;
-            if (!activeAction.RequiresClickToActivate)
+            activeCommand = args.Command;
+            if (!activeCommand.RequiresClickToActivate)
             {
                 ActivateAction(new RaycastHit());
+            }
+            else if (activeCommand.GhostPrefab != null)
+            {
+                ghostInstance = Instantiate(activeCommand.GhostPrefab);
+                ghostRenderer = ghostInstance.GetComponentInChildren<MeshRenderer>();
             }
         }
 
         private void HandleUnitSpawned(UnitSpawnEvent args)
         {
-            AliveUnits.Add(args.unit);
+            AliveUnits.Add(args.Unit);
 
         }
         private void HandleUnitDeselected(UnitDeselectedEvent args)
@@ -89,6 +106,7 @@ namespace Gumiho_Rts
 
         private void HandleUnitSelected(UnitSelectedEvent evt)
         {
+
             if (!selectableUnits.Contains(evt.Unit))
             {
                 selectableUnits.Add(evt.Unit);
@@ -96,16 +114,48 @@ namespace Gumiho_Rts
 
         }
 
+        private void HandleUnitDeath(UnitDeathEvent args)
+        {
+            selectableUnits.Remove(args.Unit);
+            AliveUnits.Remove(args.Unit);
+        }
+
 
 
         // Update is called once per frame
         void Update()
         {
-            // HandlePanning();
+            /// HandlePanning();
             HandleZooming();
             HandleRotation();
+            HandleGhostAction();
             HandleRightMuseClick();
             HandleDragSelection();
+        }
+        private void HandleGhostAction()
+        {
+            if (ghostInstance == null) return;
+            if (Keyboard.current.aKey.wasPressedThisFrame)
+            {
+                print("Activating");
+                Destroy(ghostInstance);
+                ghostInstance = null;
+                activeCommand = null;
+                return;
+            }
+            var mouseVector = Mouse.current.position.ReadValue();
+            Ray ray = camera.ScreenPointToRay(mouseVector);
+            if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, floorLayerMask))
+            {
+                ghostInstance.transform.position = hit.point;
+                bool allRestrictionsPass = activeCommand.AllRestrictionsPass(hit.point);
+                ghostRenderer.material.SetColor(TINT, allRestrictionsPass ? availableToPlaceTintColor : errorTintColor);
+                ghostRenderer.material.SetColor(FRESNEL, allRestrictionsPass ? availableToPlaceFresnelColor : errorFresnelColor);
+
+
+            }
+
+
         }
 
         private void HandleDragSelection()
@@ -129,7 +179,7 @@ namespace Gumiho_Rts
 
         private void HandleMouseUp()
         {
-            if (!Keyboard.current.shiftKey.isPressed && activeAction == null && !wasMouseDownOnUI)
+            if (!Keyboard.current.shiftKey.isPressed && activeCommand == null && !wasMouseDownOnUI)
             {
                 DeselectAllUnits();
             }
@@ -144,7 +194,7 @@ namespace Gumiho_Rts
 
         private void HandleDrag()
         {
-            if (activeAction != null || wasMouseDownOnUI) return;
+            if (activeCommand != null || wasMouseDownOnUI) return;
             Bounds selectionBounds = ResizeSelectedBox();
             foreach (AbstractUnit unit in AliveUnits)
             {
@@ -188,17 +238,19 @@ namespace Gumiho_Rts
 
         private void HandleRightMuseClick()
         {
-            if (activeAction == null && !wasMouseDownOnUI) return;
+            if (activeCommand == null && !wasMouseDownOnUI) return;
 
             if (selectableUnits.Count == 0) return;
             Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
             if (Mouse.current.rightButton.wasReleasedThisFrame)
             {
+
                 // find applicable command
 
                 // issue command to all units
                 if (Physics.Raycast(ray, out RaycastHit hit, maxDistance: float.MaxValue, layerMask: floorLayerMask | interactableLayerMask))
                 {
+                    print("Clicked on " + hit.transform.name);
                     List<AbstractUnit> abstractUnits = new(selectableUnits.Count);
                     foreach (ISelectable selectable in selectableUnits)
                     {
@@ -212,11 +264,16 @@ namespace Gumiho_Rts
                     for (int i = 0; i < abstractUnits.Count; i++)
                     {
                         CommandContext context = new CommandContext(abstractUnits[i], hit, i);
-                        foreach (var command in abstractUnits[i].AvailableCommands)
+                        print(abstractUnits[i].gameObject.name);
+                        foreach (var command in GetAvailableCommands(abstractUnits[i]))
                         {
                             if (command.CanHandle(context))
                             {
                                 command.Handle(context);
+                                if (command.IsSingleUnitCommand)
+                                {
+                                    return;
+                                }
                                 break;
                             }
                         }
@@ -225,6 +282,17 @@ namespace Gumiho_Rts
                     }
                 }
             }
+        }
+        private List<BaseCommand> GetAvailableCommands(AbstractUnit unit)
+        {
+            OverrideCommandsCommand[] overrideCommandsCommands = unit.AvailableCommands.Where(command => command is OverrideCommandsCommand).Cast<OverrideCommandsCommand>().ToArray();
+            List<BaseCommand> allAvailableCommands = new();
+            foreach (OverrideCommandsCommand overrideCommand in overrideCommandsCommands)
+            {
+                allAvailableCommands.AddRange(overrideCommand.commands.Where(command => command is not OverrideCommandsCommand));
+            }
+            allAvailableCommands.AddRange(unit.AvailableCommands.Where(command => command is not OverrideCommandsCommand));
+            return allAvailableCommands;
         }
 
 
@@ -239,12 +307,13 @@ namespace Gumiho_Rts
             Ray ray = camera.ScreenPointToRay(mouseVector);
             //  Debug.Log($"{Physics.Raycast(ray, out RaycastHit ht, float.MaxValue, layerMask: floorLayerMask | interactableLayerMask)} | {ht.transform.name} | {ht.transform.TryGetComponent(out GatherableSupply s)} | {s}");
 
-            if (activeAction == null && Physics.Raycast(ray, out RaycastHit hit, maxDistance: 100f, layerMask: selectableUnityLayerMask | interactableLayerMask)
+            if (activeCommand == null && Physics.Raycast(ray, out RaycastHit hit, maxDistance: 100f, layerMask: selectableUnityLayerMask | interactableLayerMask)
             && hit.transform.TryGetComponent(out ISelectable selectable))
             {
+
                 selectable.Select();
             }
-            else if (activeAction != null
+            else if (activeCommand != null
             && !EventSystem.current.IsPointerOverGameObject()
             && Physics.Raycast(ray, out hit, float.MaxValue, layerMask: floorLayerMask | interactableLayerMask))
             {
@@ -262,6 +331,11 @@ namespace Gumiho_Rts
 
         private void ActivateAction(RaycastHit hit)
         {
+            if (ghostInstance != null)
+            {
+                Destroy(ghostInstance);
+                ghostInstance = null;
+            }
             List<AbstractCommandable> abstractCommandable = selectableUnits
                 .Where(selectableUnit => selectableUnit is AbstractCommandable)
                 .Cast<AbstractCommandable>()
@@ -269,11 +343,18 @@ namespace Gumiho_Rts
 
             for (int i = 0; i < abstractCommandable.Count; i++)
             {
-                CommandContext context = new CommandContext(abstractCommandable[i], hit, i);
-                if (activeAction.CanHandle(context))
-                    activeAction.Handle(context);
+                CommandContext context = new CommandContext(abstractCommandable[i], hit, i, MouseButton.Right);
+                if (activeCommand.CanHandle(context))
+                {
+                    activeCommand.Handle(context);
+                    if (activeCommand.IsSingleUnitCommand)
+                    {
+                        break;
+                    }
+                }
+
             }
-            activeAction = null;
+            activeCommand = null;
         }
 
         private void HandleRotation()

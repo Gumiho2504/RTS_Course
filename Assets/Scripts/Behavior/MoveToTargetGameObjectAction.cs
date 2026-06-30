@@ -19,23 +19,26 @@ namespace Gumiho_Rts.Behavoir
         private NavMeshAgent agent;
         protected override Status OnStart()
         {
+
+
             if (!Agent.Value.TryGetComponent(out agent) || TargetGameObject.Value == null)
             {
+                Debug.Log($"Move To Target GameObject Failed {agent.gameObject.name} {TargetGameObject.Value}");
                 return Status.Failure;
             }
-
+            Debug.Log("Already there On Start");
             agent.TryGetComponent<Animator>(out animator);
 
 
             Vector3 targetPosition = GetTargetPosition();
             if (Vector3.Distance(agent.transform.position, targetPosition) <= agent.stoppingDistance)
             {
-              //  Debug.Log("Already there On Start");
+                Debug.Log("Already there On Start");
                 return Status.Success;
             }
 
             agent.SetDestination(targetPosition);
-//            Debug.Log("Moving to " + targetPosition.ToString());
+            ///Debug.Log("Moving to " + targetPosition.ToString());
             return Status.Running;
         }
 
@@ -45,6 +48,7 @@ namespace Gumiho_Rts.Behavoir
             Vector3 targetPosition = GetTargetPosition();
             if (Vector3.Distance(agent.transform.position, targetPosition) <= agent.stoppingDistance)
             {
+                Debug.Log("Already there On Update Success");
                 //Debug.Log($"Already there On Update - ${Time.time} - agent.remainingDistance  {agent.remainingDistance} -distance :  {Vector3.Distance(agent.transform.position, targetPosition)}");
                 return Status.Success;
             }

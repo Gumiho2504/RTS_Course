@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8142159870844363649}
   - component: {fileID: 6729454612411363606}
   - component: {fileID: 6194907570450213565}
+  - component: {fileID: 4802344064408590745}
   m_Layer: 5
   m_Name: Tooltip
   m_TagString: Untagged
@@ -76,6 +77,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 10
+--- !u!114 &4802344064408590745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1602296567862982773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 291b97b21e7844b89b1f7dfa027232dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.UI.Components.Tooltip
+  <Rect>k__BackingField: {fileID: 8142159870844363649}
+  <HoverDelay>k__BackingField: 0.5
+  text: {fileID: 753312127254192795}
 --- !u!1 &4803793363255682526
 GameObject:
   m_ObjectHideFlags: 0
@@ -301,6 +317,7 @@ GameObject:
   - component: {fileID: 8185538916585344636}
   - component: {fileID: 3923701401342223825}
   - component: {fileID: 5399063088701003108}
+  - component: {fileID: 2739995803193792460}
   m_Layer: 5
   m_Name: Action Button
   m_TagString: Untagged
@@ -424,3 +441,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.UI.UIActionButton
   icon: {fileID: 290920304268996613}
+  tooltip: {fileID: 4802344064408590745}
+--- !u!114 &2739995803193792460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8962091619614495752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventTrigger
+  m_Delegates: []

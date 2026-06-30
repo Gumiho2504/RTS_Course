@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3fc77b51dbcb45278d3f1592b5d07cd, type: 3}
   m_Name: Supply Hut
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.BuildingUnitSO
-  <Health>k__BackingField: 80
+  <Name>k__BackingField: Supply Hut
+  <Health>k__BackingField: 500
   <Prefab>k__BackingField: {fileID: 6964012305514025925, guid: 60174e2531fe1794a81f4a279e17f61d, type: 3}
   <BuildTime>k__BackingField: 5
   <Icon>k__BackingField: {fileID: 21300000, guid: 5b1043abe99f2d943b94b631a2aa42d9, type: 3}
+  <Cost>k__BackingField: {fileID: 11400000, guid: ebca625694aa9417abdd4ac7eb0fbeb1, type: 2}
   <BuildingGhostPlacement>k__BackingField: {fileID: 2100000, guid: df83892de47974b2d8f424ae85ebe3ee, type: 2}

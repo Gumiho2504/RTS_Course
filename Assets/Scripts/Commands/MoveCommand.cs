@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Gumiho_Rts.Commands
 {
     [CreateAssetMenu(fileName = "Move Command", menuName = "Units/Commands/Move", order = 100)]
-    public class MoveCommand : ActionBase
+    public class MoveCommand : BaseCommand
     {
 
         public float radiusMultiplier = 3.5f;
@@ -48,5 +48,6 @@ namespace Gumiho_Rts.Commands
                 radiusOffset = 2 * Mathf.PI / maxUnitsLayer;
             }
         }
+        public override bool IsLocked(CommandContext context) => false;
     }
 }

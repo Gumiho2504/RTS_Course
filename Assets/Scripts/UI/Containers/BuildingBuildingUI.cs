@@ -11,7 +11,7 @@ namespace Gumiho_Rts.UI.Containers
 {
     public class BuildingBuildingUI : MonoBehaviour, IUIElement<BaseBuilding>
     {
-        [SerializeField] private Progressbar progressBar;
+        [SerializeField] private ProgressBar progressBar;
         [SerializeField] private UIBuildQueueButton[] unitButtons;
         private Coroutine buildCoroutine;
         private BaseBuilding building;
@@ -52,8 +52,10 @@ namespace Gumiho_Rts.UI.Containers
             {
                 buildCoroutine = StartCoroutine(UpdateUnitProgress());
             }
-            SetupUnitButton();
+            if (building != null)
+                SetupUnitButton();
         }
+
 
         public void Disable()
         {
@@ -67,6 +69,9 @@ namespace Gumiho_Rts.UI.Containers
 
         }
 
+/// 
+/// 
+/// 
         private IEnumerator UpdateUnitProgress()
         {
             while (building != null && building.QueueSize > 0)

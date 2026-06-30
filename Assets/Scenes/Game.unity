@@ -5725,6 +5725,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 467497951}
+  - component: {fileID: 467497952}
   m_Layer: 5
   m_Name: Building Selected Container
   m_TagString: Untagged
@@ -5753,6 +5754,21 @@ RectTransform:
   m_AnchoredPosition: {x: 100, y: 0}
   m_SizeDelta: {x: -200, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &467497952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467497949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0c2374a633ad41aa8a3af0b1e705088, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuildingSelectedUI
+  buildingBuildingUI: {fileID: 1619984283}
+  singleUnitSelectedUI: {fileID: 1315305436}
+  buildingUnderConstructorUI: {fileID: 678677022}
 --- !u!1 &468676273
 GameObject:
   m_ObjectHideFlags: 0
@@ -6152,63 +6168,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5004720826620963258, guid: 9cd21bf41652fdf49ba05bc10fa4d90d, type: 3}
   m_PrefabInstance: {fileID: 507632610}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &510739289
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4556868348065212012, guid: 0769b0d4430bf10488837724577a9cde, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -6.194256
-      objectReference: {fileID: 0}
-    - target: {fileID: 4556868348065212012, guid: 0769b0d4430bf10488837724577a9cde, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.57
-      objectReference: {fileID: 0}
-    - target: {fileID: 4556868348065212012, guid: 0769b0d4430bf10488837724577a9cde, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -46.97591
-      objectReference: {fileID: 0}
-    - target: {fileID: 4556868348065212012, guid: 0769b0d4430bf10488837724577a9cde, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4556868348065212012, guid: 0769b0d4430bf10488837724577a9cde, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4556868348065212012, guid: 0769b0d4430bf10488837724577a9cde, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4556868348065212012, guid: 0769b0d4430bf10488837724577a9cde, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4556868348065212012, guid: 0769b0d4430bf10488837724577a9cde, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4556868348065212012, guid: 0769b0d4430bf10488837724577a9cde, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4556868348065212012, guid: 0769b0d4430bf10488837724577a9cde, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5827066523746683823, guid: 0769b0d4430bf10488837724577a9cde, type: 3}
-      propertyPath: m_Name
-      value: Barracks
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 0769b0d4430bf10488837724577a9cde, type: 3}
 --- !u!1 &513539674
 GameObject:
   m_ObjectHideFlags: 0
@@ -7298,7 +7257,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.UI.RuntimeUI
   actionUI: {fileID: 1741608388}
-  buildingBuildingUI: {fileID: 1619984283}
+  buildingSelectedUI: {fileID: 467497952}
+  unitIconUI: {fileID: 1439996932}
+  singleUnitSelectedUI: {fileID: 1315305436}
 --- !u!114 &640315636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7706,13 +7667,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 678677021}
+  - component: {fileID: 678677022}
   m_Layer: 5
   m_Name: Building Under Construction Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &678677021
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7735,6 +7697,20 @@ RectTransform:
   m_AnchoredPosition: {x: -100, y: 0}
   m_SizeDelta: {x: 200, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &678677022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 678677020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19d3b9aec049f4a92ac28b23ed23a595, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.UI.Containers.BuildingUnderConstructorUI
+  unitNameText: {fileID: 749207882}
+  progressBar: {fileID: 1819996209}
 --- !u!1 &679504034
 GameObject:
   m_ObjectHideFlags: 0
@@ -13723,6 +13699,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 896
   selectionBox: {fileID: 689788064}
+  errorTintColor: {r: 1, g: 0, b: 0, a: 1}
+  errorFresnelColor: {r: 4, g: 1.7, b: 0, a: 2}
+  availableToPlaceTintColor: {r: 0.2, g: 0.65, b: 1, a: 2}
+  availableToPlaceFresnelColor: {r: 4, g: 1.7, b: 0, a: 2}
 --- !u!114 &1072601484
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14974,7 +14954,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -91.25002, y: -22.25}
+  m_AnchoredPosition: {x: -91.250244, y: -22.25}
   m_SizeDelta: {x: -817.5, y: -100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1154113406
@@ -17165,6 +17145,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1315305435}
+  - component: {fileID: 1315305436}
   m_Layer: 5
   m_Name: Single Unit Container
   m_TagString: Untagged
@@ -17194,6 +17175,19 @@ RectTransform:
   m_AnchoredPosition: {x: 100, y: 0}
   m_SizeDelta: {x: -200, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1315305436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1315305434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30aede2f7b8484a82b8cce83221b6b73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.UI.Containers.SingleUnitSelectedUI
+  unitNameText: {fileID: 1266750878}
 --- !u!1001 &1316927690
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19697,6 +19691,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1439996931}
+  - component: {fileID: 1439996932}
   m_Layer: 5
   m_Name: Selected Unit Icon Container
   m_TagString: Untagged
@@ -19725,6 +19720,20 @@ RectTransform:
   m_AnchoredPosition: {x: 100.000046, y: 0}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1439996932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439996930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3fbd83037cdd4f57b4e3e4da1db6521, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitIconUI
+  icon: {fileID: 1431966782}
+  healthText: {fileID: 1936917055}
 --- !u!1 &1441022221
 GameObject:
   m_ObjectHideFlags: 0
@@ -25147,6 +25156,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4960964140495102217, guid: 599856f3bd9a1614f9c0db64f2ddcacd, type: 3}
   m_PrefabInstance: {fileID: 1819996207}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1819996209 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6191328372263240304, guid: 599856f3bd9a1614f9c0db64f2ddcacd, type: 3}
+  m_PrefabInstance: {fileID: 1819996207}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6c9e641aa5ef409da59150e57ea0f4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.UI.Components.Progressbar
 --- !u!1 &1825563893
 GameObject:
   m_ObjectHideFlags: 0
@@ -29374,17 +29394,21 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5734369194076491753, guid: 43943267dde60fe4a88cf5bd885c00e3, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6018277380246554126, guid: 43943267dde60fe4a88cf5bd885c00e3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 14.9
+      value: 4.13
       objectReference: {fileID: 0}
     - target: {fileID: 6018277380246554126, guid: 43943267dde60fe4a88cf5bd885c00e3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.91
+      value: 0.84
       objectReference: {fileID: 0}
     - target: {fileID: 6018277380246554126, guid: 43943267dde60fe4a88cf5bd885c00e3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -51.6
+      value: -59.56
       objectReference: {fileID: 0}
     - target: {fileID: 6018277380246554126, guid: 43943267dde60fe4a88cf5bd885c00e3, type: 3}
       propertyPath: m_LocalRotation.w
@@ -29957,4 +29981,3 @@ SceneRoots:
   - {fileID: 687768162}
   - {fileID: 4454401069924869726}
   - {fileID: 1218841104191449811}
-  - {fileID: 510739289}

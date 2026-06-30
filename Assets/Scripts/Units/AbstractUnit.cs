@@ -20,7 +20,11 @@ namespace Gumiho_Rts.Units
         protected const string SUPPLY = "Supply";
         protected const string TARGET_GAME_OBJECT = "TargetGameObject";
         protected const string GATHER_SUPPLIES_EVENT = "GatherSuppliesEventChannel";
+        protected const string BUILDING_EVENT_CHANNEL = "BuildingEventChannel";
         protected const string SUPPLY_AMOUNT_HELD = "SupplyAmountHeld";
+        protected const string GHOST = "Ghost";
+        protected const string BUILDING_SO = "BuildingSO";
+        protected const string BUILDING_UNDER_CONSTRUCTION = "BuildingUnderConstruction";
 
         private void Awake()
         {
@@ -31,6 +35,8 @@ namespace Gumiho_Rts.Units
         protected override void Start()
         {
             base.Start();
+            CurrentHealth = UnitSO.Health;
+            MaxHealth = UnitSO.Health;
             Bus<UnitSpawnEvent>.Raise(new UnitSpawnEvent(this));
         }
 
@@ -38,6 +44,7 @@ namespace Gumiho_Rts.Units
 
         public void Move(Vector3 target)
         {
+            SetCommandOverride(null);
             //navMeshAgent.SetDestination(target);
             behaviorGraphAgent.SetVariableValue(TARGET_LOCATION, target);
             behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.Move);
@@ -45,7 +52,13 @@ namespace Gumiho_Rts.Units
 
         public void Stop()
         {
+            SetCommandOverride(null);
             behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.Stop);
+        }
+
+        private void OnDestroy()
+        {
+            Bus<UnitDeathEvent>.Raise(new UnitDeathEvent(this));
         }
     }
 

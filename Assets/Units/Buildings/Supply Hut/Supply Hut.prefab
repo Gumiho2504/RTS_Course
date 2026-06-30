@@ -146,12 +146,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.BaseBuilding
   decalProjector: {fileID: 7194412501631988654}
+  <IsSelected>k__BackingField: 0
   <UnitSO>k__BackingField: {fileID: 11400000, guid: a415944b25cff4bf1ae228e14f1ba2ce, type: 2}
   <AvailableCommands>k__BackingField: []
   <CurrentHealth>k__BackingField: 0
   <MaxHealth>k__BackingField: 0
+  initialCommands: []
   <CurrentQueueStartTime>k__BackingField: 0
   <BuildingUnit>k__BackingField: {fileID: 0}
+  <Progress>k__BackingField:
+    <StartTime>k__BackingField: 0
+    <Progress>k__BackingField: 0
+    <State>k__BackingField: 3
+  <MainMeshRenderer>k__BackingField: {fileID: -7511558181221131132, guid: e7193d6645526da4f8d63f088f9a6f44, type: 3}
+  <BuildingSO>k__BackingField: {fileID: 0}
+  navMeshObstacle: {fileID: 8238219775677384266}
+  primaryMaterial: {fileID: 2100000, guid: b35c532178876e94f917ff0196f65258, type: 2}
 --- !u!1001 &4498428509526723367
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -6,6 +6,7 @@ using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
 using Gumiho_Rts.UI.Components;
 using Gumiho_Rts.Units;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -14,15 +15,8 @@ namespace Gumiho_Rts.UI.Containers
     public class ActionUI : MonoBehaviour, IUIElement<HashSet<AbstractCommandable>>
     {
         [SerializeField] private UIActionButton[] actionButtons;
-        //  private HashSet<AbstractCommandable> selectedUnits = new(12);
-
-
-
-        // private void Awake()
-        // {
-        //     Bus<UnitSelectedEvent>.OnEvent += HandleUnitSelected;
-        //     Bus<UnitDeselectedEvent>.OnEvent += HandleUnitDeselected;
-        // }
+         
+      
 
         public void EnableFor(HashSet<AbstractCommandable> item)
         {
@@ -50,36 +44,22 @@ namespace Gumiho_Rts.UI.Containers
         //     Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
         // }
 
-        // private void HandleUnitSelected(UnitSelectedEvent evt)
-        // {
-        //     if (evt.Unit is AbstractCommandable commandable)
-        //     {
-        //         selectedUnits.Add(commandable);
-        //         RefreshButtons();
-        //     }
-        // }
-
-
-        // private void HandleUnitDeselected(UnitDeselectedEvent evt)
-        // {
-        //     if (evt.Unit is AbstractCommandable commandable)
-        //     {
-        //         selectedUnits.Remove(commandable);
-        //         RefreshButtons();
-        //     }
-        // }
-
+  
         private void RefreshButtons(HashSet<AbstractCommandable> selectedUnits)
         {
 
-            HashSet<ActionBase> availableCommands = new(9);
+            HashSet<BaseCommand> availableCommands = new(9);
             foreach (AbstractCommandable commandable in selectedUnits)
             {
-                availableCommands.UnionWith(commandable.AvailableCommands);
+                //  availableCommands.UnionWith(commandable.AvailableCommands);
+                if (commandable.AvailableCommands != null)
+                {
+                    availableCommands.AddRange(commandable.AvailableCommands);
+                }
             }
             for (int i = 0; i < actionButtons.Length; i++)
             {
-                ActionBase actionBaseForSlot = availableCommands.Where(action => action.Slot == i).FirstOrDefault();
+                BaseCommand actionBaseForSlot = availableCommands.Where(action => action.Slot == i).FirstOrDefault();
                 if (actionBaseForSlot != null)
                 {
                     actionButtons[i].EnableFor(actionBaseForSlot, HandleClick(actionBaseForSlot));
@@ -91,9 +71,9 @@ namespace Gumiho_Rts.UI.Containers
             }
         }
 
-        private UnityAction HandleClick(ActionBase action)
+        private UnityAction HandleClick(BaseCommand action)
         {
-            return () => Bus<ActionSelectedEvent>.Raise(new ActionSelectedEvent(action));
+            return () => Bus<CommandSelectedEvent>.Raise(new CommandSelectedEvent(action));
         }
 
 

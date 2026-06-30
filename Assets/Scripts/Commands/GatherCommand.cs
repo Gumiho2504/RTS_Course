@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Gumiho_Rts.Commands
 {
     [CreateAssetMenu(fileName = "Gather Action", menuName = "Units/Commands/Gather", order = 105)]
-    public class GatherCommand : ActionBase
+    public class GatherCommand : BaseCommand
     {
         [SerializeField] private UnitSO commandPostBuilding;
         public override bool CanHandle(CommandContext context)
@@ -48,6 +48,8 @@ namespace Gumiho_Rts.Commands
 
 
         }
+
+        public override bool IsLocked(CommandContext context) => false;
     }
 
 }

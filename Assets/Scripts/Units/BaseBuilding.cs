@@ -1,6 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Gumiho_Rts.EventBus;
+using Gumiho_Rts.Events;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Gumiho_Rts.Units
 {
@@ -10,13 +14,43 @@ namespace Gumiho_Rts.Units
         public UnitSO[] Queue => buildingQueue.ToArray();
         [field: SerializeField] public float CurrentQueueStartTime { get; private set; }
         [field: SerializeField] public UnitSO BuildingUnit { get; private set; }
+        [field: SerializeField] public BuildingProgress Progress { get; private set; } = new BuildingProgress(0, 0, BuildingProgress.BuildingState.Destroy);
+
 
         public delegate void QueueUpdatedEvent(UnitSO[] unitsInQueue);
         public event QueueUpdatedEvent OnQueueUpdated;
 
+        public delegate void HealthUpdatedEvent(AbstractCommandable commandable,int lastHealth, int newHealth);
+        public event HealthUpdatedEvent OnHealthUpdated;
 
+        [field: SerializeField] public MeshRenderer MainMeshRenderer { get; private set; }
+
+        private IBuildingBuilder unitBuildingThis;
         private List<UnitSO> buildingQueue = new(MAX_QUEUE_SIZE);
         private const int MAX_QUEUE_SIZE = 5;
+        [field: SerializeField] public BuildingUnitSO BuildingSO { get; private set; }
+        [SerializeField] private NavMeshObstacle navMeshObstacle;
+        [SerializeField] private Material primaryMaterial;
+        private void Awake()
+        {
+            BuildingSO = UnitSO as BuildingUnitSO;
+            MaxHealth = BuildingSO.Health;
+        }
+
+
+        protected override void Start()
+        {
+            base.Start();
+            if (MainMeshRenderer != null)
+            {
+                MainMeshRenderer.material = primaryMaterial;
+            }
+            Progress = new BuildingProgress(Progress.StartTime, 1, BuildingProgress.BuildingState.Completed);
+            unitBuildingThis = null;
+            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
+            Bus<BuildingSpawnEvent>.Raise(new BuildingSpawnEvent(this));
+        }
+
 
         public void BuildUnit(UnitSO unit)
         {
@@ -25,6 +59,10 @@ namespace Gumiho_Rts.Units
                 Debug.LogError("BuildUnit called when the queue was already full ! This is not supported!");
                 return;
             }
+            
+            Bus<SupplyEvent>.Raise(new SupplyEvent(-unit.Cost.Minerals, unit.Cost.MineralsSO));
+            Bus<SupplyEvent>.Raise(new SupplyEvent(-unit.Cost.Gas, unit.Cost.GasSO));
+
             buildingQueue.Add(unit);
             if (buildingQueue.Count == 1)
                 StartCoroutine(DoBuildUnits());
@@ -39,6 +77,11 @@ namespace Gumiho_Rts.Units
                 Debug.LogError("CancelBuildUnit called with an invalid index");
                 return;
             }
+            
+            UnitSO unitSO = buildingQueue[index];
+            Bus<SupplyEvent>.Raise(new SupplyEvent(unitSO.Cost.Minerals, unitSO.Cost.MineralsSO));
+            Bus<SupplyEvent>.Raise(new SupplyEvent(unitSO.Cost.Gas, unitSO.Cost.GasSO));
+
             buildingQueue.RemoveAt(index);
             if (index == 0)
             {
@@ -71,5 +114,35 @@ namespace Gumiho_Rts.Units
             OnQueueUpdated?.Invoke(buildingQueue.ToArray());
 
         }
+
+        public void StartBuilding(IBuildingBuilder buildingBuilder)
+        {
+            Awake();
+            unitBuildingThis = buildingBuilder;
+            MainMeshRenderer.material = BuildingSO.BuildingGhostPlacement;
+
+            Progress = new BuildingProgress(Time.time - BuildingSO.BuildTime * Progress.Progress, Progress.Progress, BuildingProgress.BuildingState.Building);
+            if(Progress.Progress == 0)
+            {
+                Heal(1);
+            }
+            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
+            Bus<UnitDeathEvent>.OnEvent += HandleUnitDeath;
+        }
+
+        private void HandleUnitDeath(UnitDeathEvent args)
+        {
+            if (args.Unit.TryGetComponent(out IBuildingBuilder builder) && builder == unitBuildingThis)
+            {
+                Progress = new BuildingProgress(Progress.StartTime, (Time.time - Progress.StartTime) / BuildingSO.BuildTime, BuildingProgress.BuildingState.Paused);
+                Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
+        }
+       
     }
 }

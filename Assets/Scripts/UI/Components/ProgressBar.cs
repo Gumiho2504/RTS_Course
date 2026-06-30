@@ -4,7 +4,7 @@ using System;
 
 namespace Gumiho_Rts.UI.Components
 {
-    public class Progressbar : MonoBehaviour
+    public class ProgressBar : MonoBehaviour
     {
         [SerializeField] private Vector2 padding = new(9, 8);
         [SerializeField] private RectTransform mask;

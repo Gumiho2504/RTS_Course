@@ -1,16 +1,19 @@
 using System;
 using Gumiho_Rts.Behavoir;
+using Gumiho_Rts.Commands;
 using Gumiho_Rts.Environment;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
 using Unity.Behavior;
+
 using UnityEngine;
 using UnityEngine.AI;
 namespace Gumiho_Rts.Units
 {
     [RequireComponent(typeof(NavMeshAgent))]
-    public class Worker : AbstractUnit
+    public class Worker : AbstractUnit, IBuildingBuilder
     {
+        public bool IsBuilding => behaviorGraphAgent.GetVariable(COMMAND, out BlackboardVariable<UnitCommand> command) && command.Value.Equals(UnitCommand.BuildBuilding);
         public bool HasSupplies
         {
             get
@@ -22,6 +25,7 @@ namespace Gumiho_Rts.Units
                 return false;
             }
         }
+        [SerializeField] private BaseCommand CancelBuildingCommand;
         protected override void Start()
         {
             base.Start();
@@ -29,6 +33,24 @@ namespace Gumiho_Rts.Units
             {
                 eventChannelVariable.Value.Event += HandleGatherSupplies;
             }
+            if (behaviorGraphAgent.GetVariable(BUILDING_EVENT_CHANNEL, out BlackboardVariable<BuildingEventChannel> buildingEventChannelVariable))
+            {
+                buildingEventChannelVariable.Value.Event += HandleBuildingEvents;
+            }
+
+        }
+
+
+
+        public override void Deselect()
+        {
+    
+            if (decalProjector != null)
+                decalProjector.gameObject.SetActive(false);
+            IsSelected = false;
+            if (IsBuilding)
+                SetCommandOverride();
+            Bus<UnitDeselectedEvent>.Raise(new UnitDeselectedEvent(this));
         }
 
 
@@ -52,6 +74,85 @@ namespace Gumiho_Rts.Units
             Bus<SupplyEvent>.Raise(new SupplyEvent(amount, supply));
         }
 
+        private void HandleBuildingEvents(GameObject self, BuildingEventType eventType, BaseBuilding building)
+        {
+            switch (eventType)
+            {
+                case BuildingEventType.ArrivedAt:
+                    if (building != null && building.Progress.State == BuildingProgress.BuildingState.Building)
+                    {
+                        Stop();
+                        SetCommandOverride(new BaseCommand[] { CancelBuildingCommand });
+                        break;
+                    }
+                    break;
+                case BuildingEventType.Begin:
+                    SetCommandOverride(new BaseCommand[] { CancelBuildingCommand });
+                    break;
+                case BuildingEventType.Cancel:
+                case BuildingEventType.Abort:
+                case BuildingEventType.Competed:
+                    SetCommandOverride(null);
+                    break;
+                default: break;
+            }
+        }
 
+        public GameObject Build(BuildingUnitSO building, Vector3 position)
+        {
+            var instance = Instantiate(building.Prefab, position, Quaternion.identity);
+            if (!instance.TryGetComponent(out BaseBuilding _))
+            {
+                Debug.LogError($"Missing Building Prefab on BuildingSO name:{building.name}! Can not build!");
+                return null;
+            }
+
+            behaviorGraphAgent.SetVariableValue(BUILDING_SO, building);
+            behaviorGraphAgent.SetVariableValue(TARGET_LOCATION, position);
+            behaviorGraphAgent.SetVariableValue(GHOST, instance);
+            behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.BuildBuilding);
+
+            // SetCommandOverride(new BaseCommand[] { CancelBuildingCommand });
+            // Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
+
+            Bus<SupplyEvent>.Raise(new SupplyEvent(-building.Cost.Minerals, building.Cost.MineralsSO));
+            Bus<SupplyEvent>.Raise(new SupplyEvent(-building.Cost.Gas, building.Cost.GasSO));
+
+            return instance;
+        }
+
+        public void CancelBuilding()
+        {
+            if (behaviorGraphAgent.GetVariable(GHOST, out BlackboardVariable<GameObject> ghostVariable) && ghostVariable.Value != null)
+            {
+                Destroy(ghostVariable.Value);
+            }
+            if (behaviorGraphAgent.GetVariable(BUILDING_UNDER_CONSTRUCTION, out BlackboardVariable<BaseBuilding> building) && building.Value != null)
+            {
+                Destroy(building.Value.gameObject);
+
+                BuildingUnitSO buildingUnitSO = building.Value.BuildingSO;
+                Bus<SupplyEvent>.Raise(new SupplyEvent(Mathf.FloorToInt(buildingUnitSO.Cost.Minerals * 0.75f), buildingUnitSO.Cost.MineralsSO));
+                Bus<SupplyEvent>.Raise(new SupplyEvent(Mathf.FloorToInt(buildingUnitSO.Cost.Gas * 0.75f), buildingUnitSO.Cost.GasSO));
+            }
+            SetCommandOverride(Array.Empty<BaseCommand>());
+
+            Stop();
+        }
+
+        public void ResumeBuilding(BaseBuilding building)
+        {
+            Debug.Log("Resume Building" + building.name);
+            behaviorGraphAgent.SetVariableValue(TARGET_LOCATION, building.transform.position);
+            behaviorGraphAgent.SetVariableValue(BUILDING_UNDER_CONSTRUCTION, building);
+            behaviorGraphAgent.SetVariableValue<GameObject>(GHOST, null);
+            behaviorGraphAgent.SetVariableValue(BUILDING_SO, building.BuildingSO);
+
+            behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.BuildBuilding);
+
+            // SetCommandOverride(new BaseCommand[] { CancelBuildingCommand });
+            // Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
+
+        }
     }
 }

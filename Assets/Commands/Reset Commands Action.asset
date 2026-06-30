@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01a234620d70f4220b7183829236f169, type: 3}
   m_Name: Reset Commands Action
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Commands.OverrideCommandsCommand
+  <Name>k__BackingField: Cancel
   <Icon>k__BackingField: {fileID: 21300000, guid: af5afbd56621f394b8d6017ebda9401e, type: 3}
   <Slot>k__BackingField: 8
   <RequiresClickToActivate>k__BackingField: 0
+  <GhostPrefab>k__BackingField: {fileID: 0}
+  <Restrictions>k__BackingField: []
   <commands>k__BackingField: []
