@@ -32,7 +32,7 @@ namespace Gumiho_Rts.Units
         protected const string BUILDING_SO = "BuildingSO";
         protected const string BUILDING_UNDER_CONSTRUCTION = "BuildingUnderConstruction";
 
-        private void Awake()
+        protected virtual void Awake()
         {
             navMeshAgent = GetComponent<NavMeshAgent>();
 
@@ -129,7 +129,7 @@ namespace Gumiho_Rts.Units
         }
 
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             Bus<UnitDeathEvent>.Raise(new UnitDeathEvent(this));
 

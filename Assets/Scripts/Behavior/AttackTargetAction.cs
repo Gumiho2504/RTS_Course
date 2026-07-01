@@ -95,7 +95,8 @@ namespace Gumiho_Rts.Behavoir
             {
                 navMeshAgent.isStopped = false;
             }
-            unit.AttackingParticleSystem.Stop();
+            if (unit.AttackingParticleSystem != null)
+                unit.AttackingParticleSystem.Stop();
         }
 
         private bool HasValidInput() => Self.Value != null

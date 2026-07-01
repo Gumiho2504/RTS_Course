@@ -456,9 +456,9 @@ GameObject:
   - component: {fileID: 4936711382548348666}
   - component: {fileID: 1270225751102582855}
   - component: {fileID: 4830041354327977802}
-  - component: {fileID: 8350298506283280844}
   - component: {fileID: 1625678859090001899}
   - component: {fileID: 4623534672483793545}
+  - component: {fileID: 3279637552042835559}
   m_Layer: 6
   m_Name: Grenadier
   m_TagString: Untagged
@@ -559,30 +559,6 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 1813055781741166138}
---- !u!114 &8350298506283280844
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1813055781741166138}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a2b50667034e9d4894f9f5c8dbc108f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.BaseMilitaryUnit
-  decalProjector: {fileID: 6806269853669096770}
-  <IsSelected>k__BackingField: 0
-  <UnitSO>k__BackingField: {fileID: 11400000, guid: d271952095cbd4a988050dc9860b2a82, type: 2}
-  <AvailableCommands>k__BackingField:
-  - {fileID: 11400000, guid: adfc3b573df23f142805e97d777d6237, type: 2}
-  - {fileID: 11400000, guid: da9ca1647b00f40b594dcd7d05650cc5, type: 2}
-  - {fileID: 11400000, guid: da9ca1647b00f40b594dcd7d05650cc5, type: 2}
-  <CurrentHealth>k__BackingField: 0
-  <MaxHealth>k__BackingField: 0
-  initialCommands: []
-  <AttackingParticleSystem>k__BackingField: {fileID: 0}
-  DamageableSensor: {fileID: 5159468807328298693}
 --- !u!136 &1625678859090001899
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -633,6 +609,32 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &3279637552042835559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1813055781741166138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5311a721579094746934948602c850c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.Grenadier
+  decalProjector: {fileID: 6806269853669096770}
+  <IsSelected>k__BackingField: 0
+  <UnitSO>k__BackingField: {fileID: 11400000, guid: d271952095cbd4a988050dc9860b2a82, type: 2}
+  <AvailableCommands>k__BackingField:
+  - {fileID: 11400000, guid: adfc3b573df23f142805e97d777d6237, type: 2}
+  - {fileID: 11400000, guid: da9ca1647b00f40b594dcd7d05650cc5, type: 2}
+  - {fileID: 11400000, guid: bd2406fc6901a4556bc421dec2a8bc30, type: 2}
+  <CurrentHealth>k__BackingField: 0
+  <MaxHealth>k__BackingField: 0
+  initialCommands: []
+  <AttackingParticleSystem>k__BackingField: {fileID: 0}
+  DamageableSensor: {fileID: 5159468807328298693}
+  grenade: {fileID: 1261287624979116851}
+  explosionParticle: {fileID: 162524390503710701}
 --- !u!1 &1929278855779803906
 GameObject:
   m_ObjectHideFlags: 0
@@ -2487,6 +2489,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 86dc2f018c879e84e85016c3b6eb06e4, type: 3}
+--- !u!1 &1261287624979116851 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1834838210213202, guid: 86dc2f018c879e84e85016c3b6eb06e4, type: 3}
+  m_PrefabInstance: {fileID: 1262831637591524961}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1930688289250584969 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 814399922220380136, guid: 86dc2f018c879e84e85016c3b6eb06e4, type: 3}
@@ -2549,6 +2556,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a7d9401fea42804da048030b09e4232, type: 3}
+--- !u!198 &162524390503710701 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 2424133839786347970, guid: 7a7d9401fea42804da048030b09e4232, type: 3}
+  m_PrefabInstance: {fileID: 2586517474001777199}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &294408575047847386 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2878034333400645621, guid: 7a7d9401fea42804da048030b09e4232, type: 3}
