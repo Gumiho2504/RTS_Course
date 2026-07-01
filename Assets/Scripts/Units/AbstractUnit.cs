@@ -16,6 +16,7 @@ namespace Gumiho_Rts.Units
         private NavMeshAgent navMeshAgent;
         protected BehaviorGraphAgent behaviorGraphAgent;
         public float AgentRadius => navMeshAgent.radius;
+        [field: SerializeField] public ParticleSystem AttackingParticleSystem { get; private set; }
 
         [SerializeField] private DamageableSensor DamageableSensor;
 

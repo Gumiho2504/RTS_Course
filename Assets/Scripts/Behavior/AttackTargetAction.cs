@@ -26,6 +26,7 @@ namespace Gumiho_Rts.Behavoir
         private IDamageable targetDamageable;
 
         private float lastAttackTime;
+        private AbstractUnit unit;
 
         protected override Status OnStart()
         {
@@ -33,35 +34,53 @@ namespace Gumiho_Rts.Behavoir
 
             navMeshAgent = Self.Value.GetComponent<NavMeshAgent>();
             selfTransform = Self.Value.transform;
+            unit = selfTransform.GetComponent<AbstractUnit>();
             animator = selfTransform.GetComponent<Animator>();
 
             targetTransform = Target.Value.transform;
             targetDamageable = Target.Value.GetComponent<IDamageable>();
 
-            if (animator != null)
-            {
-                animator.SetBool(AnimationConstants.ATTACK, true);
-            }
+
             return Status.Running;
         }
 
         protected override Status OnUpdate()
         {
-            if(Target.Value == null|| targetDamageable.CurrentHealth == 0) return Status.Success;
+            if (Target.Value == null || targetDamageable.CurrentHealth == 0) return Status.Success;
 
-            if (Vector3.Distance(targetTransform.position, selfTransform.position) <= AttackConfig.Value.AttackRange)
+            if (animator != null)
+            {
+                animator.SetFloat(AnimationConstants.SPEED, navMeshAgent.velocity.magnitude);
+            }
+
+            if (Vector3.Distance(targetTransform.position, selfTransform.position) >= AttackConfig.Value.AttackRange)
             {
                 navMeshAgent.SetDestination(targetTransform.position);
                 navMeshAgent.isStopped = false;
+                if (animator != null)
+                {
+                    animator.SetBool(AnimationConstants.ATTACK, false);
+                }
                 return Status.Running;
             }
 
             navMeshAgent.isStopped = true;
 
-            if(Time.time >= lastAttackTime + AttackConfig.Value.AttackDelay)
+            Quaternion lookRotation = Quaternion.LookRotation((targetTransform.position - selfTransform.position).normalized, Vector3.up);
+            selfTransform.rotation = Quaternion.Euler(selfTransform.eulerAngles.x, lookRotation.eulerAngles.y, selfTransform.eulerAngles.z);
+
+            if (animator != null)
+            {
+                animator.SetBool(AnimationConstants.ATTACK, true);
+            }
+            if (Time.time >= lastAttackTime + AttackConfig.Value.AttackDelay)
             {
                 lastAttackTime = Time.time;
                 targetDamageable.TakeDamage(AttackConfig.Value.Damage);
+                if (unit.AttackingParticleSystem != null)
+                {
+                    unit.AttackingParticleSystem.Play();
+                }
             }
             return Status.Running;
         }
@@ -73,6 +92,7 @@ namespace Gumiho_Rts.Behavoir
 
         private bool HasValidInput() => Self.Value != null
                                         && Self.Value.TryGetComponent<NavMeshAgent>(out NavMeshAgent _)
+                                        && Self.Value.TryGetComponent<AbstractUnit>(out AbstractUnit _)
                                         && Target.Value != null
                                         && Target.Value.TryGetComponent<IDamageable>(out IDamageable _)
                                         && AttackConfig.Value != null;

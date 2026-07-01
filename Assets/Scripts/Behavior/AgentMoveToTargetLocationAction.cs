@@ -44,7 +44,7 @@ namespace Gumiho_Rts.Behavoir
             {
                 return Status.Success;
             }
-//            Debug.Log("Running");
+            //            Debug.Log("Running");
             return Status.Running;
         }
 
