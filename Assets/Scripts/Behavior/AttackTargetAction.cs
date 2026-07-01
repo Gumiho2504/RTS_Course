@@ -30,10 +30,13 @@ namespace Gumiho_Rts.Behavoir
 
         protected override Status OnStart()
         {
+            Debug.Log($"Onstart attack target action {HasValidInput()}");
+
             if (!HasValidInput()) return Status.Failure;
 
             navMeshAgent = Self.Value.GetComponent<NavMeshAgent>();
             selfTransform = Self.Value.transform;
+
             unit = selfTransform.GetComponent<AbstractUnit>();
             animator = selfTransform.GetComponent<Animator>();
 
@@ -57,10 +60,9 @@ namespace Gumiho_Rts.Behavoir
             {
                 navMeshAgent.SetDestination(targetTransform.position);
                 navMeshAgent.isStopped = false;
-                if (animator != null)
-                {
-                    animator.SetBool(AnimationConstants.ATTACK, false);
-                }
+
+                animator?.SetBool(AnimationConstants.ATTACK, false);
+
                 return Status.Running;
             }
 
@@ -69,10 +71,10 @@ namespace Gumiho_Rts.Behavoir
             Quaternion lookRotation = Quaternion.LookRotation((targetTransform.position - selfTransform.position).normalized, Vector3.up);
             selfTransform.rotation = Quaternion.Euler(selfTransform.eulerAngles.x, lookRotation.eulerAngles.y, selfTransform.eulerAngles.z);
 
-            if (animator != null)
-            {
-                animator.SetBool(AnimationConstants.ATTACK, true);
-            }
+
+
+            animator?.SetBool(AnimationConstants.ATTACK, true);
+
             if (Time.time >= lastAttackTime + AttackConfig.Value.AttackDelay)
             {
                 lastAttackTime = Time.time;
@@ -87,7 +89,7 @@ namespace Gumiho_Rts.Behavoir
 
         protected override void OnEnd()
         {
-            animator.SetBool(AnimationConstants.ATTACK, false);
+            animator?.SetBool(AnimationConstants.ATTACK, false);
         }
 
         private bool HasValidInput() => Self.Value != null
