@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Gumiho_Rts.EventBus;
+using Gumiho_Rts.Events;
 using UnityEngine;
 namespace Gumiho_Rts.Units
 {
@@ -15,7 +18,8 @@ namespace Gumiho_Rts.Units
 
         private new SphereCollider collider;
 
-        private void Awake() {
+        private void Awake()
+        {
             collider = GetComponent<SphereCollider>();
         }
         void OnTriggerEnter(Collider other)
@@ -24,6 +28,10 @@ namespace Gumiho_Rts.Units
             {
                 damageables.Add(damageable);
                 OnUnitEnter?.Invoke(damageable);
+            }
+            if (damageables.Count == 1)
+            {
+                Bus<UnitDeathEvent>.OnEvent += HandleUnitDeath;
             }
         }
 
@@ -34,11 +42,28 @@ namespace Gumiho_Rts.Units
                 damageables.Remove(damageable);
                 OnUnitExit?.Invoke(damageable);
             }
+            if (damageables.Count == 0)
+            {
+                Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
+            }
+        }
+
+        private void HandleUnitDeath(UnitDeathEvent args)
+        {
+            if (damageables.Remove(args.Unit))
+            {
+                OnTriggerExit(args.Unit.GetComponent<Collider>());
+            }
         }
 
         public void SetupFrom(AttackConfigSO attackConfig)
         {
             collider.radius = attackConfig.AttackRange;
+        }
+
+        void OnDestroy()
+        {
+            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
         }
     }
 }
