@@ -11,7 +11,7 @@ using UnityEngine.AI;
 namespace Gumiho_Rts.Units
 {
     [RequireComponent(typeof(NavMeshAgent))]
-    public class Worker : AbstractUnit, IBuildingBuilder
+    public class Worker : AbstractUnit, IBuildingBuilder, ITransportable
     {
         public bool IsBuilding => behaviorGraphAgent.GetVariable(COMMAND, out BlackboardVariable<UnitCommand> command) && command.Value.Equals(UnitCommand.BuildBuilding);
         public bool HasSupplies
@@ -25,6 +25,10 @@ namespace Gumiho_Rts.Units
                 return false;
             }
         }
+
+        public int TransportCapacityUsage => unitSO.TransportConfig.GetTransportCapacityUsage();
+
+
         [SerializeField] private BaseCommand CancelBuildingCommand;
         protected override void Start()
         {
@@ -44,7 +48,7 @@ namespace Gumiho_Rts.Units
 
         public override void Deselect()
         {
-    
+
             if (decalProjector != null)
                 decalProjector.gameObject.SetActive(false);
             IsSelected = false;
@@ -53,6 +57,10 @@ namespace Gumiho_Rts.Units
             Bus<UnitDeselectedEvent>.Raise(new UnitDeselectedEvent(this));
         }
 
+        public void LoadInto(ITransporter transporter)
+        {
+            throw new NotImplementedException();
+        }
 
 
         public void Gather(GatherableSupply supply)
@@ -154,5 +162,7 @@ namespace Gumiho_Rts.Units
             // Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
 
         }
+
+
     }
 }

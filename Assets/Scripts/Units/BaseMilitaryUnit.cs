@@ -1,8 +1,13 @@
 using UnityEngine;
 namespace Gumiho_Rts.Units
 {
-    public class BaseMilitaryUnit : AbstractUnit
+    public class BaseMilitaryUnit : AbstractUnit, ITransportable
     {
+        public int TransportCapacityUsage => unitSO.TransportConfig.GetTransportCapacityUsage();
 
+        public void LoadInto(ITransporter transporter)
+        {
+            
+        }
     }
 }

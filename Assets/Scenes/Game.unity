@@ -7992,6 +7992,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1044941370334050359, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
+      propertyPath: <AvailableCommands>k__BackingField.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1044941370334050359, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
+      propertyPath: '<AvailableCommands>k__BackingField.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 076f43ddfc712bf4593f640748d49e81, type: 2}
     - target: {fileID: 1076983579694789324, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
       propertyPath: m_Name
       value: Air Transport
