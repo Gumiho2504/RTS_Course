@@ -31,20 +31,23 @@ namespace Gumiho_Rts.Units
             Vector3 startPosition = grenade.transform.position;
             Vector3 endPosition = grenade.transform.position + grenade.transform.forward * 3f;
 
+            IDamageable damageable = null;
+
             if (behaviorGraphAgent.GetVariable("TargetGameObject", out BlackboardVariable<GameObject> targetVariable) && targetVariable != null)
             {
                 endPosition = targetVariable.Value.transform.position + Vector3.up;
+                damageable = targetVariable.Value.GetComponent<IDamageable>();
             }
             else if (behaviorGraphAgent.GetVariable("TargetLocation", out BlackboardVariable<Vector3> targetLocationVariable) && targetLocationVariable != null)
             {
                 endPosition = targetLocationVariable;
             }
 
-            StartCoroutine(AnimateGrenadeMovement(startPosition, endPosition));
+            StartCoroutine(AnimateGrenadeMovement(startPosition, endPosition, damageable));
 
         }
 
-        IEnumerator AnimateGrenadeMovement(Vector3 startPosition, Vector3 endPosition)
+        IEnumerator AnimateGrenadeMovement(Vector3 startPosition, Vector3 endPosition, IDamageable damageable)
         {
             float time = 0;
             const float speed = 2;
@@ -54,6 +57,8 @@ namespace Gumiho_Rts.Units
                 time += speed * Time.deltaTime;
                 yield return null;
             }
+
+            damageable?.TakeDamage(unitSO.AttackConfig.Damage);
 
             explosionParticle.transform.SetParent(null);
             explosionParticle.transform.position = endPosition;

@@ -15,7 +15,7 @@ MonoBehaviour:
   <AttackRange>k__BackingField: 6
   <AttackDelay>k__BackingField: 2
   <Damage>k__BackingField: 25
-  <HasProjectileAttacks>k__BackingField: 0
+  <HasProjectileAttacks>k__BackingField: 1
   <IsAreaOfEffect>k__BackingField: 0
   <AreaOfEffectRadius>k__BackingField: 2
   <MaxEnemiesHitPerAttack>k__BackingField: 5

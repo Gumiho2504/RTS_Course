@@ -79,10 +79,15 @@ namespace Gumiho_Rts.Behavoir
             if (Time.time >= lastAttackTime + AttackConfig.Value.AttackDelay)
             {
                 lastAttackTime = Time.time;
-                targetDamageable.TakeDamage(AttackConfig.Value.Damage);
+                //targetDamageable.TakeDamage(AttackConfig.Value.Damage);
                 if (unit.AttackingParticleSystem != null)
                 {
                     unit.AttackingParticleSystem.Play();
+                }
+                if (!AttackConfig.Value.HasProjectileAttacks)
+                {
+                    targetDamageable.TakeDamage(AttackConfig.Value.Damage);
+                    // projectile attacks are handle by the specific subclass of AbstractUnit that shoot the projectile.
                 }
             }
             return Status.Running;
