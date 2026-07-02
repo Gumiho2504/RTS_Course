@@ -10,6 +10,7 @@ namespace Gumiho_Rts.Units
 
         private Transform grenadeParent;
         private Vector3 defaultGrenadePosition;
+        private Collider[] enemyColliders;
 
         protected override void Awake()
         {
@@ -22,6 +23,12 @@ namespace Gumiho_Rts.Units
 
             defaultGrenadePosition = grenade.transform.localPosition;
             grenadeParent = grenade.transform.parent;
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+            enemyColliders = new Collider[unitSO.AttackConfig.MaxEnemiesHitPerAttack];
         }
 
         // Animation Event
@@ -58,14 +65,30 @@ namespace Gumiho_Rts.Units
                 yield return null;
             }
 
-            damageable?.TakeDamage(unitSO.AttackConfig.Damage);
 
             explosionParticle.transform.SetParent(null);
             explosionParticle.transform.position = endPosition;
             explosionParticle.Play();
+            ApplyDamage(endPosition, damageable);
 
             grenade.transform.SetParent(grenadeParent);
             grenade.transform.localPosition = defaultGrenadePosition;
+        }
+
+        private void ApplyDamage(Vector3 endPosition, IDamageable damageable)
+        {
+            damageable?.TakeDamage(unitSO.AttackConfig.Damage);
+            if (unitSO.AttackConfig.IsAreaOfEffect)
+            {
+                int hits = Physics.OverlapSphereNonAlloc(endPosition, unitSO.AttackConfig.AreaOfEffectRadius, enemyColliders, unitSO.AttackConfig.DamageableLayers);
+                for (int i = 0; i < hits; i++)
+                {
+                    if (enemyColliders[i].TryGetComponent<IDamageable>(out IDamageable nearbyEnemy) && nearbyEnemy != damageable)
+                    {
+                        nearbyEnemy?.TakeDamage(unitSO.AttackConfig.CalculateAreaOfEffectDamage(endPosition,nearbyEnemy.Transform.position));
+                    }
+                }
+            }
         }
 
         protected override void OnDestroy()
