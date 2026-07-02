@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Air Transport
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.Unit
   <Name>k__BackingField: Air Transport
-  <Health>k__BackingField: 1300
+  <Health>k__BackingField: 200
   <Prefab>k__BackingField: {fileID: 1076983579694789324, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
-  <BuildTime>k__BackingField: 70
+  <BuildTime>k__BackingField: 60
   <Icon>k__BackingField: {fileID: 21300000, guid: 4d0944a6c62020d4f955f5b7174bb96f, type: 3}
-  <Cost>k__BackingField: {fileID: 11400000, guid: f749046be6087416fbfb787e1ef8c711, type: 2}
+  <Cost>k__BackingField: {fileID: 11400000, guid: 836528e1e58942048a69b925ae383c64, type: 2}
+  <AttackConfig>k__BackingField: {fileID: 0}

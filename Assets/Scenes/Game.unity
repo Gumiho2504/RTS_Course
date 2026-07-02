@@ -7996,43 +7996,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Air Transport
       objectReference: {fileID: 0}
-    - target: {fileID: 2115234063178354583, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
-      propertyPath: m_Graph
-      value: 
-      objectReference: {fileID: 7263508801805294390, guid: 382b0a3129f044bbb9c5bb1588fa03f7, type: 2}
-    - target: {fileID: 2115234063178354583, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2115234063178354583, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
-      propertyPath: 'managedReferences[4656822322551325682]'
-      value: 'Unity.Behavior Unity.Behavior.BlackboardVariable`1[[UnityEngine.GameObject,
-        UnityEngine.CoreModule]]'
-      objectReference: {fileID: 0}
-    - target: {fileID: 2115234063178354583, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
-      propertyPath: managedReferences[4656822322551325682].Name
-      value: Self
-      objectReference: {fileID: 0}
-    - target: {fileID: 2115234063178354583, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
-      propertyPath: m_BlackboardVariableOverridesList.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2115234063178354583, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
-      propertyPath: managedReferences[4656822322551325682].m_Value
-      value: 
-      objectReference: {fileID: 1903808154}
-    - target: {fileID: 2115234063178354583, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
-      propertyPath: 'm_BlackboardVariableOverridesList.Array.data[0]'
-      value: 4656822322551325682
-      objectReference: {fileID: 0}
-    - target: {fileID: 2115234063178354583, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
-      propertyPath: managedReferences[4656822322551325682].GUID.m_Value0
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2115234063178354583, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
-      propertyPath: managedReferences[4656822322551325682].GUID.m_Value1
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2636797422651241148, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
       propertyPath: m_LocalPosition.x
       value: -10.871605
@@ -26202,11 +26165,6 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 4583745518494351312, guid: 5920905e7a5364c47864b79706cb5eca, type: 3}
   m_PrefabInstance: {fileID: 1902937345}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1903808154 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1076983579694789324, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
-  m_PrefabInstance: {fileID: 687768162}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1905020770
 PrefabInstance:

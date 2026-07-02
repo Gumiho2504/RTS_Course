@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 1974153333601261373}
   - component: {fileID: 6373942607041070935}
   - component: {fileID: 4998999097916986450}
-  - component: {fileID: 9065312445302724172}
   - component: {fileID: 2115234063178354583}
+  - component: {fileID: 1044941370334050359}
   m_Layer: 6
   m_Name: Air Transport
   m_TagString: Untagged
@@ -133,23 +133,6 @@ CapsuleCollider:
   m_Height: 3
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &9065312445302724172
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1076983579694789324}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62cf893c502db4a07bdee8712029c7e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.Worker
-  decalProjector: {fileID: 5256939506563389180}
-  <UnitSO>k__BackingField: {fileID: 11400000, guid: 06d8609859f1b41008965e3e48c077fe, type: 2}
-  <AvailableCommands>k__BackingField: []
-  <CurrentHealth>k__BackingField: 0
-  <MaxHealth>k__BackingField: 0
 --- !u!114 &2115234063178354583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,14 +145,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.BehaviorGraphAgent
-  m_Graph: {fileID: 0}
-  m_BlackboardVariableOverridesList: []
-  m_OriginalGraph: {fileID: 0}
+  m_Graph: {fileID: -5211860198009756407, guid: 295ec481f391e2f4983841f9a04f2a21, type: 2}
+  m_BlackboardVariableOverridesList:
+  - rid: 4656822322551325682
+  m_OriginalGraph: {fileID: -5211860198009756407, guid: 295ec481f391e2f4983841f9a04f2a21, type: 2}
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 4656822322551325682
+      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 1
+          m_Value1: 0
+        Name: Self
+        m_Value: {fileID: 1076983579694789324}
+--- !u!114 &1044941370334050359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076983579694789324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1241d735d5bd67a48893a367f799f176, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.AirTransport
+  decalProjector: {fileID: 5256939506563389180}
+  <IsSelected>k__BackingField: 0
+  <UnitSO>k__BackingField: {fileID: 11400000, guid: 06d8609859f1b41008965e3e48c077fe, type: 2}
+  <AvailableCommands>k__BackingField:
+  - {fileID: 11400000, guid: da9ca1647b00f40b594dcd7d05650cc5, type: 2}
+  - {fileID: 11400000, guid: bd2406fc6901a4556bc421dec2a8bc30, type: 2}
+  <CurrentHealth>k__BackingField: 0
+  <MaxHealth>k__BackingField: 0
+  initialCommands: []
+  <AttackingParticleSystem>k__BackingField: {fileID: 0}
+  DamageableSensor: {fileID: 0}
 --- !u!1 &5742520385410641420
 GameObject:
   m_ObjectHideFlags: 0
