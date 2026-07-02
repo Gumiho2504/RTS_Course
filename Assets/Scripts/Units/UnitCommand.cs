@@ -11,6 +11,7 @@ namespace Gumiho_Rts.Units
 		Gather,
 		ReturnSupplies,
 		BuildBuilding,
-		Attack
+		Attack,
+		LoadUnits
 	}
 }
