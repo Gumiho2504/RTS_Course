@@ -1,3 +1,4 @@
+
 using System.Collections.Generic;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
@@ -66,6 +67,14 @@ namespace Gumiho_Rts.Units
             SetCommandOverride(null);
             //navMeshAgent.SetDestination(target);
             behaviorGraphAgent.SetVariableValue(TARGET_LOCATION, target);
+            behaviorGraphAgent.SetVariableValue<GameObject>(TARGET_GAME_OBJECT, null);
+            behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.Move);
+        }
+
+        public void Move(Transform transform)
+        {
+
+            behaviorGraphAgent.SetVariableValue(TARGET_GAME_OBJECT, transform.gameObject);
             behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.Move);
         }
 

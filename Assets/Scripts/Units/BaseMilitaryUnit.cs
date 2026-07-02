@@ -7,7 +7,8 @@ namespace Gumiho_Rts.Units
 
         public void LoadInto(ITransporter transporter)
         {
-            
+            Move(transporter.Transform);
+            transporter.Load(this);
         }
     }
 }

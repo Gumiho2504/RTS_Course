@@ -8,7 +8,7 @@ namespace Gumiho_Rts.Commands
     {
         [field: SerializeField] public string Name { get; private set; } = " Command";
         [field: SerializeField] public Sprite Icon { get; private set; }
-        [field: SerializeField][field: Range(0, 8)] public int Slot { get; private set; }
+        [field: SerializeField][field: Range(-1, 8)] public int Slot { get; private set; }
         [field: SerializeField] public bool RequiresClickToActivate { get; private set; } = true;
         [field: SerializeField] public bool IsSingleUnitCommand { get; private set; }
         [field: SerializeField] public GameObject GhostPrefab { get; private set; }

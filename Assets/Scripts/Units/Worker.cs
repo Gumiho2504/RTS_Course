@@ -59,7 +59,8 @@ namespace Gumiho_Rts.Units
 
         public void LoadInto(ITransporter transporter)
         {
-            throw new NotImplementedException();
+            Move(transporter.Transform);
+            transporter.Load(this);
         }
 
 

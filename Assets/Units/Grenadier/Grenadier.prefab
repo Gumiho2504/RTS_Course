@@ -625,6 +625,7 @@ MonoBehaviour:
   <IsSelected>k__BackingField: 0
   <UnitSO>k__BackingField: {fileID: 11400000, guid: d271952095cbd4a988050dc9860b2a82, type: 2}
   <AvailableCommands>k__BackingField:
+  - {fileID: 11400000, guid: 784493e56b08a0b41b2ee52187f2fe7c, type: 2}
   - {fileID: 11400000, guid: adfc3b573df23f142805e97d777d6237, type: 2}
   - {fileID: 11400000, guid: da9ca1647b00f40b594dcd7d05650cc5, type: 2}
   - {fileID: 11400000, guid: bd2406fc6901a4556bc421dec2a8bc30, type: 2}
