@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
+using Gumiho_Rts.UI.Components;
 using Gumiho_Rts.UI.Containers;
 using Gumiho_Rts.Units;
 using UnityEngine;
@@ -15,6 +16,7 @@ namespace Gumiho_Rts.UI
         [SerializeField] private BuildingSelectedUI buildingSelectedUI;
         [SerializeField] private UnitIconUI unitIconUI;
         [SerializeField] private SingleUnitSelectedUI singleUnitSelectedUI;
+        [SerializeField] private UnitTransportUI unitTransportUI;
 
 
         private HashSet<AbstractCommandable> selectableUnits = new(12);
@@ -34,6 +36,7 @@ namespace Gumiho_Rts.UI
             unitIconUI.Disable();
             singleUnitSelectedUI.Disable();
             buildingSelectedUI.Disable();
+            unitTransportUI.Disable();
 
         }
 
@@ -52,13 +55,8 @@ namespace Gumiho_Rts.UI
             if (args.Unit is AbstractCommandable unit)
             {
                 selectableUnits.Add(unit);
-                // actionUI.EnableFor(selectableUnits);
                 RefreshUI();
             }
-            // if (selectableUnits.Count == 1 && args.Unit is BaseBuilding building)
-            // {
-            //     buildingBuildingUI.EnableFor(building);
-            // }
 
         }
         private void HandleUnitDeselected(UnitDeselectedEvent args)
@@ -78,46 +76,59 @@ namespace Gumiho_Rts.UI
 
                 if (selectableUnits.Count == 1)
                 {
-                    AbstractCommandable commandable = selectableUnits.First();
-                    unitIconUI.EnableFor(commandable);
-
-                    if (commandable is BaseBuilding baseBuilding)
-                    {
-                        singleUnitSelectedUI.Disable();
-                        buildingSelectedUI.EnableFor(baseBuilding);
-                    }
-                    else
-                    {
-                        buildingSelectedUI.Disable();
-                        singleUnitSelectedUI.EnableFor(commandable);
-                    }
+                    ResolveUnitSingleSelectedUI();
                 }
                 else
                 {
-                    unitIconUI.Disable();
-                    singleUnitSelectedUI.Disable();
-                    buildingSelectedUI.Disable();
+                    DisableAllContainer();
                 }
-
-                // if (selectableUnits.Count == 1 && selectableUnits.First() is BaseBuilding building)
-                // {
-                //     buildingSelectedUI.EnableFor(building);
-                // }
-                // else
-                // {
-                //     buildingSelectedUI.Disable();
-                // }
 
             }
             else
             {
-                actionUI.Disable();
-                buildingSelectedUI.Disable();
-                unitIconUI.Disable();
-                singleUnitSelectedUI.Disable();
+                DisableAllContainer();
 
             }
         }
+
+        private void DisableAllContainer()
+        {
+            actionUI.Disable();
+            buildingSelectedUI.Disable();
+            unitIconUI.Disable();
+            singleUnitSelectedUI.Disable();
+            unitTransportUI.Disable();
+        }
+
+        private void ResolveUnitSingleSelectedUI()
+        {
+            AbstractCommandable commandable = selectableUnits.First();
+            unitIconUI.EnableFor(commandable);
+
+            if (commandable is BaseBuilding baseBuilding)
+            {
+                singleUnitSelectedUI.Disable();
+                unitTransportUI.Disable();
+
+                buildingSelectedUI.EnableFor(baseBuilding);
+
+            }
+            else if (commandable is ITransporter transporter && transporter.UsedCapacity > 0)
+            {
+                buildingSelectedUI.Disable();
+                singleUnitSelectedUI.Disable();
+
+                unitTransportUI.EnableFor(transporter);
+            }
+            else
+            {
+                buildingSelectedUI.Disable();
+                unitTransportUI.Disable();
+
+                singleUnitSelectedUI.EnableFor(commandable);
+            }
+        }
+
         private void HandleUnitDeath(UnitDeathEvent args)
         {
             selectableUnits.Remove(args.Unit);
