@@ -20,7 +20,13 @@ namespace Gumiho_Rts.Commands
         public override void Handle(CommandContext context)
         {
             var unit = context.Commandable as AbstractUnit;
-            var hit = context.Hit;
+
+
+            if (context.Hit.collider != null && context.Hit.collider.TryGetComponent(out AbstractCommandable commandable))
+            {
+                unit.Move(commandable.transform);
+                return;
+            }
 
             if (context.UnitIndex == 0)
             {
@@ -29,6 +35,8 @@ namespace Gumiho_Rts.Commands
                 circleRadius = 0;
                 radiusOffset = 0;
             }
+
+            var hit = context.Hit;
             var targetPosition = new Vector3(
                         hit.point.x + Mathf.Cos(radiusOffset * unitsOnLayer) * circleRadius,
                         hit.point.y,
