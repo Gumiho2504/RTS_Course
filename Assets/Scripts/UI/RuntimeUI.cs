@@ -26,8 +26,11 @@ namespace Gumiho_Rts.UI
             Bus<UnitDeselectedEvent>.OnEvent += HandleUnitDeselected;
             Bus<UnitDeathEvent>.OnEvent += HandleUnitDeath;
             Bus<SupplyEvent>.OnEvent += HandleSupplyChangeEvent;
+            Bus<UnitLoadEvent>.OnEvent += HandleUnitLoadEvent;
+            Bus<UnitUnloadEvent>.OnEvent += HandleUnitUnloadEvent;
 
         }
+
 
 
         void Start()
@@ -46,6 +49,8 @@ namespace Gumiho_Rts.UI
             Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
             Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
             Bus<SupplyEvent>.OnEvent -= HandleSupplyChangeEvent;
+            Bus<UnitLoadEvent>.OnEvent -= HandleUnitLoadEvent;
+            Bus<UnitUnloadEvent>.OnEvent -= HandleUnitUnloadEvent;
         }
 
 
@@ -67,6 +72,28 @@ namespace Gumiho_Rts.UI
                 RefreshUI();
             }
         }
+
+        private void HandleUnitLoadEvent(UnitLoadEvent args)
+        {
+            if (selectableUnits.Count == 1 && selectableUnits.First() is ITransporter)
+            {
+                RefreshUI();
+            }
+            else if (args.Unit is AbstractCommandable commandable && selectableUnits.Contains(commandable))
+            {
+                commandable.Deselect(); // RefreshUI will be called because of UnitDeselectedEvent raised for this
+
+            }
+        }
+
+        private void HandleUnitUnloadEvent(UnitUnloadEvent args)
+        {
+            if (selectableUnits.Count == 1 && selectableUnits.First() is ITransporter)
+            {
+                RefreshUI();
+            }
+        }
+
 
         private void RefreshUI()
         {

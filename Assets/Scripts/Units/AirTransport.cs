@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Gumiho_Rts.Behavoir;
+using Gumiho_Rts.EventBus;
+using Gumiho_Rts.Events;
 using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.AI;
@@ -31,6 +33,7 @@ namespace Gumiho_Rts.Units
 
 
             behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.LoadUnits);
+
         }
 
         public void Load(ITransportable[] units)
@@ -65,6 +68,7 @@ namespace Gumiho_Rts.Units
                 }
 
                 loadedUnits.Remove(unit);
+                Bus<UnitUnloadEvent>.Raise(new UnitUnloadEvent(unit,this));
                 return true;
 
             }
@@ -100,6 +104,7 @@ namespace Gumiho_Rts.Units
             UsedCapacity += transportable.TransportCapacityUsage;
 
             loadedUnits.Add(transportable);
+            Bus<UnitLoadEvent>.Raise(new UnitLoadEvent(transportable,this));
 
             if (behaviorGraphAgent.GetVariable("LoadUnitTargets", out BlackboardVariable<List<GameObject>> loadUnitTargetsVariable))
             {
