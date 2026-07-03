@@ -158,11 +158,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: da9ca1647b00f40b594dcd7d05650cc5, type: 2}
   - {fileID: 11400000, guid: bd2406fc6901a4556bc421dec2a8bc30, type: 2}
   - {fileID: 11400000, guid: 076f43ddfc712bf4593f640748d49e81, type: 2}
+  - {fileID: 11400000, guid: 7be6a8c48156f2147a85da5713fec5dc, type: 2}
   <CurrentHealth>k__BackingField: 0
   <MaxHealth>k__BackingField: 0
   initialCommands: []
   <AttackingParticleSystem>k__BackingField: {fileID: 0}
   DamageableSensor: {fileID: 0}
+  <UsedCapacity>k__BackingField: 0
 --- !u!1 &5742520385410641420
 GameObject:
   m_ObjectHideFlags: 0

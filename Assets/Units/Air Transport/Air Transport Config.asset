@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.TransportConfigSO
   <Capacity>k__BackingField: 8
   <Size>k__BackingField: 3
+  <SafeDropLayer>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 256

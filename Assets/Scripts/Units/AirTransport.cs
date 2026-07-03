@@ -1,9 +1,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Gumiho_Rts.Behavoir;
 using Unity.Behavior;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Gumiho_Rts.Units
 {
@@ -12,10 +14,10 @@ namespace Gumiho_Rts.Units
         public int Capacity => unitSO.TransportConfig.Capacity;
         [field: SerializeField] public int UsedCapacity { get; private set; }
 
-        public List<ITransportable> GetLoadedUnits()
-        {
-            throw new NotImplementedException();
-        }
+        private List<ITransportable> loadedUnits = new(8);
+
+        public List<ITransportable> GetLoadedUnits() => loadedUnits.ToList();
+
 
         public void Load(ITransportable unit)
         {
@@ -38,12 +40,44 @@ namespace Gumiho_Rts.Units
 
         public bool Unload(ITransportable unit)
         {
-            throw new NotImplementedException();
+            NavMeshQueryFilter queryFilter = new()
+            {
+                areaMask = unit.Agent.areaMask,
+                agentTypeID = unit.Agent.agentTypeID
+            };
+
+            if (Physics.Raycast(transform.position,
+                    Vector3.down,
+                    out RaycastHit raycastHit,
+                    float.MaxValue,
+                    unitSO.TransportConfig.SafeDropLayer)
+                && NavMesh.SamplePosition(raycastHit.point, out NavMeshHit hit, 1f, queryFilter))
+            {
+                UsedCapacity -= unit.TransportCapacityUsage;
+                unit.Transform.SetParent(null);
+                unit.Transform.gameObject.SetActive(true);
+
+                unit.Agent.Warp(hit.position); //urgent movement (teleport)
+
+                if (unit is IMoveable moveable)
+                {
+                    moveable.Move(hit.position);
+                }
+
+                loadedUnits.Remove(unit);
+                return true;
+
+            }
+            return false;
         }
 
         public bool UnloadAll()
         {
-            throw new NotImplementedException();
+            for (int i = loadedUnits.Count - 1; i >= 0; i--)
+            {
+                Unload(loadedUnits[i]);
+            }
+            return true;
         }
 
         protected override void Start()
@@ -65,6 +99,8 @@ namespace Gumiho_Rts.Units
             ITransportable transportable = targetGameObject.GetComponent<ITransportable>();
             UsedCapacity += transportable.TransportCapacityUsage;
 
+            loadedUnits.Add(transportable);
+
             if (behaviorGraphAgent.GetVariable("LoadUnitTargets", out BlackboardVariable<List<GameObject>> loadUnitTargetsVariable))
             {
                 loadUnitTargetsVariable.Value.Remove(targetGameObject);
@@ -73,8 +109,8 @@ namespace Gumiho_Rts.Units
 
             if (UsedCapacity >= Capacity)
             {
-                behaviorGraphAgent.SetVariableValue(COMMAND,UnitCommand.Stop);
-                behaviorGraphAgent.SetVariableValue("LoadUnitTargets",new List<GameObject>(unitSO.TransportConfig.Capacity));
+                behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.Stop);
+                behaviorGraphAgent.SetVariableValue("LoadUnitTargets", new List<GameObject>(unitSO.TransportConfig.Capacity));
             }
         }
     }

@@ -13,9 +13,9 @@ namespace Gumiho_Rts.Units
     [RequireComponent(typeof(NavMeshAgent), typeof(BehaviorGraphAgent))]
     public abstract class AbstractUnit : AbstractCommandable, IMoveable, IAttacker
     {
-        private NavMeshAgent navMeshAgent;
+        public NavMeshAgent Agent{get; private set;}
         protected BehaviorGraphAgent behaviorGraphAgent;
-        public float AgentRadius => navMeshAgent.radius;
+        public float AgentRadius => Agent.radius;
         [field: SerializeField] public ParticleSystem AttackingParticleSystem { get; private set; }
 
         [SerializeField] private DamageableSensor DamageableSensor;
@@ -35,7 +35,7 @@ namespace Gumiho_Rts.Units
 
         protected virtual void Awake()
         {
-            navMeshAgent = GetComponent<NavMeshAgent>();
+            Agent = GetComponent<NavMeshAgent>();
 
             unitSO = UnitSO as Unit;
 

@@ -6,6 +6,7 @@ namespace Gumiho_Rts.Units
     {
         [field: SerializeField] public int Capacity { get; private set; }
         [field: SerializeField] public TransportSize Size { get; private set; }
+        [field:SerializeField ] public LayerMask SafeDropLayer {get; private set;}
 
         public int GetTransportCapacityUsage() => Size switch
         {
