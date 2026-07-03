@@ -238,54 +238,59 @@ namespace Gumiho_Rts
 
         private void HandleRightMuseClick()
         {
-            if (activeCommand == null && !wasMouseDownOnUI) return;
-
             if (selectableUnits.Count == 0) return;
+            // if (activeCommand == null && !wasMouseDownOnUI) return;
+
+            // Debug.Log($"<color=blue>Handle Right Click {activeCommand.name}</color>");
+
+
             Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (Mouse.current.rightButton.wasReleasedThisFrame)
+            if (Mouse.current.rightButton.wasReleasedThisFrame && Physics.Raycast(ray, out RaycastHit hit, maxDistance: float.MaxValue, layerMask: floorLayerMask | interactableLayerMask))
             {
 
                 // find applicable command
 
                 // issue command to all units
-                if (Physics.Raycast(ray, out RaycastHit hit, maxDistance: float.MaxValue, layerMask: floorLayerMask | interactableLayerMask))
+
+                print("Clicked on " + hit.transform.name);
+                List<AbstractUnit> abstractUnits = new(selectableUnits.Count);
+                foreach (ISelectable selectable in selectableUnits)
                 {
-                    print("Clicked on " + hit.transform.name);
-                    List<AbstractUnit> abstractUnits = new(selectableUnits.Count);
-                    foreach (ISelectable selectable in selectableUnits)
+                    if (selectable is AbstractUnit abstractUnit)
                     {
-                        if (selectable is AbstractUnit abstractUnit)
-                        {
-                            abstractUnits.Add(abstractUnit);
-                        }
+                        abstractUnits.Add(abstractUnit);
                     }
+                }
 
 
-                    for (int i = 0; i < abstractUnits.Count; i++)
+                for (int i = 0; i < abstractUnits.Count; i++)
+                {
+                    CommandContext context = new CommandContext(abstractUnits[i], hit, i, MouseButton.Right);
+
+                    foreach (var command in GetAvailableCommands(abstractUnits[i]))
                     {
-                        CommandContext context = new CommandContext(abstractUnits[i], hit, i);
-                        print(abstractUnits[i].gameObject.name);
-                        foreach (var command in GetAvailableCommands(abstractUnits[i]))
+                        if (command.CanHandle(context))
                         {
-                            if (command.CanHandle(context))
+                            command.Handle(context);
+                            if (command.IsSingleUnitCommand)
                             {
-                                command.Handle(context);
-                                if (command.IsSingleUnitCommand)
-                                {
-                                    return;
-                                }
-                                break;
+                                return;
                             }
+                            break;
                         }
-
-
                     }
+
+
+
                 }
             }
         }
         private List<BaseCommand> GetAvailableCommands(AbstractUnit unit)
         {
-            OverrideCommandsCommand[] overrideCommandsCommands = unit.AvailableCommands.Where(command => command is OverrideCommandsCommand).Cast<OverrideCommandsCommand>().ToArray();
+            OverrideCommandsCommand[] overrideCommandsCommands = unit.AvailableCommands
+                .Where(command => command is OverrideCommandsCommand)
+                .Cast<OverrideCommandsCommand>()
+                .ToArray();
             List<BaseCommand> allAvailableCommands = new();
             foreach (OverrideCommandsCommand overrideCommand in overrideCommandsCommands)
             {
