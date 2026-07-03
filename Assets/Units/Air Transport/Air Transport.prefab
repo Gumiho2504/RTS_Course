@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2636797422651241148}
   - component: {fileID: 437240106829665555}
-  - component: {fileID: 1974153333601261373}
   - component: {fileID: 6373942607041070935}
   - component: {fileID: 4998999097916986450}
   - component: {fileID: 2115234063178354583}
@@ -61,28 +60,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 0
---- !u!95 &1974153333601261373
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1076983579694789324}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!54 &6373942607041070935
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -180,6 +157,7 @@ MonoBehaviour:
   <AvailableCommands>k__BackingField:
   - {fileID: 11400000, guid: da9ca1647b00f40b594dcd7d05650cc5, type: 2}
   - {fileID: 11400000, guid: bd2406fc6901a4556bc421dec2a8bc30, type: 2}
+  - {fileID: 11400000, guid: 076f43ddfc712bf4593f640748d49e81, type: 2}
   <CurrentHealth>k__BackingField: 0
   <MaxHealth>k__BackingField: 0
   initialCommands: []

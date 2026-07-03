@@ -8,14 +8,15 @@ namespace Gumiho_Rts.Commands
     {
         public override bool CanHandle(CommandContext context)
         {
-            Debug.Log("Handle Load Unit Into Command");
+            Debug.Log($"<color=blue>{context.Commandable is ITransportable} - {context.Hit.collider != null} - {context.Hit.collider.TryGetComponent(out ITransporter _)}</color>");
             return context.Commandable is ITransportable
                 && context.Hit.collider != null
-                && context.Hit.collider.TryGetComponent(out ITransportable _);
+                && context.Hit.collider.TryGetComponent(out ITransporter _);
         }
 
         public override void Handle(CommandContext context)
         {
+            Debug.Log("Handle Load Unit Into Command");
             ITransportable transportable = (ITransportable)context.Commandable;
             ITransporter transporter = context.Hit.collider.GetComponent<ITransporter>();
 

@@ -7992,14 +7992,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1044941370334050359, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
-      propertyPath: <AvailableCommands>k__BackingField.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1044941370334050359, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
-      propertyPath: '<AvailableCommands>k__BackingField.Array.data[2]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 076f43ddfc712bf4593f640748d49e81, type: 2}
     - target: {fileID: 1076983579694789324, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
       propertyPath: m_Name
       value: Air Transport
@@ -11224,6 +11216,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 863810960502844524, guid: 883b9682b823cb84cac42e4ad43d41d2, type: 3}
+      propertyPath: '<AvailableCommands>k__BackingField.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: da9ca1647b00f40b594dcd7d05650cc5, type: 2}
+    - target: {fileID: 863810960502844524, guid: 883b9682b823cb84cac42e4ad43d41d2, type: 3}
+      propertyPath: '<AvailableCommands>k__BackingField.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: fc971762ced284102b42f4c540e7db07, type: 2}
     - target: {fileID: 4078631732461238711, guid: 883b9682b823cb84cac42e4ad43d41d2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 9.2
