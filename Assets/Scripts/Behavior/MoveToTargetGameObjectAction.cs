@@ -29,7 +29,7 @@ namespace Gumiho_Rts.Behavoir
                 // Debug.Log($"Move To Target GameObject Failed {agent.gameObject.name} {TargetGameObject.Value}");
                 return Status.Failure;
             }
-            Debug.Log("Already there On Start");
+            //Debug.Log("Already there On Start");
             agent.TryGetComponent<Animator>(out animator);
 
 

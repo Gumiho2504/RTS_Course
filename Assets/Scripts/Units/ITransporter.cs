@@ -7,7 +7,7 @@ namespace Gumiho_Rts.Units
     {
         public Transform Transform { get; }
         public int Capacity { get; }
-        public int UseCapacity { get; }
+        public int UsedCapacity { get; }
 
         public List<ITransportable> GetLoadedUnits();
 

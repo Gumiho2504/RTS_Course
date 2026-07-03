@@ -10,7 +10,7 @@ namespace Gumiho_Rts.Units
     public class AirTransport : AbstractUnit, ITransporter
     {
         public int Capacity => unitSO.TransportConfig.Capacity;
-        public int UseCapacity { get; private set; }
+        [field: SerializeField] public int UsedCapacity { get; private set; }
 
         public List<ITransportable> GetLoadedUnits()
         {
@@ -19,9 +19,15 @@ namespace Gumiho_Rts.Units
 
         public void Load(ITransportable unit)
         {
-            if (UseCapacity + unit.TransportCapacityUsage > Capacity) return;
+            if (UsedCapacity + unit.TransportCapacityUsage > Capacity) return;
 
-            behaviorGraphAgent.SetVariableValue("TargetGameObject", unit.Transform.gameObject);
+            if (behaviorGraphAgent.GetVariable("LoadUnitTargets", out BlackboardVariable<List<GameObject>> loadUnitsTargetsVariable))
+            {
+                loadUnitsTargetsVariable.Value.Add(unit.Transform.gameObject);
+                behaviorGraphAgent.SetVariableValue("LoadUnitTargets", loadUnitsTargetsVariable.Value);
+            }
+
+
             behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.LoadUnits);
         }
 
@@ -53,10 +59,23 @@ namespace Gumiho_Rts.Units
         private void HandleLoadUnit(GameObject self, GameObject targetGameObject)
         {
             Debug.Log($"<color=yellow> Load unit {targetGameObject.name} </color>");
+
             targetGameObject.SetActive(false);
             targetGameObject.transform.SetParent(self.transform);
             ITransportable transportable = targetGameObject.GetComponent<ITransportable>();
-            UseCapacity += transportable.TransportCapacityUsage;
+            UsedCapacity += transportable.TransportCapacityUsage;
+
+            if (behaviorGraphAgent.GetVariable("LoadUnitTargets", out BlackboardVariable<List<GameObject>> loadUnitTargetsVariable))
+            {
+                loadUnitTargetsVariable.Value.Remove(targetGameObject);
+                behaviorGraphAgent.SetVariableValue("LoadUnitTargets", loadUnitTargetsVariable.Value);
+            }
+
+            if (UsedCapacity >= Capacity)
+            {
+                behaviorGraphAgent.SetVariableValue(COMMAND,UnitCommand.Stop);
+                behaviorGraphAgent.SetVariableValue("LoadUnitTargets",new List<GameObject>(unitSO.TransportConfig.Capacity));
+            }
         }
     }
 }
