@@ -107,7 +107,10 @@ namespace Gumiho_Rts.UI
                 }
                 else
                 {
-                    DisableAllContainer();
+                    unitIconUI.Disable();
+                    singleUnitSelectedUI.Disable();
+                    buildingSelectedUI.Disable();
+                    unitTransportUI.Disable();
                 }
 
             }
