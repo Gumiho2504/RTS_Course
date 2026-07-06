@@ -8,7 +8,8 @@ namespace Gumiho_Rts.Events
     {
         public int Amount { get; private set; }
         public SupplySO Supply { get; private set; }
-        public SupplyEvent(int amount, SupplySO supply) { Amount = amount; Supply = supply; }
+        public Owner Owner { get; private set; }
+        public SupplyEvent(Owner owner, int amount, SupplySO supply) { Owner = owner; Amount = amount; Supply = supply; }
     }
 }
 

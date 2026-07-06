@@ -34,7 +34,7 @@ namespace Gumiho_Rts.UI.Containers
         private void RefreshButtons(HashSet<AbstractCommandable> selectedUnits)
         {
 
-            IEnumerable<BaseCommand> availableCommands = selectedUnits.ElementAt(0).AvailableCommands;
+            IEnumerable<BaseCommand> availableCommands = selectedUnits.Count > 0 ? selectedUnits.ElementAt(0).AvailableCommands : Array.Empty<BaseCommand>();
             foreach (AbstractCommandable commandable in selectedUnits)
             {
                 //  availableCommands.UnionWith(commandable.AvailableCommands);

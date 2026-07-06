@@ -17,7 +17,7 @@ namespace Gumiho_Rts.Commands
                 return context.Hit.collider.TryGetComponent(out BaseBuilding building) && BuildingSO == building.BuildingSO
                  && (building.Progress.State == BuildingProgress.BuildingState.Paused || building.Progress.State == BuildingProgress.BuildingState.Destroy);
             }
-            return AllRestrictionsPass(context.Hit.point) && HasEnoughSupply();
+            return AllRestrictionsPass(context.Hit.point) && HasEnoughSupply(context);
         }
 
         public override void Handle(CommandContext context)
@@ -28,15 +28,18 @@ namespace Gumiho_Rts.Commands
                 Debug.Log("Resume Building");
                 builder.ResumeBuilding(building);
             }
-            else if (AllRestrictionsPass(context.Hit.point) && HasEnoughSupply())
+            else if (AllRestrictionsPass(context.Hit.point) && HasEnoughSupply(context))
             {
                 Debug.Log("Build Building");
                 builder.Build(BuildingSO, context.Hit.point);
             }
         }
 
-        public override bool IsLocked(CommandContext context) => !HasEnoughSupply();
+        public override bool IsLocked(CommandContext context) => !HasEnoughSupply(context);
 
-        private bool HasEnoughSupply() => BuildingSO.Cost.Minerals <= Supplies.Minerals && BuildingSO.Cost.Gas <= Supplies.Gas;
+        private bool HasEnoughSupply(CommandContext context)
+        {
+            return BuildingSO.Cost.Minerals <= Supplies.Minerals[context.Owner] && BuildingSO.Cost.Gas <= Supplies.Gas[context.Owner];
+        } 
     }
 }

@@ -10,20 +10,23 @@ namespace Gumiho_Rts.Commands
         [field: SerializeField] public UnitSO Unit { get; private set; }
         public override bool CanHandle(CommandContext context)
         {
-            return context.Commandable is BaseBuilding && HasEnoughSupply();
+            return context.Commandable is BaseBuilding && HasEnoughSupply(context);
         }
         public override void Handle(CommandContext context)
         {
-            if (!HasEnoughSupply()) return;
+            if (!HasEnoughSupply(context)) return;
             // Debug.Log("Starting  Building .... Unity work in progress");
             BaseBuilding building = (BaseBuilding)context.Commandable;
             building.BuildUnit(Unit);
             //Debug.Log("Finished  Building .... Unity work in progress");
         }
 
-        public override bool IsLocked(CommandContext context) => !HasEnoughSupply();
+        public override bool IsLocked(CommandContext context) => !HasEnoughSupply(context);
 
-        private bool HasEnoughSupply() => Unit.Cost.Minerals <= Supplies.Minerals && Unit.Cost.Gas <= Supplies.Gas;
+        private bool HasEnoughSupply(CommandContext context)
+        {
+            return Unit.Cost.Minerals <= Supplies.Minerals[context.Owner] && Unit.Cost.Gas <= Supplies.Gas[context.Owner];
+        }
 
     }
 }
