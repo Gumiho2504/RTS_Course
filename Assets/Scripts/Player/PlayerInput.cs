@@ -198,7 +198,7 @@ namespace Gumiho_Rts
             Bounds selectionBounds = ResizeSelectedBox();
             foreach (AbstractUnit unit in AliveUnits)
             {
-
+                if (!unit.gameObject.activeInHierarchy) continue;
                 Vector2 unitPosition = camera.WorldToScreenPoint(unit.transform.position);
                 if (selectionBounds.Contains(unitPosition))
                 {
