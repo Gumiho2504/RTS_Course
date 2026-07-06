@@ -22,11 +22,11 @@ namespace Gumiho_Rts.UI
         private HashSet<AbstractCommandable> selectableUnits = new(12);
         void Awake()
         {
-            // Bus<UnitSelectedEvent>.OnEvent += HandleUnitSelected;
-            // Bus<UnitDeselectedEvent>.OnEvent += HandleUnitDeselected;
-            // Bus<UnitDeathEvent>.OnEvent += HandleUnitDeath;
-            // Bus<SupplyEvent>.OnEvent += HandleSupplyChangeEvent;
-            // Bus<UnitLoadEvent>.OnEvent += HandleUnitLoadEvent;
+            Bus<UnitSelectedEvent>.OnEvent[Owner.Player1] += HandleUnitSelected;
+            Bus<UnitDeselectedEvent>.OnEvent[Owner.Player1] += HandleUnitDeselected;
+            Bus<UnitDeathEvent>.OnEvent[Owner.Player1] += HandleUnitDeath;
+            Bus<SupplyEvent>.OnEvent[Owner.Player1] += HandleSupplyChangeEvent;
+            Bus<UnitLoadEvent>.OnEvent[Owner.Player1] += HandleUnitLoadEvent;
             // Bus<UnitUnloadEvent>.OnEvent += HandleUnitUnloadEvent;
 
         }
@@ -45,12 +45,12 @@ namespace Gumiho_Rts.UI
 
         void OnDestroy()
         {
-            // Bus<UnitSelectedEvent>.OnEvent -= HandleUnitSelected;
-            // Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
-            // Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
-            // Bus<SupplyEvent>.OnEvent -= HandleSupplyChangeEvent;
-            // Bus<UnitLoadEvent>.OnEvent -= HandleUnitLoadEvent;
-            // Bus<UnitUnloadEvent>.OnEvent -= HandleUnitUnloadEvent;
+            Bus<UnitSelectedEvent>.OnEvent[Owner.Player1] -= HandleUnitSelected;
+            Bus<UnitDeselectedEvent>.OnEvent[Owner.Player1] -= HandleUnitDeselected;
+            Bus<UnitDeathEvent>.OnEvent[Owner.Player1] -= HandleUnitDeath;
+            Bus<SupplyEvent>.OnEvent[Owner.Player1] -= HandleSupplyChangeEvent;
+            Bus<UnitLoadEvent>.OnEvent[Owner.Player1] -= HandleUnitLoadEvent;
+            Bus<UnitUnloadEvent>.OnEvent[Owner.Player1] -= HandleUnitUnloadEvent;
         }
 
 

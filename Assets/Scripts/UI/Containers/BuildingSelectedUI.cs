@@ -32,7 +32,7 @@ public class BuildingSelectedUI : MonoBehaviour, IUIElement<BaseBuilding>
             singleUnitSelectedUI.Disable();
             buildingBuildingUI.Disable();
 
-            //Bus<BuildingSpawnEvent>.OnEvent += HandleBuildingSpawn;
+            Bus<BuildingSpawnEvent>.OnEvent[Owner.Player1] += HandleBuildingSpawn;
 
         }
     }
@@ -44,7 +44,7 @@ public class BuildingSelectedUI : MonoBehaviour, IUIElement<BaseBuilding>
         singleUnitSelectedUI.Disable();
         buildingBuildingUI.Disable();
         buildingUnderConstructorUI.Disable();
-        // Bus<BuildingSpawnEvent>.OnEvent -= HandleBuildingSpawn;
+        Bus<BuildingSpawnEvent>.OnEvent[Owner.Player1] -= HandleBuildingSpawn;
         if (selectedBuilding != null)
         {
             selectedBuilding.OnQueueUpdated -= OnBuildingQueueUpdated;
@@ -72,7 +72,7 @@ public class BuildingSelectedUI : MonoBehaviour, IUIElement<BaseBuilding>
         {
             buildingUnderConstructorUI.Disable();
             OnBuildingQueueUpdated();
-            //Bus<BuildingSpawnEvent>.OnEvent -= HandleBuildingSpawn;
+            Bus<BuildingSpawnEvent>.OnEvent[Owner.Player1] -= HandleBuildingSpawn;
         }
     }
 

@@ -56,11 +56,11 @@ namespace Gumiho_Rts
             startingFollowOffset = cinemachineFollow.FollowOffset;
             minRotationAmount = Mathf.Abs(cinemachineFollow.FollowOffset.z);
 
-            // Bus<UnitSelectedEvent>.OnEvent += HandleUnitSelected;
-            // Bus<UnitDeselectedEvent>.OnEvent += HandleUnitDeselected;
-            // Bus<UnitSpawnEvent>.OnEvent += HandleUnitSpawned;
-            // Bus<CommandSelectedEvent>.OnEvent += HandleActionSelected;
-            // Bus<UnitDeathEvent>.OnEvent += HandleUnitDeath;
+            Bus<UnitSelectedEvent>.OnEvent[Owner.Player1] += HandleUnitSelected;
+            Bus<UnitDeselectedEvent>.OnEvent[Owner.Player1] += HandleUnitDeselected;
+            Bus<UnitSpawnEvent>.OnEvent[Owner.Player1] += HandleUnitSpawned;
+            Bus<CommandSelectedEvent>.OnEvent[Owner.Player1] += HandleActionSelected;
+            Bus<UnitDeathEvent>.OnEvent[Owner.Player1] += HandleUnitDeath;
 
         }
 
@@ -68,11 +68,11 @@ namespace Gumiho_Rts
 
         private void OnDestroy()
         {
-            // Bus<UnitSelectedEvent>.OnEvent -= HandleUnitSelected;
-            // Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
-            // Bus<UnitSpawnEvent>.OnEvent -= HandleUnitSpawned;
-            // Bus<CommandSelectedEvent>.OnEvent -= HandleActionSelected;
-            // Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
+            Bus<UnitSelectedEvent>.OnEvent[Owner.Player1] -= HandleUnitSelected;
+            Bus<UnitDeselectedEvent>.OnEvent[Owner.Player1] -= HandleUnitDeselected;
+            Bus<UnitSpawnEvent>.OnEvent[Owner.Player1] -= HandleUnitSpawned;
+            Bus<CommandSelectedEvent>.OnEvent[Owner.Player1] -= HandleActionSelected;
+            Bus<UnitDeathEvent>.OnEvent[Owner.Player1] -= HandleUnitDeath;
 
 
         }

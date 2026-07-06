@@ -30,19 +30,6 @@ namespace Gumiho_Rts.UI.Containers
             }
         }
 
-        // private void Start()
-        // {
-        //     foreach (UIActionButton button in actionButtons)
-        //     {
-        //         button.Disable();
-        //     }
-        // }
-        // private void OnDestroy()
-        // {
-        //     Bus<UnitSelectedEvent>.OnEvent -= HandleUnitSelected;
-        //     Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
-        // }
-
 
         private void RefreshButtons(HashSet<AbstractCommandable> selectedUnits)
         {
@@ -72,8 +59,7 @@ namespace Gumiho_Rts.UI.Containers
 
         private UnityAction HandleClick(BaseCommand action)
         {
-            return null;
-            //return () => Bus<CommandSelectedEvent>.Raise(new CommandSelectedEvent(action));
+            return () => Bus<CommandSelectedEvent>.Raise(Owner.Player1, new CommandSelectedEvent(action));
         }
 
 
