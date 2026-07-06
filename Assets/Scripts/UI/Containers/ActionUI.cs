@@ -15,8 +15,8 @@ namespace Gumiho_Rts.UI.Containers
     public class ActionUI : MonoBehaviour, IUIElement<HashSet<AbstractCommandable>>
     {
         [SerializeField] private UIActionButton[] actionButtons;
-         
-      
+
+
 
         public void EnableFor(HashSet<AbstractCommandable> item)
         {
@@ -44,17 +44,17 @@ namespace Gumiho_Rts.UI.Containers
         //     Bus<UnitDeselectedEvent>.OnEvent -= HandleUnitDeselected;
         // }
 
-  
+
         private void RefreshButtons(HashSet<AbstractCommandable> selectedUnits)
         {
 
-            HashSet<BaseCommand> availableCommands = new(9);
+            IEnumerable<BaseCommand> availableCommands = selectedUnits.ElementAt(0).AvailableCommands;
             foreach (AbstractCommandable commandable in selectedUnits)
             {
                 //  availableCommands.UnionWith(commandable.AvailableCommands);
                 if (commandable.AvailableCommands != null)
                 {
-                    availableCommands.AddRange(commandable.AvailableCommands);
+                    availableCommands = availableCommands.Intersect(commandable.AvailableCommands);
                 }
             }
             for (int i = 0; i < actionButtons.Length; i++)
@@ -62,7 +62,7 @@ namespace Gumiho_Rts.UI.Containers
                 BaseCommand actionBaseForSlot = availableCommands.Where(action => action.Slot == i).FirstOrDefault();
                 if (actionBaseForSlot != null)
                 {
-                    actionButtons[i].EnableFor(actionBaseForSlot, HandleClick(actionBaseForSlot));
+                    actionButtons[i].EnableFor(actionBaseForSlot, selectedUnits, HandleClick(actionBaseForSlot));
                 }
                 else
                 {

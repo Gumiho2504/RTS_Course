@@ -6,11 +6,14 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using System;
 using Gumiho_Rts.Units;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Gumiho_Rts.UI.Components
 {
     [RequireComponent(typeof(Button))]
-    public class UIActionButton : MonoBehaviour, IUIElement<BaseCommand, UnityAction>, IPointerEnterHandler, IPointerExitHandler
+    public class UIActionButton : MonoBehaviour, IUIElement<BaseCommand,IEnumerable<AbstractCommandable>, UnityAction>, IPointerEnterHandler, IPointerExitHandler
     {
 
         [SerializeField] private Image icon;
@@ -25,10 +28,11 @@ namespace Gumiho_Rts.UI.Components
             rectTransform = GetComponent<RectTransform>();
         }
 
-        public void EnableFor(BaseCommand command, UnityAction onClick)
+        public void EnableFor(BaseCommand command,IEnumerable<AbstractCommandable> selectedUnits, UnityAction onClick)
         {
             SetIcon(command.Icon);
-            button.interactable = !command.IsLocked(new CommandContext());
+         
+            button.interactable = selectedUnits.Any(commandable => !command.IsLocked(new CommandContext(commandable,new RaycastHit())));
             button.onClick.AddListener(onClick);
             isActive = true;
             if (tooltip != null)

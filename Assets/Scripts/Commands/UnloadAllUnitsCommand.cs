@@ -17,6 +17,9 @@ namespace Gumiho_Rts.Commands
             transporter.UnloadAll();
         }
 
-        public override bool IsLocked(CommandContext context) => false;
+        public override bool IsLocked(CommandContext context)
+        {
+            return context.Commandable is not ITransporter transporter || transporter.UsedCapacity == 0;
+        }
     }
 }
