@@ -21,14 +21,14 @@ namespace Gumiho_Rts.Player
 
         private void Awake()
         {
-            print("Supplies : " + gameObject.name);
-            Bus<SupplyEvent>.OnEvent += HandleSupplyEvent;
+           
+            //Bus<SupplyEvent>.OnEvent += HandleSupplyEvent;
         }
 
         private void OnDestroy()
         {
         
-            Bus<SupplyEvent>.OnEvent -= HandleSupplyEvent;
+            //Bus<SupplyEvent>.OnEvent -= HandleSupplyEvent;
         }
         private void HandleSupplyEvent(SupplyEvent args)
         {

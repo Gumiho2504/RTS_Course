@@ -32,7 +32,7 @@ namespace Gumiho_Rts.Units
             }
             if (damageables.Count == 1)
             {
-                Bus<UnitDeathEvent>.OnEvent += HandleUnitDeath;
+                Bus<UnitDeathEvent>.RegisterForAll(HandleUnitDeath);
             }
         }
 
@@ -45,7 +45,7 @@ namespace Gumiho_Rts.Units
             }
             if (damageables.Count == 0)
             {
-                Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
+                Bus<UnitDeathEvent>.UnregisterForAll(HandleUnitDeath);
             }
         }
 
@@ -64,7 +64,7 @@ namespace Gumiho_Rts.Units
 
         void OnDestroy()
         {
-            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
+            Bus<UnitDeathEvent>.UnregisterForAll(HandleUnitDeath);
         }
     }
 }

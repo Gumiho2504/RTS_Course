@@ -47,8 +47,8 @@ namespace Gumiho_Rts.Units
             }
             Progress = new BuildingProgress(Progress.StartTime, 1, BuildingProgress.BuildingState.Completed);
             unitBuildingThis = null;
-            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
-            Bus<BuildingSpawnEvent>.Raise(new BuildingSpawnEvent(this));
+            Bus<UnitDeathEvent>.OnEvent[Owner] -= HandleUnitDeath;
+            Bus<BuildingSpawnEvent>.Raise(Owner,new BuildingSpawnEvent(this));
         }
 
 
@@ -60,8 +60,8 @@ namespace Gumiho_Rts.Units
                 return;
             }
 
-            Bus<SupplyEvent>.Raise(new SupplyEvent(-unit.Cost.Minerals, unit.Cost.MineralsSO));
-            Bus<SupplyEvent>.Raise(new SupplyEvent(-unit.Cost.Gas, unit.Cost.GasSO));
+            Bus<SupplyEvent>.Raise(Owner,new SupplyEvent(-unit.Cost.Minerals, unit.Cost.MineralsSO));
+            Bus<SupplyEvent>.Raise(Owner,new SupplyEvent(-unit.Cost.Gas, unit.Cost.GasSO));
 
             buildingQueue.Add(unit);
             if (buildingQueue.Count == 1)
@@ -79,8 +79,8 @@ namespace Gumiho_Rts.Units
             }
 
             UnitSO unitSO = buildingQueue[index];
-            Bus<SupplyEvent>.Raise(new SupplyEvent(unitSO.Cost.Minerals, unitSO.Cost.MineralsSO));
-            Bus<SupplyEvent>.Raise(new SupplyEvent(unitSO.Cost.Gas, unitSO.Cost.GasSO));
+            Bus<SupplyEvent>.Raise(Owner,new SupplyEvent(unitSO.Cost.Minerals, unitSO.Cost.MineralsSO));
+            Bus<SupplyEvent>.Raise(Owner,new SupplyEvent(unitSO.Cost.Gas, unitSO.Cost.GasSO));
 
             buildingQueue.RemoveAt(index);
             if (index == 0)
@@ -131,8 +131,8 @@ namespace Gumiho_Rts.Units
             {
                 Heal(1);
             }
-            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
-            Bus<UnitDeathEvent>.OnEvent += HandleUnitDeath;
+            Bus<UnitDeathEvent>.OnEvent[Owner] -= HandleUnitDeath;
+            Bus<UnitDeathEvent>.OnEvent[Owner] += HandleUnitDeath;
         }
 
         private void HandleUnitDeath(UnitDeathEvent args)
@@ -140,13 +140,13 @@ namespace Gumiho_Rts.Units
             if (args.Unit.TryGetComponent(out IBuildingBuilder builder) && builder == unitBuildingThis)
             {
                 Progress = new BuildingProgress(Progress.StartTime, (Time.time - Progress.StartTime) / BuildingSO.BuildTime, BuildingProgress.BuildingState.Paused);
-                Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
+                Bus<UnitDeathEvent>.OnEvent[Owner] -= HandleUnitDeath;
             }
         }
 
         private void OnDestroy()
         {
-            Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
+            Bus<UnitDeathEvent>.OnEvent[Owner] -= HandleUnitDeath;
         }
 
     }

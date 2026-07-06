@@ -68,7 +68,7 @@ namespace Gumiho_Rts.Units
                 }
 
                 loadedUnits.Remove(unit);
-                Bus<UnitUnloadEvent>.Raise(new UnitUnloadEvent(unit,this));
+                Bus<UnitUnloadEvent>.Raise(Owner,new UnitUnloadEvent(unit,this));
                 return true;
 
             }
@@ -104,7 +104,7 @@ namespace Gumiho_Rts.Units
             UsedCapacity += transportable.TransportCapacityUsage;
 
             loadedUnits.Add(transportable);
-            Bus<UnitLoadEvent>.Raise(new UnitLoadEvent(transportable,this));
+            Bus<UnitLoadEvent>.Raise(Owner,new UnitLoadEvent(transportable,this));
 
             if (behaviorGraphAgent.GetVariable("LoadUnitTargets", out BlackboardVariable<List<GameObject>> loadUnitTargetsVariable))
             {

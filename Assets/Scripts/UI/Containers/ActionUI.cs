@@ -6,7 +6,6 @@ using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
 using Gumiho_Rts.UI.Components;
 using Gumiho_Rts.Units;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -73,7 +72,8 @@ namespace Gumiho_Rts.UI.Containers
 
         private UnityAction HandleClick(BaseCommand action)
         {
-            return () => Bus<CommandSelectedEvent>.Raise(new CommandSelectedEvent(action));
+            return null;
+            //return () => Bus<CommandSelectedEvent>.Raise(new CommandSelectedEvent(action));
         }
 
 

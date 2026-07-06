@@ -34,7 +34,7 @@ namespace Gumiho_Rts.Units
             if (decalProjector != null)
                 decalProjector.gameObject.SetActive(true);
             IsSelected = true;
-            Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
+            Bus<UnitSelectedEvent>.Raise(Owner,new UnitSelectedEvent(this));
 
         }
 
@@ -44,7 +44,7 @@ namespace Gumiho_Rts.Units
                 decalProjector.gameObject.SetActive(false);
             IsSelected = false;
             SetCommandOverride();
-            Bus<UnitDeselectedEvent>.Raise(new UnitDeselectedEvent(this));
+            Bus<UnitDeselectedEvent>.Raise(Owner,new UnitDeselectedEvent(this));
         }
         public void SetCommandOverride(BaseCommand[] command = null)
         {
@@ -58,7 +58,7 @@ namespace Gumiho_Rts.Units
                 AvailableCommands = command;
             }
             if (IsSelected)
-                Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
+                Bus<UnitSelectedEvent>.Raise(Owner,new UnitSelectedEvent(this));
         }
 
         public void TakeDamage(int damage)

@@ -54,7 +54,7 @@ namespace Gumiho_Rts.Units
             IsSelected = false;
             if (IsBuilding)
                 SetCommandOverride();
-            Bus<UnitDeselectedEvent>.Raise(new UnitDeselectedEvent(this));
+            Bus<UnitDeselectedEvent>.Raise(Owner,new UnitDeselectedEvent(this));
         }
 
         public void LoadInto(ITransporter transporter)
@@ -80,7 +80,7 @@ namespace Gumiho_Rts.Units
 
         private void HandleGatherSupplies(GameObject self, int amount, SupplySO supply)
         {
-            Bus<SupplyEvent>.Raise(new SupplyEvent(amount, supply));
+            Bus<SupplyEvent>.Raise(Owner,new SupplyEvent(amount, supply));
         }
 
         private void HandleBuildingEvents(GameObject self, BuildingEventType eventType, BaseBuilding building)
@@ -124,8 +124,8 @@ namespace Gumiho_Rts.Units
             // SetCommandOverride(new BaseCommand[] { CancelBuildingCommand });
             // Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
 
-            Bus<SupplyEvent>.Raise(new SupplyEvent(-building.Cost.Minerals, building.Cost.MineralsSO));
-            Bus<SupplyEvent>.Raise(new SupplyEvent(-building.Cost.Gas, building.Cost.GasSO));
+            Bus<SupplyEvent>.Raise(Owner,new SupplyEvent(-building.Cost.Minerals, building.Cost.MineralsSO));
+            Bus<SupplyEvent>.Raise(Owner,new SupplyEvent(-building.Cost.Gas, building.Cost.GasSO));
 
             return instance;
         }
@@ -141,8 +141,8 @@ namespace Gumiho_Rts.Units
                 Destroy(building.Value.gameObject);
 
                 BuildingUnitSO buildingUnitSO = building.Value.BuildingSO;
-                Bus<SupplyEvent>.Raise(new SupplyEvent(Mathf.FloorToInt(buildingUnitSO.Cost.Minerals * 0.75f), buildingUnitSO.Cost.MineralsSO));
-                Bus<SupplyEvent>.Raise(new SupplyEvent(Mathf.FloorToInt(buildingUnitSO.Cost.Gas * 0.75f), buildingUnitSO.Cost.GasSO));
+                Bus<SupplyEvent>.Raise(Owner,new SupplyEvent(Mathf.FloorToInt(buildingUnitSO.Cost.Minerals * 0.75f), buildingUnitSO.Cost.MineralsSO));
+                Bus<SupplyEvent>.Raise(Owner,new SupplyEvent(Mathf.FloorToInt(buildingUnitSO.Cost.Gas * 0.75f), buildingUnitSO.Cost.GasSO));
             }
             SetCommandOverride(Array.Empty<BaseCommand>());
 
