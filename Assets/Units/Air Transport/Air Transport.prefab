@@ -155,6 +155,7 @@ MonoBehaviour:
   decalProjector: {fileID: 5256939506563389180}
   <IsSelected>k__BackingField: 0
   <UnitSO>k__BackingField: {fileID: 11400000, guid: 06d8609859f1b41008965e3e48c077fe, type: 2}
+  <Owner>k__BackingField: 1
   <AvailableCommands>k__BackingField:
   - {fileID: 11400000, guid: da9ca1647b00f40b594dcd7d05650cc5, type: 2}
   - {fileID: 11400000, guid: bd2406fc6901a4556bc421dec2a8bc30, type: 2}

@@ -57,6 +57,7 @@ namespace Gumiho_Rts.Units
             {
                 DamageableSensor.OnUnitEnter += HandleUnitEnter;
                 DamageableSensor.OnUnitExit += HandleUnitExit;
+                DamageableSensor.Owner = Owner;
                 DamageableSensor.SetupFrom(unitSO.AttackConfig);
             }
         }

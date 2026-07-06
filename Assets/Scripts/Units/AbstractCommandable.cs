@@ -11,6 +11,7 @@ namespace Gumiho_Rts.Units
         [SerializeField] protected DecalProjector decalProjector;
         [field: SerializeField] public bool IsSelected { get; protected set; }
         [field: SerializeField] public UnitSO UnitSO { get; private set; }
+        [field:SerializeField] public Owner Owner {get;  set;}
         public Transform Transform => transform;
 
 

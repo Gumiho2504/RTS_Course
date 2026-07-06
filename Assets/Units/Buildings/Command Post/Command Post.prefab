@@ -124,13 +124,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1589499662120937400}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f2ecd2884187a4f0dbb3d51c30577ffd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.BaseBuilding
   decalProjector: {fileID: 662355631343715911}
+  <IsSelected>k__BackingField: 0
   <UnitSO>k__BackingField: {fileID: 11400000, guid: 4806c17484ea44fc291bb4d4ab047493, type: 2}
+  <Owner>k__BackingField: 1
   <AvailableCommands>k__BackingField:
   - {fileID: 11400000, guid: 3e5ad58471a0047878039e2fb7030f26, type: 2}
   <CurrentHealth>k__BackingField: 0

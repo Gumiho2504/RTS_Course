@@ -20,7 +20,7 @@ namespace Gumiho_Rts.Units
         public delegate void QueueUpdatedEvent(UnitSO[] unitsInQueue);
         public event QueueUpdatedEvent OnQueueUpdated;
 
-        public delegate void HealthUpdatedEvent(AbstractCommandable commandable,int lastHealth, int newHealth);
+        public delegate void HealthUpdatedEvent(AbstractCommandable commandable, int lastHealth, int newHealth);
         public event HealthUpdatedEvent OnHealthUpdated;
 
         [field: SerializeField] public MeshRenderer MainMeshRenderer { get; private set; }
@@ -59,7 +59,7 @@ namespace Gumiho_Rts.Units
                 Debug.LogError("BuildUnit called when the queue was already full ! This is not supported!");
                 return;
             }
-            
+
             Bus<SupplyEvent>.Raise(new SupplyEvent(-unit.Cost.Minerals, unit.Cost.MineralsSO));
             Bus<SupplyEvent>.Raise(new SupplyEvent(-unit.Cost.Gas, unit.Cost.GasSO));
 
@@ -77,7 +77,7 @@ namespace Gumiho_Rts.Units
                 Debug.LogError("CancelBuildUnit called with an invalid index");
                 return;
             }
-            
+
             UnitSO unitSO = buildingQueue[index];
             Bus<SupplyEvent>.Raise(new SupplyEvent(unitSO.Cost.Minerals, unitSO.Cost.MineralsSO));
             Bus<SupplyEvent>.Raise(new SupplyEvent(unitSO.Cost.Gas, unitSO.Cost.GasSO));
@@ -108,7 +108,11 @@ namespace Gumiho_Rts.Units
 
                 yield return new WaitForSeconds(BuildingUnit.BuildTime);
 
-                Instantiate(BuildingUnit.Prefab, transform.position, Quaternion.identity);
+                GameObject instance = Instantiate(BuildingUnit.Prefab, transform.position, Quaternion.identity);
+                if(instance.TryGetComponent(out AbstractCommandable commandable))
+                {
+                    commandable.Owner = Owner;
+                }
                 buildingQueue.RemoveAt(0);
             }
             OnQueueUpdated?.Invoke(buildingQueue.ToArray());
@@ -119,10 +123,11 @@ namespace Gumiho_Rts.Units
         {
             Awake();
             unitBuildingThis = buildingBuilder;
+            Owner = buildingBuilder.Owner;
             MainMeshRenderer.material = BuildingSO.BuildingGhostPlacement;
 
             Progress = new BuildingProgress(Time.time - BuildingSO.BuildTime * Progress.Progress, Progress.Progress, BuildingProgress.BuildingState.Building);
-            if(Progress.Progress == 0)
+            if (Progress.Progress == 0)
             {
                 Heal(1);
             }
@@ -143,6 +148,6 @@ namespace Gumiho_Rts.Units
         {
             Bus<UnitDeathEvent>.OnEvent -= HandleUnitDeath;
         }
-       
+
     }
 }

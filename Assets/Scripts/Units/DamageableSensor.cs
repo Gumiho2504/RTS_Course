@@ -11,6 +11,7 @@ namespace Gumiho_Rts.Units
     {
         private HashSet<IDamageable> damageables = new();
         public List<IDamageable> Damageables => damageables.ToList();
+        public Owner Owner {get;set;}
 
         public delegate void UnitDetectionEvent(IDamageable damageable);
         public event UnitDetectionEvent OnUnitEnter;
@@ -24,7 +25,7 @@ namespace Gumiho_Rts.Units
         }
         void OnTriggerEnter(Collider other)
         {
-            if (other != null && other.TryGetComponent<IDamageable>(out IDamageable damageable))
+            if (other != null && other.TryGetComponent<IDamageable>(out IDamageable damageable) && damageable.Owner != Owner)
             {
                 damageables.Add(damageable);
                 OnUnitEnter?.Invoke(damageable);
@@ -37,7 +38,7 @@ namespace Gumiho_Rts.Units
 
         void OnTriggerExit(Collider other)
         {
-            if (other != null && other.TryGetComponent<IDamageable>(out IDamageable damageable))
+            if (other != null && other.TryGetComponent<IDamageable>(out IDamageable damageable) && damageables.Remove(damageable))
             {
                 damageables.Remove(damageable);
                 OnUnitExit?.Invoke(damageable);
