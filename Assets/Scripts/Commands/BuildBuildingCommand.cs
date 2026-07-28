@@ -8,7 +8,6 @@ namespace Gumiho_Rts.Commands
     [CreateAssetMenu(fileName = "Build Building", menuName = "Units/Commands/Build Building")]
     public class BuildBuildingCommand : BaseCommand
     {
-        [SerializeField] private TechTreeSO techTree;
         [field: SerializeField] public BuildingUnitSO BuildingSO { get; private set; }
 
         public override bool CanHandle(CommandContext context)
@@ -41,7 +40,7 @@ namespace Gumiho_Rts.Commands
             }
         }
 
-        public override bool IsLocked(CommandContext context) => !HasEnoughSupply(context) || !techTree.IsUnlocked(context.Owner,BuildingSO);
+        public override bool IsLocked(CommandContext context) => !HasEnoughSupply(context) || !BuildingSO.TechTree.IsUnlocked(context.Owner,BuildingSO);
 
         private bool HasEnoughSupply(CommandContext context)
         {

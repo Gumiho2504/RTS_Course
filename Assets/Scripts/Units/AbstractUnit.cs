@@ -62,11 +62,15 @@ namespace Gumiho_Rts.Units
                 DamageableSensor.SetupFrom(unitSO.AttackConfig);
             }
 
-            foreach(UpgradeSO upgrade in unitSO.Upgrades)
+            foreach (UpgradeSO upgrade in unitSO.Upgrades)
             {
                 // we still need to check that it's researched! Coming in a future lecture!
-                upgrade.Apply(unitSO);
+                if (unitSO.TechTree.IsResearched(Owner, upgrade))
+                {
+                    upgrade.Apply(unitSO);
+                }
             }
+
         }
 
 

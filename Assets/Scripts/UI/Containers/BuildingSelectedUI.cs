@@ -1,6 +1,7 @@
 using System;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
+using Gumiho_Rts.TechTree;
 using Gumiho_Rts.UI;
 using Gumiho_Rts.UI.Containers;
 using Gumiho_Rts.Units;
@@ -53,7 +54,7 @@ public class BuildingSelectedUI : MonoBehaviour, IUIElement<BaseBuilding>
     }
 
 
-    private void OnBuildingQueueUpdated(UnitSO[] _ = null)
+    private void OnBuildingQueueUpdated(UnlockableSO[] _ = null)
     {
         if (selectedBuilding.QueueSize == 0)
         {

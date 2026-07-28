@@ -51,7 +51,7 @@ namespace Gumiho_Rts.UI.Containers
                 }
                 float startTime = building.Progress.StartTime;
 
-                float endTime = startTime + building.BuildingUnit.BuildTime;
+                float endTime = startTime + building.SOBeingBuilt.BuildTime;
 
                 progressBar.SetProgress(Mathf.Clamp01((Time.time - startTime) / (endTime - startTime)));
                 yield return null;

@@ -133,12 +133,13 @@ MonoBehaviour:
   <IsSelected>k__BackingField: 0
   <UnitSO>k__BackingField: {fileID: 11400000, guid: 7907221783a074549be42a3c14df6664, type: 2}
   <Owner>k__BackingField: 0
-  <AvailableCommands>k__BackingField: []
+  <AvailableCommands>k__BackingField:
+  - {fileID: 11400000, guid: 1a9950b3117cd66499d09cff4286da47, type: 2}
   <CurrentHealth>k__BackingField: 0
   <MaxHealth>k__BackingField: 0
   initialCommands: []
   <CurrentQueueStartTime>k__BackingField: 0
-  <BuildingUnit>k__BackingField: {fileID: 11400000, guid: 7907221783a074549be42a3c14df6664, type: 2}
+  <SOBeingBuilt>k__BackingField: {fileID: 0}
   <Progress>k__BackingField:
     <StartTime>k__BackingField: 0
     <Progress>k__BackingField: 0

@@ -16,7 +16,9 @@ MonoBehaviour:
   <BuildTime>k__BackingField: 5
   <Icon>k__BackingField: {fileID: 21300000, guid: 05140302c0774b946a72e885e4c597e1, type: 3}
   <Cost>k__BackingField: {fileID: 11400000, guid: 5a8b8701f54dd844486ed57392bd3133, type: 2}
+  <TechTree>k__BackingField: {fileID: 11400000, guid: 0dabc96478a255241bdd9e73c545c52e, type: 2}
   <unlockRequirements>k__BackingField: []
   <Health>k__BackingField: 1000
   <Prefab>k__BackingField: {fileID: 5827066523746683823, guid: 0769b0d4430bf10488837724577a9cde, type: 3}
+  <Upgrades>k__BackingField: []
   <BuildingGhostPlacement>k__BackingField: {fileID: 2100000, guid: df83892de47974b2d8f424ae85ebe3ee, type: 2}

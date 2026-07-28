@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
+using Gumiho_Rts.TechTree;
+using RTS_Course.Assets.Scripts.Events;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,13 +13,13 @@ namespace Gumiho_Rts.Units
     public class BaseBuilding : AbstractCommandable
     {
         public int QueueSize => buildingQueue.Count;
-        public UnitSO[] Queue => buildingQueue.ToArray();
+        public UnlockableSO[] Queue => buildingQueue.ToArray();
         [field: SerializeField] public float CurrentQueueStartTime { get; private set; }
-        [field: SerializeField] public UnitSO BuildingUnit { get; private set; }
+        [field: SerializeField] public UnlockableSO SOBeingBuilt { get; private set; }
         [field: SerializeField] public BuildingProgress Progress { get; private set; } = new BuildingProgress(0, 0, BuildingProgress.BuildingState.Destroy);
 
 
-        public delegate void QueueUpdatedEvent(UnitSO[] unitsInQueue);
+        public delegate void QueueUpdatedEvent(UnlockableSO[] unitsInQueue);
         public event QueueUpdatedEvent OnQueueUpdated;
 
         public delegate void HealthUpdatedEvent(AbstractCommandable commandable, int lastHealth, int newHealth);
@@ -26,7 +28,7 @@ namespace Gumiho_Rts.Units
         [field: SerializeField] public MeshRenderer MainMeshRenderer { get; private set; }
 
         private IBuildingBuilder unitBuildingThis;
-        private List<UnitSO> buildingQueue = new(MAX_QUEUE_SIZE);
+        private List<UnlockableSO> buildingQueue = new(MAX_QUEUE_SIZE);
         private const int MAX_QUEUE_SIZE = 5;
         [field: SerializeField] public BuildingUnitSO BuildingSO { get; private set; }
         [SerializeField] private NavMeshObstacle navMeshObstacle;
@@ -53,7 +55,7 @@ namespace Gumiho_Rts.Units
         }
 
 
-        public void BuildUnit(UnitSO unit)
+        public void BuildUnlockable(UnlockableSO unlockable)
         {
             if (buildingQueue.Count == MAX_QUEUE_SIZE)
             {
@@ -61,10 +63,10 @@ namespace Gumiho_Rts.Units
                 return;
             }
 
-            Bus<SupplyEvent>.Raise(Owner, new SupplyEvent(Owner, -unit.Cost.Minerals, unit.Cost.MineralsSO));
-            Bus<SupplyEvent>.Raise(Owner, new SupplyEvent(Owner, -unit.Cost.Gas, unit.Cost.GasSO));
+            Bus<SupplyEvent>.Raise(Owner, new SupplyEvent(Owner, -unlockable.Cost.Minerals, unlockable.Cost.MineralsSO));
+            Bus<SupplyEvent>.Raise(Owner, new SupplyEvent(Owner, -unlockable.Cost.Gas, unlockable.Cost.GasSO));
 
-            buildingQueue.Add(unit);
+            buildingQueue.Add(unlockable);
             if (buildingQueue.Count == 1)
                 StartCoroutine(DoBuildUnits());
             else
@@ -79,9 +81,9 @@ namespace Gumiho_Rts.Units
                 return;
             }
 
-            UnitSO unitSO = buildingQueue[index];
-            Bus<SupplyEvent>.Raise(Owner, new SupplyEvent(Owner, unitSO.Cost.Minerals, unitSO.Cost.MineralsSO));
-            Bus<SupplyEvent>.Raise(Owner, new SupplyEvent(Owner, unitSO.Cost.Gas, unitSO.Cost.GasSO));
+            UnlockableSO unlockableSO = buildingQueue[index];
+            Bus<SupplyEvent>.Raise(Owner, new SupplyEvent(Owner, unlockableSO.Cost.Minerals, unlockableSO.Cost.MineralsSO));
+            Bus<SupplyEvent>.Raise(Owner, new SupplyEvent(Owner, unlockableSO.Cost.Gas, unlockableSO.Cost.GasSO));
 
             buildingQueue.RemoveAt(index);
             if (index == 0)
@@ -102,18 +104,27 @@ namespace Gumiho_Rts.Units
         {
             while (buildingQueue.Count > 0)
             {
-                BuildingUnit = buildingQueue[0];
+                SOBeingBuilt = buildingQueue[0];
                 CurrentQueueStartTime = Time.time;
 
                 OnQueueUpdated?.Invoke(buildingQueue.ToArray());
 
-                yield return new WaitForSeconds(BuildingUnit.BuildTime);
+                yield return new WaitForSeconds(SOBeingBuilt.BuildTime);
 
-                GameObject instance = Instantiate(BuildingUnit.Prefab, transform.position, Quaternion.identity);
-                if (instance.TryGetComponent(out AbstractCommandable commandable))
+                if (SOBeingBuilt is UnitSO unitSO)
                 {
-                    commandable.Owner = Owner;
+                    GameObject instance = Instantiate(unitSO.Prefab, transform.position, Quaternion.identity);
+                    if (instance.TryGetComponent(out AbstractCommandable commandable))
+                    {
+                        commandable.Owner = Owner;
+                    }
                 }
+                else if (SOBeingBuilt is UpgradeSO upgrade)
+                {
+                    Bus<UpgradeResearchedEvent>.Raise(Owner,new UpgradeResearchedEvent(Owner,upgrade));
+                }
+
+
                 buildingQueue.RemoveAt(0);
             }
             OnQueueUpdated?.Invoke(buildingQueue.ToArray());
@@ -125,7 +136,7 @@ namespace Gumiho_Rts.Units
             Awake();
             unitBuildingThis = buildingBuilder;
             Owner = buildingBuilder.Owner;
-         //   Debug.Log("<color=green> BaseBuilding Start Build");
+            //   Debug.Log("<color=green> BaseBuilding Start Build");
 
 
 

@@ -8,7 +8,9 @@ namespace Gumiho_Rts.TechTree
     using Gumiho_Rts.EventBus;
     using Gumiho_Rts.Events;
     using Gumiho_Rts.Units;
+    using RTS_Course.Assets.Scripts.Events;
     using UnityEngine;
+    using UnityEngine.InputSystem;
 
     [CreateAssetMenu(fileName = "Tech Tree", menuName = "Tech Tree/Tech Tree", order = 1)]
     public class TechTreeSO : ScriptableObject
@@ -17,15 +19,11 @@ namespace Gumiho_Rts.TechTree
         public IEnumerable<UnlockableSO> AllUnlockables => allUnlockables.ToList();
 
         private Dictionary<Owner, Dictionary<UnlockableSO, Dependency>> techTrees;
+        private Dictionary<Owner, HashSet<UnlockableSO>> unlockedDependencies;
 
-        private Dictionary<String, int> test = new()
-        {
-              { "ItemOne", 100 },
-    { "ItemTwo", 200 }
-
-        };
 
         public bool IsUnlocked(Owner owner, UnlockableSO unlockableSO) => techTrees[owner].TryGetValue(unlockableSO, out Dependency value) && value.IsUnlocked;
+        public bool IsResearched(Owner owner, UnlockableSO unlockableSO) => unlockedDependencies[owner].Contains(unlockableSO);
 
         private void OnEnable()
         {
@@ -34,6 +32,7 @@ namespace Gumiho_Rts.TechTree
                 BuildTechTrees();
             }
             Bus<BuildingSpawnEvent>.RegisterForAll(HandleBuildingSpawn);
+            Bus<UpgradeResearchedEvent>.RegisterForAll(HandleUpgradeResearched);
         }
 
 
@@ -41,6 +40,7 @@ namespace Gumiho_Rts.TechTree
         {
             techTrees = null;
             Bus<BuildingSpawnEvent>.UnregisterForAll(HandleBuildingSpawn);
+            Bus<UpgradeResearchedEvent>.UnregisterForAll(HandleUpgradeResearched);
         }
 
         private void HandleBuildingSpawn(BuildingSpawnEvent args)
@@ -51,15 +51,31 @@ namespace Gumiho_Rts.TechTree
             }
         }
 
+        private void HandleUpgradeResearched(UpgradeResearchedEvent args)
+        {
+            Debug.Log($"<color=blue> Researched {args.Upgrade.Name} for {args.Owner} </color>");
+            unlockedDependencies[args.Owner].Add(args.Upgrade);
+            foreach(var (key,value) in techTrees[args.Owner])
+            {
+                value.UnlockDependency(args.Upgrade);
+
+            }
+        }
+
+
 
         private void BuildTechTrees()
         {
             techTrees = new Dictionary<Owner, Dictionary<UnlockableSO, Dependency>>();
+            unlockedDependencies = new Dictionary<Owner, HashSet<UnlockableSO>>();
             Debug.Log($"Build Tech tree {name}");
             foreach (Owner owner in Enum.GetValues(typeof(Owner)))
             {
                 Debug.Log($"Adding {owner} to Tech Tree Dictionary");
+
                 techTrees.Add(owner, new Dictionary<UnlockableSO, Dependency>());
+                unlockedDependencies.Add(owner, new HashSet<UnlockableSO>());
+
                 foreach (UnlockableSO unlockableSO in allUnlockables)
                 {
                     techTrees[owner].Add(unlockableSO, new Dependency(unlockableSO));

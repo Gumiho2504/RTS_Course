@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections;
+using Gumiho_Rts.TechTree;
 using Gumiho_Rts.UI.Components;
 using Gumiho_Rts.Units;
 using UnityEngine;
@@ -46,7 +47,7 @@ namespace Gumiho_Rts.UI.Containers
             }
         }
 
-        private void HandleQueueUpdated(UnitSO[] unitsInQueue)
+        private void HandleQueueUpdated(UnlockableSO[] unitsInQueue)
         {
             if (unitsInQueue.Length == 1 && buildCoroutine == null)
             {
@@ -69,9 +70,9 @@ namespace Gumiho_Rts.UI.Containers
 
         }
 
-/// 
-/// 
-/// 
+        /// 
+        /// 
+        /// 
         private IEnumerator UpdateUnitProgress()
         {
             while (building != null && building.QueueSize > 0)
@@ -92,7 +93,7 @@ namespace Gumiho_Rts.UI.Containers
 
 
                 float startTime = building.CurrentQueueStartTime;
-                float endTime = startTime + building.BuildingUnit.BuildTime;
+                float endTime = startTime + building.SOBeingBuilt.BuildTime;
                 float progress = Mathf.Clamp01((Time.time - startTime) / (endTime - startTime));
                 progressBar.SetProgress(progress);
                 yield return null;

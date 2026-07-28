@@ -1,11 +1,12 @@
 using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.Events;
+using Gumiho_Rts.TechTree;
 
 namespace Gumiho_Rts.UI.Components
 {
     [RequireComponent(typeof(Button))]
-    public class UIBuildQueueButton : MonoBehaviour, IUIElement<UnitSO, UnityAction>
+    public class UIBuildQueueButton : MonoBehaviour, IUIElement<UnlockableSO, UnityAction>
     {
 
         [SerializeField] private Image icon;
@@ -16,7 +17,7 @@ namespace Gumiho_Rts.UI.Components
             Disable();
         }
 
-        public void EnableFor(UnitSO unit, UnityAction onClick)
+        public void EnableFor(UnlockableSO unit, UnityAction onClick)
         {
             button.onClick.RemoveAllListeners();
             button.interactable = true;
