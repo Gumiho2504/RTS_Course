@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f549cb85268e4d70af9d20fd3bca41c, type: 3}
   m_Name: 100 Minerals 100 Gas
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.SupplyCostSO
-  <Minerals>k__BackingField: 100
+  <Minerals>k__BackingField: 0
   <MineralsSO>k__BackingField: {fileID: 11400000, guid: 0a0867adda2df4ca796938b8d5ffb76f, type: 2}
-  <Gas>k__BackingField: 100
+  <Gas>k__BackingField: 0
   <GasSO>k__BackingField: {fileID: 11400000, guid: 077dc110d0da34fd981c575ca14abde6, type: 2}

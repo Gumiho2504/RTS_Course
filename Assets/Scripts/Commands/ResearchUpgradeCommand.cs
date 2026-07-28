@@ -30,6 +30,15 @@ namespace Gumiho_Rts.Commands
 
         public override bool IsLocked(CommandContext context) => !HasEnoughSupply(context) || !Upgrade.TechTree.IsUnlocked(context.Owner,Upgrade);
 
+        public override bool IsAvailable(CommandContext context)
+        {
+            if(Upgrade.IsOneTimeUnlock && Upgrade.TechTree.IsResearched(context.Owner, Upgrade))
+            {
+                return false;
+            }
+            return Upgrade.TechTree.IsUnlocked(context.Owner,Upgrade);
+        }
+
         private bool HasEnoughSupply(CommandContext context)
         {
             return Upgrade.Cost.Minerals <= Supplies.Minerals[context.Owner] && Upgrade.Cost.Gas <= Supplies.Gas[context.Owner];

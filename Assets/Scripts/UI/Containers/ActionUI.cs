@@ -35,6 +35,12 @@ namespace Gumiho_Rts.UI.Containers
         {
 
             IEnumerable<BaseCommand> availableCommands = selectedUnits.Count > 0 ? selectedUnits.ElementAt(0).AvailableCommands : Array.Empty<BaseCommand>();
+            availableCommands = availableCommands.
+                                                                                                    Where(action => 
+                                                                                                                                action.IsAvailable(
+                                                                                                                                                new CommandContext(Owner.Player1,
+                                                                                                                                                selectedUnits.FirstOrDefault(),
+                                                                                                                                                new RaycastHit())));
             foreach (AbstractCommandable commandable in selectedUnits)
             {
                 //  availableCommands.UnionWith(commandable.AvailableCommands);
