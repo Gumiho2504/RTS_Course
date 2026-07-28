@@ -1,4 +1,5 @@
 using Gumiho_Rts.Player;
+using Gumiho_Rts.TechTree;
 using Gumiho_Rts.Units;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ namespace Gumiho_Rts.Commands
     [CreateAssetMenu(fileName = "Build Unit", menuName = " Buildings/Commands/Build Unit")]
     public class BuildUnitCommand : BaseCommand
     {
+        [SerializeField] private TechTreeSO techTree;
         [field: SerializeField] public UnitSO Unit { get; private set; }
         public override bool CanHandle(CommandContext context)
         {
@@ -21,7 +23,7 @@ namespace Gumiho_Rts.Commands
             //Debug.Log("Finished  Building .... Unity work in progress");
         }
 
-        public override bool IsLocked(CommandContext context) => !HasEnoughSupply(context);
+        public override bool IsLocked(CommandContext context) => !HasEnoughSupply(context) || !techTree.IsUnlocked(context.Owner, Unit);
 
         private bool HasEnoughSupply(CommandContext context)
         {

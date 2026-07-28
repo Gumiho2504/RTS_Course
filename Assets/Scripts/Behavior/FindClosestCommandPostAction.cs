@@ -28,7 +28,7 @@ namespace Gumiho_Rts.Behavoir
             foreach (var collider in colliders)
             {
 
-                // Debug.Log("Checking Command Post " + (collider.TryGetComponent(out BaseBuilding b)).ToString() + " isCommandPostBuilding " + b.UnitSO.Equals(CommandPostBuilding.Value).ToString() + " is b.unitSo null " + (b.UnitSO == null).ToString() + " is CommandPostBuilding null " + (CommandPostBuilding.Value == null).ToString() );
+                Debug.Log("Checking Command Post " + (collider.TryGetComponent(out BaseBuilding b)).ToString() + " isCommandPostBuilding " + b.UnitSO.Equals(CommandPostBuilding.Value).ToString() + " is b.unitSo null " + (b.UnitSO == null).ToString() + " is CommandPostBuilding null " + (CommandPostBuilding.Value == null).ToString() );
 
                 if (collider.TryGetComponent(out BaseBuilding building) && building.UnitSO.Equals(CommandPostBuilding.Value) && building.Progress.State == BuildingProgress.BuildingState.Completed)
                 {

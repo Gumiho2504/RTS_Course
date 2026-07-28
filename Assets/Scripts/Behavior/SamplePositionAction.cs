@@ -14,18 +14,21 @@ namespace Gumiho_Rts.Behavior
     {
         [SerializeReference] public BlackboardVariable<Vector3> TargetLocation;
         [SerializeReference] public BlackboardVariable<GameObject> Target;
-        [SerializeReference] public BlackboardVariable<float> Radius = new(7f);
+        [SerializeReference] public BlackboardVariable<float> Radius = new(5f);
 
         protected override Status OnStart()
         {
             if (Target.Value == null || !Target.Value.TryGetComponent(out NavMeshAgent agent)) return Status.Failure;
 
-            NavMeshQueryFilter navMeshQueryFilter = new();
-            navMeshQueryFilter.agentTypeID = agent.agentTypeID;
-            navMeshQueryFilter.areaMask = agent.areaMask;
-
-            if (NavMesh.SamplePosition(Target.Value.transform.position, out NavMeshHit hit, Radius.Value, navMeshQueryFilter))
+            NavMeshQueryFilter navMeshQueryFilter = new()
             {
+                agentTypeID = agent.agentTypeID,
+                areaMask = agent.areaMask
+            };
+
+            if (NavMesh.SamplePosition(Target.Value.transform.position, out NavMeshHit hit, Radius, navMeshQueryFilter))
+            {
+               // Debug.Log("Success");
                 TargetLocation.Value = hit.position;
                 return Status.Success;
             }

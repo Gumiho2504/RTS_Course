@@ -31,7 +31,7 @@ namespace Gumiho_Rts.Units
         [field: SerializeField] public BuildingUnitSO BuildingSO { get; private set; }
         [SerializeField] private NavMeshObstacle navMeshObstacle;
         [SerializeField] private Material primaryMaterial;
-        private void Awake()
+        protected void Awake()
         {
             BuildingSO = UnitSO as BuildingUnitSO;
             MaxHealth = BuildingSO.Health;
@@ -44,11 +44,12 @@ namespace Gumiho_Rts.Units
             if (MainMeshRenderer != null)
             {
                 MainMeshRenderer.material = primaryMaterial;
+
             }
             Progress = new BuildingProgress(Progress.StartTime, 1, BuildingProgress.BuildingState.Completed);
             unitBuildingThis = null;
             Bus<UnitDeathEvent>.OnEvent[Owner] -= HandleUnitDeath;
-            Bus<BuildingSpawnEvent>.Raise(Owner,new BuildingSpawnEvent(this));
+            Bus<BuildingSpawnEvent>.Raise(Owner, new BuildingSpawnEvent(Owner, this));
         }
 
 
@@ -60,8 +61,8 @@ namespace Gumiho_Rts.Units
                 return;
             }
 
-            Bus<SupplyEvent>.Raise(Owner,new SupplyEvent(Owner,-unit.Cost.Minerals, unit.Cost.MineralsSO));
-            Bus<SupplyEvent>.Raise(Owner,new SupplyEvent(Owner,-unit.Cost.Gas, unit.Cost.GasSO));
+            Bus<SupplyEvent>.Raise(Owner, new SupplyEvent(Owner, -unit.Cost.Minerals, unit.Cost.MineralsSO));
+            Bus<SupplyEvent>.Raise(Owner, new SupplyEvent(Owner, -unit.Cost.Gas, unit.Cost.GasSO));
 
             buildingQueue.Add(unit);
             if (buildingQueue.Count == 1)
@@ -79,8 +80,8 @@ namespace Gumiho_Rts.Units
             }
 
             UnitSO unitSO = buildingQueue[index];
-            Bus<SupplyEvent>.Raise(Owner,new SupplyEvent(Owner,unitSO.Cost.Minerals, unitSO.Cost.MineralsSO));
-            Bus<SupplyEvent>.Raise(Owner,new SupplyEvent(Owner,unitSO.Cost.Gas, unitSO.Cost.GasSO));
+            Bus<SupplyEvent>.Raise(Owner, new SupplyEvent(Owner, unitSO.Cost.Minerals, unitSO.Cost.MineralsSO));
+            Bus<SupplyEvent>.Raise(Owner, new SupplyEvent(Owner, unitSO.Cost.Gas, unitSO.Cost.GasSO));
 
             buildingQueue.RemoveAt(index);
             if (index == 0)
@@ -109,7 +110,7 @@ namespace Gumiho_Rts.Units
                 yield return new WaitForSeconds(BuildingUnit.BuildTime);
 
                 GameObject instance = Instantiate(BuildingUnit.Prefab, transform.position, Quaternion.identity);
-                if(instance.TryGetComponent(out AbstractCommandable commandable))
+                if (instance.TryGetComponent(out AbstractCommandable commandable))
                 {
                     commandable.Owner = Owner;
                 }
@@ -124,7 +125,9 @@ namespace Gumiho_Rts.Units
             Awake();
             unitBuildingThis = buildingBuilder;
             Owner = buildingBuilder.Owner;
-            MainMeshRenderer.material = BuildingSO.BuildingGhostPlacement;
+         //   Debug.Log("<color=green> BaseBuilding Start Build");
+
+
 
             Progress = new BuildingProgress(Time.time - BuildingSO.BuildTime * Progress.Progress, Progress.Progress, BuildingProgress.BuildingState.Building);
             if (Progress.Progress == 0)
@@ -142,6 +145,11 @@ namespace Gumiho_Rts.Units
                 Progress = new BuildingProgress(Progress.StartTime, (Time.time - Progress.StartTime) / BuildingSO.BuildTime, BuildingProgress.BuildingState.Paused);
                 Bus<UnitDeathEvent>.OnEvent[Owner] -= HandleUnitDeath;
             }
+        }
+
+        public void ShowGhostVisual()
+        {
+            MainMeshRenderer.material = BuildingSO.BuildingGhostPlacement;
         }
 
         private void OnDestroy()

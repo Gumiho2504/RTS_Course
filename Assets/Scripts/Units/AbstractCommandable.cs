@@ -11,7 +11,7 @@ namespace Gumiho_Rts.Units
         [SerializeField] protected DecalProjector decalProjector;
         [field: SerializeField] public bool IsSelected { get; protected set; }
         [field: SerializeField] public UnitSO UnitSO { get; private set; }
-        [field:SerializeField] public Owner Owner {get;  set;}
+        [field: SerializeField] public Owner Owner { get; set; }
         public Transform Transform => transform;
 
 
@@ -22,6 +22,8 @@ namespace Gumiho_Rts.Units
 
         public delegate void HeathUpdatedEvent(AbstractCommandable commandable, int lastHealth, int newHealth);
         public event HeathUpdatedEvent OnHealthUpdated;
+
+     
 
         protected virtual void Start()
         {
@@ -34,7 +36,7 @@ namespace Gumiho_Rts.Units
             if (decalProjector != null)
                 decalProjector.gameObject.SetActive(true);
             IsSelected = true;
-            Bus<UnitSelectedEvent>.Raise(Owner,new UnitSelectedEvent(this));
+            Bus<UnitSelectedEvent>.Raise(Owner, new UnitSelectedEvent(this));
 
         }
 
@@ -44,7 +46,7 @@ namespace Gumiho_Rts.Units
                 decalProjector.gameObject.SetActive(false);
             IsSelected = false;
             SetCommandOverride();
-            Bus<UnitDeselectedEvent>.Raise(Owner,new UnitDeselectedEvent(this));
+            Bus<UnitDeselectedEvent>.Raise(Owner, new UnitDeselectedEvent(this));
         }
         public void SetCommandOverride(BaseCommand[] command = null)
         {
@@ -58,13 +60,13 @@ namespace Gumiho_Rts.Units
                 AvailableCommands = command;
             }
             if (IsSelected)
-                Bus<UnitSelectedEvent>.Raise(Owner,new UnitSelectedEvent(this));
+                Bus<UnitSelectedEvent>.Raise(Owner, new UnitSelectedEvent(this));
         }
 
         public void TakeDamage(int damage)
         {
             int lastHealth = CurrentHealth;
-            
+
             CurrentHealth = Mathf.Clamp(CurrentHealth - damage, 0, CurrentHealth);
 
             OnHealthUpdated?.Invoke(this, lastHealth, CurrentHealth);

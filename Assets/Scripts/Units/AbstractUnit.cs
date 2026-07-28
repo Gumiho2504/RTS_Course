@@ -28,7 +28,7 @@ namespace Gumiho_Rts.Units
         protected const string SUPPLY = "Supply";
         protected const string TARGET_GAME_OBJECT = "TargetGameObject";
         protected const string GATHER_SUPPLIES_EVENT = "GatherSuppliesEventChannel";
-        protected const string BUILDING_EVENT_CHANNEL = "BuildingEventChannel";
+        protected const string BUILDING_EVENT_CHANNEL = "Building Event Channel";
         protected const string SUPPLY_AMOUNT_HELD = "SupplyAmountHeld";
         protected const string GHOST = "Ghost";
         protected const string BUILDING_SO = "BuildingSO";
@@ -51,7 +51,7 @@ namespace Gumiho_Rts.Units
             base.Start();
             CurrentHealth = UnitSO.Health;
             MaxHealth = UnitSO.Health;
-            Bus<UnitSpawnEvent>.Raise(Owner,new UnitSpawnEvent(this));
+            Bus<UnitSpawnEvent>.Raise(Owner, new UnitSpawnEvent(this));
 
             if (DamageableSensor != null)
             {
@@ -142,7 +142,7 @@ namespace Gumiho_Rts.Units
 
         protected virtual void OnDestroy()
         {
-            Bus<UnitDeathEvent>.Raise(Owner,new UnitDeathEvent(this));
+            Bus<UnitDeathEvent>.Raise(Owner, new UnitDeathEvent(this));
 
             if (DamageableSensor != null)
             {

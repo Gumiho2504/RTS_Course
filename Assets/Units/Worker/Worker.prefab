@@ -151,12 +151,21 @@ MonoBehaviour:
   m_Graph: {fileID: 7263508801805294390, guid: 382b0a3129f044bbb9c5bb1588fa03f7, type: 2}
   m_BlackboardVariableOverridesList:
   - rid: 4656822117277630676
+  - rid: 3802055752792145921
   m_OriginalGraph: {fileID: 7263508801805294390, guid: 382b0a3129f044bbb9c5bb1588fa03f7, type: 2}
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
     version: 2
     RefIds:
+    - rid: 3802055752792145921
+      type: {class: 'BlackboardVariable`1[[Gumiho_Rts.Units.BuildingUnitSO, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 3602399588636933281
+          m_Value1: 10023388384410857572
+        Name: CommandPostSO
+        m_Value: {fileID: 11400000, guid: 4806c17484ea44fc291bb4d4ab047493, type: 2}
     - rid: 4656822117277630676
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:

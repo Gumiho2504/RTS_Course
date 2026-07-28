@@ -20,6 +20,7 @@ namespace Gumiho_Rts.Behavoir
         private BaseBuilding completedBuilding;
         private Renderer buildingRenderer;
         private Vector3 startPosition;
+        private Vector3 endPosition;
         private float targetHealth;
 
         protected override Status OnStart()
@@ -38,17 +39,18 @@ namespace Gumiho_Rts.Behavoir
             {
                 completedBuilding = BuildingUnderConstruction.Value;
             }
+           // Debug.Log("<color=yellow> BuildingAction Start</color>");
             completedBuilding.StartBuilding(Self.Value.GetComponent<IBuildingBuilder>());
             startBuildTime = completedBuilding.Progress.StartTime;
 
-            //   GameObject building = GameObject.Instantiate(BuildingSO.Value.Prefab);
-
-
             buildingRenderer = completedBuilding.MainMeshRenderer;
+
             BuildingUnderConstruction.Value = completedBuilding;
 
             startPosition = TargetLocation.Value - Vector3.up * buildingRenderer.bounds.size.y;
+            endPosition = TargetLocation.Value;
             buildingRenderer.transform.position = startPosition;
+
 
             return OnUpdate();
         }
@@ -60,7 +62,7 @@ namespace Gumiho_Rts.Behavoir
 
             float normalizedTime = (Time.time - startBuildTime) / BuildingSO.Value.BuildTime;
             targetHealth += Time.deltaTime * (BuildingSO.Value.Health / BuildingSO.Value.BuildTime);
-            if(targetHealth > 1)
+            if (targetHealth > 1)
             {
                 int healthAmount = Mathf.FloorToInt(targetHealth);
                 completedBuilding.Heal(healthAmount);
@@ -72,6 +74,8 @@ namespace Gumiho_Rts.Behavoir
 
             return normalizedTime >= 1 ? Status.Success : Status.Running;
         }
+
+
 
         protected override void OnEnd()
         {

@@ -78,6 +78,8 @@
     "interactable",
     "Lerp",
     "Mathf",
-    "Scriptable"
+    "Scriptable",
+    "Unlockable",
+    "Unlockables"
   ]
 }

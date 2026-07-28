@@ -82,6 +82,7 @@ namespace Gumiho_Rts
         private void HandleActionSelected(CommandSelectedEvent args)
         {
             activeCommand = args.Command;
+            //Debug.Log($"<color=green> {activeCommand.Name}</color>");
             if (!activeCommand.RequiresClickToActivate)
             {
                 ActivateAction(new RaycastHit());
@@ -120,8 +121,6 @@ namespace Gumiho_Rts
             AliveUnits.Remove(args.Unit);
         }
 
-
-
         // Update is called once per frame
         void Update()
         {
@@ -137,7 +136,7 @@ namespace Gumiho_Rts
             if (ghostInstance == null) return;
             if (Keyboard.current.aKey.wasPressedThisFrame)
             {
-                print("Activating");
+                //print("Activating");
                 Destroy(ghostInstance);
                 ghostInstance = null;
                 activeCommand = null;
@@ -348,7 +347,7 @@ namespace Gumiho_Rts
 
             for (int i = 0; i < abstractCommandable.Count; i++)
             {
-                CommandContext context = new CommandContext(abstractCommandable[i], hit, i, MouseButton.Right);
+                CommandContext context = new CommandContext(abstractCommandable[i], hit, i);
                 if (activeCommand.CanHandle(context))
                 {
                     activeCommand.Handle(context);

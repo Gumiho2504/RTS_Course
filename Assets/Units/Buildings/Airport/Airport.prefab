@@ -124,7 +124,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5827066523746683823}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f2ecd2884187a4f0dbb3d51c30577ffd, type: 3}
   m_Name: 
@@ -132,18 +132,19 @@ MonoBehaviour:
   decalProjector: {fileID: 6263841018324900101}
   <IsSelected>k__BackingField: 0
   <UnitSO>k__BackingField: {fileID: 11400000, guid: f8716d90fac4448aa8ace91a4c3fc7f7, type: 2}
+  <Owner>k__BackingField: 0
   <AvailableCommands>k__BackingField: []
   <CurrentHealth>k__BackingField: 0
   <MaxHealth>k__BackingField: 0
   initialCommands: []
   <CurrentQueueStartTime>k__BackingField: 0
-  <BuildingUnit>k__BackingField: {fileID: 0}
+  <BuildingUnit>k__BackingField: {fileID: 11400000, guid: f8716d90fac4448aa8ace91a4c3fc7f7, type: 2}
   <Progress>k__BackingField:
     <StartTime>k__BackingField: 0
     <Progress>k__BackingField: 0
     <State>k__BackingField: 3
-  <MainMeshRenderer>k__BackingField: {fileID: -7511558181221131132, guid: 65f3692cf55db4a43b8befcf3d45c8a2, type: 3}
-  <BuildingSO>k__BackingField: {fileID: 0}
+  <MainMeshRenderer>k__BackingField: {fileID: 8477328904039810847}
+  <BuildingSO>k__BackingField: {fileID: 11400000, guid: f8716d90fac4448aa8ace91a4c3fc7f7, type: 2}
   navMeshObstacle: {fileID: 4507911756857930507}
   primaryMaterial: {fileID: 2100000, guid: b35c532178876e94f917ff0196f65258, type: 2}
 --- !u!208 &4507911756857930507
@@ -242,5 +243,10 @@ PrefabInstance:
 --- !u!4 &7344994296185896048 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 65f3692cf55db4a43b8befcf3d45c8a2, type: 3}
+  m_PrefabInstance: {fileID: 7089809412475542427}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &8477328904039810847 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 65f3692cf55db4a43b8befcf3d45c8a2, type: 3}
   m_PrefabInstance: {fileID: 7089809412475542427}
   m_PrefabAsset: {fileID: 0}

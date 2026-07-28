@@ -22,7 +22,7 @@ namespace Gumiho_Rts.Behavoir
 
         protected override Status OnStart()
         {
-
+            if (TargetGameObject.Value == null) return Status.Failure;
 
             if (!Agent.Value.TryGetComponent(out agent) || TargetGameObject.Value == null)
             {
@@ -41,29 +41,38 @@ namespace Gumiho_Rts.Behavoir
             }
 
             agent.SetDestination(targetPosition);
-            ///Debug.Log("Moving to " + targetPosition.ToString());
+            lastPosition = targetPosition;
+            // Debug.Log("Moving to " + targetPosition.ToString());
             return Status.Running;
         }
 
         protected override Status OnUpdate()
         {
-            if (animator != null) animator.SetFloat(AnimationConstants.SPEED, agent.velocity.magnitude);
+            if (animator != null)
+                animator.SetFloat(AnimationConstants.SPEED, agent.velocity.magnitude);
 
             Vector3 targetPosition = GetTargetPosition();
+
+            // Track position changes for debugging
             if (Vector3.Distance(targetPosition, lastPosition) >= MoveThreshold.Value)
             {
                 agent.SetDestination(targetPosition);
                 lastPosition = agent.destination;
             }
 
-            if (agent.remainingDistance <= agent.stoppingDistance)
+            // FIX: Wait until the path is calculated before checking distances
+            if (!agent.pathPending)
             {
-                //Debug.Log("Already there On Update Success");
-                //Debug.Log($"Already there On Update - ${Time.time} - agent.remainingDistance  {agent.remainingDistance} -distance :  {Vector3.Distance(agent.transform.position, targetPosition)}");
-                return Status.Success;
+                if (agent.remainingDistance <= agent.stoppingDistance)
+                {
+                    // Debug.Log($"Reached destination - Time: {Time.time} - Remaining: {agent.remainingDistance}");
+                    return Status.Success;
+                }
             }
+
             return Status.Running;
         }
+
 
         protected override void OnEnd()
         {

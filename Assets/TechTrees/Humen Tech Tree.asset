@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85e0ca3b013f62d498e09928d89a652c, type: 3}
+  m_Name: Humen Tech Tree
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.TechTree.TechTreeSO
+  allUnlockables:
+  - {fileID: 11400000, guid: c4923a796b20548b2a2a1cbd2bbb8f32, type: 2}
+  - {fileID: 11400000, guid: a415944b25cff4bf1ae228e14f1ba2ce, type: 2}
+  - {fileID: 11400000, guid: b372b99abe1d84a32ad262583959a7aa, type: 2}
+  - {fileID: 11400000, guid: 7907221783a074549be42a3c14df6664, type: 2}
+  - {fileID: 11400000, guid: d271952095cbd4a988050dc9860b2a82, type: 2}
+  - {fileID: 11400000, guid: 4806c17484ea44fc291bb4d4ab047493, type: 2}
+  - {fileID: 11400000, guid: d849b6202efbe4aa68f2771e10915d1a, type: 2}
+  - {fileID: 11400000, guid: 06d8609859f1b41008965e3e48c077fe, type: 2}
+  - {fileID: 11400000, guid: f8716d90fac4448aa8ace91a4c3fc7f7, type: 2}

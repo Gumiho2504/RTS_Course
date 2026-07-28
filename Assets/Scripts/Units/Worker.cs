@@ -39,6 +39,7 @@ namespace Gumiho_Rts.Units
             }
             if (behaviorGraphAgent.GetVariable(BUILDING_EVENT_CHANNEL, out BlackboardVariable<BuildingEventChannel> buildingEventChannelVariable))
             {
+
                 buildingEventChannelVariable.Value.Event += HandleBuildingEvents;
             }
 
@@ -54,7 +55,7 @@ namespace Gumiho_Rts.Units
             IsSelected = false;
             if (IsBuilding)
                 SetCommandOverride();
-            Bus<UnitDeselectedEvent>.Raise(Owner,new UnitDeselectedEvent(this));
+            Bus<UnitDeselectedEvent>.Raise(Owner, new UnitDeselectedEvent(this));
         }
 
         public void LoadInto(ITransporter transporter)
@@ -80,11 +81,12 @@ namespace Gumiho_Rts.Units
 
         private void HandleGatherSupplies(GameObject self, int amount, SupplySO supply)
         {
-            Bus<SupplyEvent>.Raise(Owner,new SupplyEvent(Owner,amount, supply));
+            Bus<SupplyEvent>.Raise(Owner, new SupplyEvent(Owner, amount, supply));
         }
 
         private void HandleBuildingEvents(GameObject self, BuildingEventType eventType, BaseBuilding building)
         {
+            //Debug.Log($"<color=green> Handel Building Event : {eventType} </color>");
             switch (eventType)
             {
                 case BuildingEventType.ArrivedAt:
@@ -96,6 +98,7 @@ namespace Gumiho_Rts.Units
                     }
                     break;
                 case BuildingEventType.Begin:
+                    // Debug.Log("Begin");
                     SetCommandOverride(new BaseCommand[] { CancelBuildingCommand });
                     break;
                 case BuildingEventType.Cancel:
@@ -110,22 +113,24 @@ namespace Gumiho_Rts.Units
         public GameObject Build(BuildingUnitSO building, Vector3 position)
         {
             var instance = Instantiate(building.Prefab, position, Quaternion.identity);
+
             if (!instance.TryGetComponent(out BaseBuilding _))
             {
                 Debug.LogError($"Missing Building Prefab on BuildingSO name:{building.name}! Can not build!");
                 return null;
             }
 
+
             behaviorGraphAgent.SetVariableValue(BUILDING_SO, building);
             behaviorGraphAgent.SetVariableValue(TARGET_LOCATION, position);
             behaviorGraphAgent.SetVariableValue(GHOST, instance);
             behaviorGraphAgent.SetVariableValue(COMMAND, UnitCommand.BuildBuilding);
 
-            // SetCommandOverride(new BaseCommand[] { CancelBuildingCommand });
+            SetCommandOverride(new BaseCommand[] { CancelBuildingCommand });
             // Bus<UnitSelectedEvent>.Raise(new UnitSelectedEvent(this));
 
-            Bus<SupplyEvent>.Raise(Owner,new SupplyEvent(Owner,-building.Cost.Minerals, building.Cost.MineralsSO));
-            Bus<SupplyEvent>.Raise(Owner,new SupplyEvent(Owner,-building.Cost.Gas, building.Cost.GasSO));
+            Bus<SupplyEvent>.Raise(Owner, new SupplyEvent(Owner, -building.Cost.Minerals, building.Cost.MineralsSO));
+            Bus<SupplyEvent>.Raise(Owner, new SupplyEvent(Owner, -building.Cost.Gas, building.Cost.GasSO));
 
             return instance;
         }
@@ -141,8 +146,8 @@ namespace Gumiho_Rts.Units
                 Destroy(building.Value.gameObject);
 
                 BuildingUnitSO buildingUnitSO = building.Value.BuildingSO;
-                Bus<SupplyEvent>.Raise(Owner,new SupplyEvent(Owner,Mathf.FloorToInt(buildingUnitSO.Cost.Minerals * 0.75f), buildingUnitSO.Cost.MineralsSO));
-                Bus<SupplyEvent>.Raise(Owner,new SupplyEvent(Owner,Mathf.FloorToInt(buildingUnitSO.Cost.Gas * 0.75f), buildingUnitSO.Cost.GasSO));
+                Bus<SupplyEvent>.Raise(Owner, new SupplyEvent(Owner, Mathf.FloorToInt(buildingUnitSO.Cost.Minerals * 0.75f), buildingUnitSO.Cost.MineralsSO));
+                Bus<SupplyEvent>.Raise(Owner, new SupplyEvent(Owner, Mathf.FloorToInt(buildingUnitSO.Cost.Gas * 0.75f), buildingUnitSO.Cost.GasSO));
             }
             SetCommandOverride(Array.Empty<BaseCommand>());
 

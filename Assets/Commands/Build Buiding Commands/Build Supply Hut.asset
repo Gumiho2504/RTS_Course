@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa50d3ac5423d634d84bebd0cb710960, type: 3}
-  m_Name: Build Command Post
+  m_Name: Build Supply Hut
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Commands.BuildBuildingCommand
-  <Name>k__BackingField: Build Command Post
-  <Icon>k__BackingField: {fileID: 21300000, guid: dfebbdf93f58d764ab9aa4d54edd629e, type: 3}
-  <Slot>k__BackingField: 0
+  <Name>k__BackingField: Build Supply Hut
+  <Icon>k__BackingField: {fileID: 21300000, guid: 5b1043abe99f2d943b94b631a2aa42d9, type: 3}
+  <Slot>k__BackingField: 4
   <RequiresClickToActivate>k__BackingField: 1
   <IsSingleUnitCommand>k__BackingField: 1
-  <GhostPrefab>k__BackingField: {fileID: 8369938181539895083, guid: 1588c320b7cc24b0493f06f8673686c7, type: 3}
+  <GhostPrefab>k__BackingField: {fileID: 7872046886628920671, guid: 58613d74efcee3048842037f5eeffab9, type: 3}
   <Restrictions>k__BackingField:
   - {fileID: 11400000, guid: 1ec3308ae40f94e6e886cebc808b5a80, type: 2}
   - {fileID: 11400000, guid: 28c9a47aed62049908e2404a5168f56a, type: 2}
-  <BuildingSO>k__BackingField: {fileID: 11400000, guid: 4806c17484ea44fc291bb4d4ab047493, type: 2}
+  techTree: {fileID: 11400000, guid: 0dabc96478a255241bdd9e73c545c52e, type: 2}
+  <BuildingSO>k__BackingField: {fileID: 11400000, guid: a415944b25cff4bf1ae228e14f1ba2ce, type: 2}
