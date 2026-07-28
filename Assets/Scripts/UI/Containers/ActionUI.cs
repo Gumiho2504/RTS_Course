@@ -4,6 +4,7 @@ using System.Linq;
 using Gumiho_Rts.Commands;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
+using Gumiho_Rts.TechTree;
 using Gumiho_Rts.UI.Components;
 using Gumiho_Rts.Units;
 using UnityEngine;
@@ -14,13 +15,27 @@ namespace Gumiho_Rts.UI.Containers
     public class ActionUI : MonoBehaviour, IUIElement<HashSet<AbstractCommandable>>
     {
         [SerializeField] private UIActionButton[] actionButtons;
+        private HashSet<BaseBuilding> selectedBuildings = new();
 
 
-
-        public void EnableFor(HashSet<AbstractCommandable> item)
+        public void EnableFor(HashSet<AbstractCommandable> selectedUnits)
         {
-            RefreshButtons(item);
+            RefreshButtons(selectedUnits);
+
+            foreach (BaseBuilding building in selectedBuildings)
+            {
+                building.OnQueueUpdated -= OnBuildingQueueUpdate;
+            }
+
+            selectedBuildings = selectedUnits.Where(selectedUnit => selectedUnit is BaseBuilding).Cast<BaseBuilding>().ToHashSet();
+
+            foreach (BaseBuilding building in selectedBuildings)
+            {
+                building.OnQueueUpdated += OnBuildingQueueUpdate;
+            }
         }
+
+
 
         public void Disable()
         {
@@ -28,6 +43,13 @@ namespace Gumiho_Rts.UI.Containers
             {
                 button.Disable();
             }
+
+            foreach (BaseBuilding building in selectedBuildings)
+            {
+                building.OnQueueUpdated -= OnBuildingQueueUpdate;
+            }
+
+            selectedBuildings.Clear();
         }
 
 
@@ -36,7 +58,7 @@ namespace Gumiho_Rts.UI.Containers
 
             IEnumerable<BaseCommand> availableCommands = selectedUnits.Count > 0 ? selectedUnits.ElementAt(0).AvailableCommands : Array.Empty<BaseCommand>();
             availableCommands = availableCommands.
-                                                                                                    Where(action => 
+                                                                                                    Where(action =>
                                                                                                                                 action.IsAvailable(
                                                                                                                                                 new CommandContext(Owner.Player1,
                                                                                                                                                 selectedUnits.FirstOrDefault(),
@@ -61,6 +83,11 @@ namespace Gumiho_Rts.UI.Containers
                     actionButtons[i].Disable();
                 }
             }
+        }
+
+        private void OnBuildingQueueUpdate(UnlockableSO[] unitsInQueue)
+        {
+            RefreshButtons(selectedBuildings.Cast<AbstractCommandable>().ToHashSet());
         }
 
         private UnityAction HandleClick(BaseCommand action)

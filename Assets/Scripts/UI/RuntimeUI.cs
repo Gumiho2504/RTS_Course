@@ -6,6 +6,7 @@ using Gumiho_Rts.Events;
 using Gumiho_Rts.UI.Components;
 using Gumiho_Rts.UI.Containers;
 using Gumiho_Rts.Units;
+using RTS_Course.Assets.Scripts.Events;
 using UnityEngine;
 namespace Gumiho_Rts.UI
 {
@@ -27,6 +28,8 @@ namespace Gumiho_Rts.UI
             Bus<UnitDeathEvent>.OnEvent[Owner.Player1] += HandleUnitDeath;
             Bus<SupplyEvent>.OnEvent[Owner.Player1] += HandleSupplyChangeEvent;
             Bus<UnitLoadEvent>.OnEvent[Owner.Player1] += HandleUnitLoadEvent;
+            Bus<BuildingSpawnEvent>.OnEvent[Owner.Player1] += HandleBuildingSpawn;
+            Bus<UpgradeResearchedEvent>.OnEvent[Owner.Player1] += HandleUpgradeResearched;
             // Bus<UnitUnloadEvent>.OnEvent += HandleUnitUnloadEvent;
 
         }
@@ -51,8 +54,9 @@ namespace Gumiho_Rts.UI
             Bus<SupplyEvent>.OnEvent[Owner.Player1] -= HandleSupplyChangeEvent;
             Bus<UnitLoadEvent>.OnEvent[Owner.Player1] -= HandleUnitLoadEvent;
             Bus<UnitUnloadEvent>.OnEvent[Owner.Player1] -= HandleUnitUnloadEvent;
+            Bus<BuildingSpawnEvent>.OnEvent[Owner.Player1] -= HandleBuildingSpawn;
+            Bus<UpgradeResearchedEvent>.OnEvent[Owner.Player1] -= HandleUpgradeResearched;
         }
-
 
 
         private void HandleUnitSelected(UnitSelectedEvent args)
@@ -93,6 +97,20 @@ namespace Gumiho_Rts.UI
                 RefreshUI();
             }
         }
+
+        private void HandleUpgradeResearched(UpgradeResearchedEvent args)
+        {
+            RefreshUI();
+        }
+
+        private void HandleBuildingSpawn(BuildingSpawnEvent args)
+        {
+             if(selectableUnits.Count ==1 && selectableUnits.First() is Worker)
+            {
+                actionUI.EnableFor(selectableUnits);
+            }
+        }
+
 
 
         private void RefreshUI()

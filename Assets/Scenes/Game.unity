@@ -3317,6 +3317,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Minerals (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 2470480825251639189, guid: 5920905e7a5364c47864b79706cb5eca, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4583745518494351312, guid: 5920905e7a5364c47864b79706cb5eca, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.22387686
@@ -15530,7 +15534,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1193821232}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5
@@ -29060,6 +29064,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Grenadier
       objectReference: {fileID: 0}
+    - target: {fileID: 4213099996223354679, guid: d606f67b2169916478d3b1364e1b4428, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -30216,8 +30224,8 @@ SceneRoots:
   - {fileID: 640315634}
   - {fileID: 1450056796}
   - {fileID: 1608382817}
-  - {fileID: 139299937}
   - {fileID: 1154113407}
+  - {fileID: 139299937}
   - {fileID: 1528898852}
   - {fileID: 81421243}
   - {fileID: 468676274}

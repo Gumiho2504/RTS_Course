@@ -28,15 +28,21 @@ namespace Gumiho_Rts.Commands
             }
         }
 
-        public override bool IsLocked(CommandContext context) => !HasEnoughSupply(context) || !Upgrade.TechTree.IsUnlocked(context.Owner,Upgrade);
+        public override bool IsLocked(CommandContext context)
+        {
+            bool isLocked = !HasEnoughSupply(context) || !Upgrade.TechTree.IsUnlocked(context.Owner, Upgrade);
+            if (!isLocked && Upgrade.IsOneTimeUnlock && context.Commandable != null && context.Commandable is BaseBuilding building)
+                isLocked = building.Queue.Contains(Upgrade);
+            return isLocked;
 
+        }
         public override bool IsAvailable(CommandContext context)
         {
-            if(Upgrade.IsOneTimeUnlock && Upgrade.TechTree.IsResearched(context.Owner, Upgrade))
+            if (Upgrade.IsOneTimeUnlock && Upgrade.TechTree.IsResearched(context.Owner, Upgrade))
             {
                 return false;
             }
-            return Upgrade.TechTree.IsUnlocked(context.Owner,Upgrade);
+            return Upgrade.TechTree.IsUnlocked(context.Owner, Upgrade);
         }
 
         private bool HasEnoughSupply(CommandContext context)
