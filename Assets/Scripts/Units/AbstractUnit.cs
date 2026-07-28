@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
+using Gumiho_Rts.TechTree;
 using Gumiho_Rts.Utilities;
 using Unity.Behavior;
 using UnityEngine;
@@ -59,6 +60,12 @@ namespace Gumiho_Rts.Units
                 DamageableSensor.OnUnitExit += HandleUnitExit;
                 DamageableSensor.Owner = Owner;
                 DamageableSensor.SetupFrom(unitSO.AttackConfig);
+            }
+
+            foreach(UpgradeSO upgrade in unitSO.Upgrades)
+            {
+                // we still need to check that it's researched! Coming in a future lecture!
+                upgrade.Apply(unitSO);
             }
         }
 
