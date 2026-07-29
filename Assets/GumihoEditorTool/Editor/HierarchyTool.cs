@@ -1,4 +1,5 @@
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
@@ -66,7 +67,7 @@ public class HierarchyTool : EditorWindow
     private static Color selectionColor = DefaultSelectionColor;
     private static Color selectionTextColor = DefaultSelectionTextColor;
     private static Color hoverColor = DefaultHoverColor;
-    private static bool useCustomFoldout = true;
+    private static bool useCustomFoldout = false;
     private static Color foldoutColor = DefaultFoldoutColor;
     private static string filterText = "";
     private static bool usePrefixIcon = true;
@@ -105,6 +106,11 @@ public class HierarchyTool : EditorWindow
     private static MethodInfo setExpandedMethod;
     private static bool hierarchyApiResolved;
     private static bool hierarchyApiAvailable;
+
+    // Project browser reflection cache
+    private static Type projectBrowserType;
+    private static FieldInfo projectViewModeField;
+    private static bool projectApiResolved;
 
     private Vector2 scrollPosition;
 
@@ -201,7 +207,9 @@ public class HierarchyTool : EditorWindow
             hoverColor);
 
         useCustomFoldout = EditorGUILayout.ToggleLeft(
-            new GUIContent("Custom Collapse Icon", "Redraw hierarchy foldouts so they stay visible on selection and use a custom color"),
+            new GUIContent(
+                "Custom Collapse Icon",
+                "Hierarchy only: replace Unity's foldout with a custom colored triangle. Off = keep Unity's default arrow. Project window always uses Unity's default."),
             useCustomFoldout);
         if (useCustomFoldout)
         {
@@ -218,7 +226,7 @@ public class HierarchyTool : EditorWindow
             selectionTextColor = DefaultSelectionTextColor;
             hoverColor = DefaultHoverColor;
             foldoutColor = DefaultFoldoutColor;
-            useCustomFoldout = true;
+            useCustomFoldout = false;
             showAlternatingRows = true;
             showProjectAlternatingRows = true;
             GUI.changed = true;
@@ -385,10 +393,10 @@ public class HierarchyTool : EditorWindow
 
         if (isRepaint && showLines)
         {
-            DrawTreeLines(obj, selectionRect, instanceID);
+            DrawTreeLines(obj, selectionRect, instanceID, useCustomFoldout && hasChildren);
         }
 
-        // Keep triangle above the lines
+        // Custom triangle only when enabled — otherwise leave Unity's default foldout alone
         if (isRepaint && useCustomFoldout && hasChildren)
         {
             Rect foldRect = new Rect(selectionRect.x - IndentWidth, selectionRect.y, IndentWidth, selectionRect.height);
@@ -699,7 +707,7 @@ public class HierarchyTool : EditorWindow
         style.alignment = TextAnchor.MiddleLeft;
     }
 
-    private static void DrawTreeLines(GameObject obj, Rect selectionRect, int instanceID)
+    private static void DrawTreeLines(GameObject obj, Rect selectionRect, int instanceID, bool customFoldoutCoversColumn)
     {
         Transform current = obj.transform;
         float midY = selectionRect.y + (selectionRect.height * 0.5f);
@@ -717,15 +725,16 @@ public class HierarchyTool : EditorWindow
         // Scene roots still get sibling connectors
         if (current.parent == null)
         {
-            DrawRootTreeLines(obj, selectionRect, midY, halfThick);
+            DrawRootTreeLines(obj, selectionRect, midY, halfThick, customFoldoutCoversColumn);
             return;
         }
 
         float anchorX = selectionRect.x - IndentWidth;
 
-        // Horizontal stub into this row
+        // Horizontal stub — keep clear of Unity's default foldout when custom is off
+        float stubX = customFoldoutCoversColumn ? anchorX : (selectionRect.x - HorizontalLineLength);
         EditorGUI.DrawRect(
-            new Rect(anchorX, midY - halfThick, HorizontalLineLength, lineThickness),
+            new Rect(stubX, midY - halfThick, HorizontalLineLength, lineThickness),
             lineColor);
 
         Transform target = current;
@@ -741,33 +750,68 @@ public class HierarchyTool : EditorWindow
         {
             float lineX = anchorX - (i * IndentWidth);
             bool isLast = IsLastSibling(target);
-
-            // Last child: only up to the middle fork. Otherwise full row for siblings below.
-            float y = selectionRect.y;
-            float height = isLast ? (selectionRect.height * 0.5f) : selectionRect.height;
-            EditorGUI.DrawRect(new Rect(lineX, y, lineThickness, height), lineColor);
+            // Level 0 shares the foldout column — leave a gap unless custom foldout will redraw
+            bool protectFoldout = !customFoldoutCoversColumn && i == 0 && current.childCount > 0;
+            DrawTreeVerticalSegment(lineX, selectionRect, midY, isLast, protectFoldout, lineColor);
 
             if (target.parent == null) break;
             target = target.parent;
         }
     }
 
-    private static void DrawRootTreeLines(GameObject obj, Rect selectionRect, float midY, float halfThick)
+    private static void DrawRootTreeLines(GameObject obj, Rect selectionRect, float midY, float halfThick, bool customFoldoutCoversColumn)
     {
-        // Roots have no parent transform, but they still sit as siblings under the scene
         if (!obj.scene.IsValid()) return;
 
         GameObject[] roots = obj.scene.GetRootGameObjects();
         if (roots == null || roots.Length <= 1) return;
 
         float anchorX = selectionRect.x - IndentWidth;
+        float stubX = customFoldoutCoversColumn ? anchorX : (selectionRect.x - HorizontalLineLength);
         EditorGUI.DrawRect(
-            new Rect(anchorX, midY - halfThick, HorizontalLineLength, lineThickness),
+            new Rect(stubX, midY - halfThick, HorizontalLineLength, lineThickness),
             lineColor);
 
         bool isLast = roots[roots.Length - 1] == obj;
-        float height = isLast ? selectionRect.height * 0.5f : selectionRect.height;
-        EditorGUI.DrawRect(new Rect(anchorX, selectionRect.y, lineThickness, height), lineColor);
+        bool protectFoldout = !customFoldoutCoversColumn && obj.transform.childCount > 0;
+        DrawTreeVerticalSegment(anchorX, selectionRect, midY, isLast, protectFoldout, lineColor);
+    }
+
+    private static void DrawTreeVerticalSegment(
+        float lineX,
+        Rect selectionRect,
+        float midY,
+        bool isLast,
+        bool protectFoldout,
+        Color color)
+    {
+        if (!protectFoldout)
+        {
+            float height = isLast ? selectionRect.height * 0.5f : selectionRect.height;
+            EditorGUI.DrawRect(new Rect(lineX, selectionRect.y, lineThickness, height), color);
+            return;
+        }
+
+        // Leave space for Unity's default foldout arrow
+        const float gapHalf = 5.5f;
+        float topEnd = midY - gapHalf;
+        if (topEnd > selectionRect.y + 0.5f)
+        {
+            EditorGUI.DrawRect(
+                new Rect(lineX, selectionRect.y, lineThickness, topEnd - selectionRect.y),
+                color);
+        }
+
+        if (!isLast)
+        {
+            float botStart = midY + gapHalf;
+            if (botStart < selectionRect.yMax - 0.5f)
+            {
+                EditorGUI.DrawRect(
+                    new Rect(lineX, botStart, lineThickness, selectionRect.yMax - botStart),
+                    color);
+            }
+        }
     }
 
     private static bool IsLastSibling(Transform target)
@@ -791,31 +835,111 @@ public class HierarchyTool : EditorWindow
         // Skip icon/grid view tiles
         if (selectionRect.height > 22f) return;
 
-        if (showProjectAlternatingRows)
+        string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+        if (string.IsNullOrEmpty(assetPath)) return;
+        assetPath = NormalizeAssetPath(assetPath);
+
+        bool isTreeRow = IsProjectTreeRow(assetPath, selectionRect);
+
+        // Never paint over the foldout column (selectionRect starts at content indent)
+        if (showProjectAlternatingRows && isTreeRow)
         {
             int rowNumber = Mathf.RoundToInt(selectionRect.y / Mathf.Max(1f, selectionRect.height));
             if (rowNumber % 2 == 0)
             {
-                Rect bgRect = new Rect(0f, selectionRect.y, selectionRect.xMax + 200f, selectionRect.height);
+                Rect bgRect = new Rect(selectionRect.x, selectionRect.y, selectionRect.width + 200f, selectionRect.height);
                 EditorGUI.DrawRect(bgRect, projectAlternatingRowColor);
             }
         }
 
         if (!showProjectLines) return;
-
-        string assetPath = AssetDatabase.GUIDToAssetPath(guid);
-        if (string.IsNullOrEmpty(assetPath)) return;
-
-        assetPath = NormalizeAssetPath(assetPath);
         if (assetPath == "Assets" || assetPath == "Packages") return;
+        if (!isTreeRow) return;
 
-        // Skip flat/search lists that are not tree-indented
-        if (selectionRect.x < 20f) return;
-
-        DrawProjectTreeLines(assetPath, selectionRect);
+        // Two-column left tree only lists folders; one-column lists folders + assets
+        bool foldersOnly = IsProjectTwoColumnView();
+        DrawProjectTreeLines(assetPath, selectionRect, foldersOnly);
     }
 
-    private static void DrawProjectTreeLines(string assetPath, Rect selectionRect)
+    private static bool IsProjectTreeRow(string assetPath, Rect selectionRect)
+    {
+        // Flat list / search rows share a small x regardless of path depth
+        if (selectionRect.x < 16f) return false;
+
+        int depth = GetAssetPathDepth(assetPath);
+        if (depth < 1) return false;
+
+        // Tree content indent grows with depth; flat right-column lists do not.
+        // Accept a generous window so different Unity skins still match.
+        float expectedX = 2f + (depth * IndentWidth) + IndentWidth;
+        float minX = Mathf.Max(16f, expectedX - IndentWidth * 1.5f);
+        float maxX = expectedX + IndentWidth * 2f;
+        return selectionRect.x >= minX && selectionRect.x <= maxX;
+    }
+
+    private static int GetAssetPathDepth(string path)
+    {
+        if (string.IsNullOrEmpty(path)) return 0;
+        int depth = 0;
+        for (int i = 0; i < path.Length; i++)
+        {
+            if (path[i] == '/') depth++;
+        }
+        return depth;
+    }
+
+    private static void ResolveProjectApi()
+    {
+        if (projectApiResolved) return;
+        projectApiResolved = true;
+
+        try
+        {
+            projectBrowserType = typeof(EditorWindow).Assembly.GetType("UnityEditor.ProjectBrowser");
+            if (projectBrowserType == null) return;
+            projectViewModeField = projectBrowserType.GetField(
+                "m_ViewMode",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+        }
+        catch
+        {
+            projectViewModeField = null;
+        }
+    }
+
+    private static bool IsProjectTwoColumnView()
+    {
+        ResolveProjectApi();
+        if (projectBrowserType == null || projectViewModeField == null) return false;
+
+        try
+        {
+            UnityEngine.Object[] browsers = Resources.FindObjectsOfTypeAll(projectBrowserType);
+            if (browsers == null || browsers.Length == 0) return false;
+
+            EditorWindow focused = null;
+            for (int i = 0; i < browsers.Length; i++)
+            {
+                EditorWindow window = browsers[i] as EditorWindow;
+                if (window != null && window.hasFocus)
+                {
+                    focused = window;
+                    break;
+                }
+            }
+
+            object target = focused != null ? (object)focused : browsers[0];
+            object mode = projectViewModeField.GetValue(target);
+            // ViewMode.TwoColumns == 1
+            return Convert.ToInt32(mode) == 1;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static void DrawProjectTreeLines(string assetPath, Rect selectionRect, bool foldersOnly)
     {
         string parent = GetParentFolder(assetPath);
         if (string.IsNullOrEmpty(parent)) return;
@@ -824,9 +948,25 @@ public class HierarchyTool : EditorWindow
         float halfThick = lineThickness * 0.5f;
         float anchorX = selectionRect.x - IndentWidth;
 
-        // Horizontal stub into this asset/folder row
+        bool isFolder = AssetDatabase.IsValidFolder(assetPath);
+        // Left tree in two-column only expands for subfolders; one-column also expands for assets.
+        bool hasVisibleChildren = isFolder && GetProjectChildren(assetPath, foldersOnly).Count > 0;
+        // Always protect Unity's default arrow if the folder has ANY content (files or folders).
+        // Wrong two-column detection must not paint over one-column foldouts.
+        bool protectUnityFoldout = isFolder && GetProjectChildren(assetPath, false).Count > 0;
+
+        // Vertical stub from expanded folders down toward their children
+        if (hasVisibleChildren && IsProjectFolderExpanded(assetPath))
+        {
+            EditorGUI.DrawRect(
+                new Rect(selectionRect.x, midY - halfThick, lineThickness, selectionRect.height * 0.5f + halfThick),
+                projectLineColor);
+        }
+
+        // Horizontal stub stays out of the foldout column so Unity's arrow stays visible
+        float stubX = selectionRect.x - HorizontalLineLength;
         EditorGUI.DrawRect(
-            new Rect(anchorX, midY - halfThick, HorizontalLineLength, lineThickness),
+            new Rect(stubX, midY - halfThick, HorizontalLineLength, lineThickness),
             projectLineColor);
 
         // Vertical connectors for this item and ancestor folders
@@ -838,29 +978,46 @@ public class HierarchyTool : EditorWindow
             if (string.IsNullOrEmpty(currentParent)) break;
 
             float lineX = anchorX - (level * IndentWidth);
-            bool isLast = IsLastProjectSibling(current, currentParent);
-            float height = isLast ? selectionRect.height * 0.5f : selectionRect.height;
-            EditorGUI.DrawRect(new Rect(lineX, selectionRect.y, lineThickness, height), projectLineColor);
+            bool isLast = IsLastProjectSibling(current, currentParent, foldersOnly);
+            bool protect = protectUnityFoldout && level == 0;
+            DrawTreeVerticalSegment(lineX, selectionRect, midY, isLast, protect, projectLineColor);
 
             current = currentParent;
             level++;
-
-            // Safety: don't draw endless lines off-screen
             if (level > 24) break;
         }
     }
 
-    private static bool IsLastProjectSibling(string path, string parentFolder)
+    private static bool IsProjectFolderExpanded(string folderPath)
     {
-        List<string> siblings = GetProjectChildren(parentFolder);
+        folderPath = NormalizeAssetPath(folderPath);
+        UnityEngine.Object folderAsset = AssetDatabase.LoadMainAssetAtPath(folderPath);
+        if (folderAsset == null) return false;
+
+        int id = folderAsset.GetInstanceID();
+        int[] expanded = InternalEditorUtility.expandedProjectWindowItems;
+        if (expanded == null) return false;
+
+        for (int i = 0; i < expanded.Length; i++)
+        {
+            if (expanded[i] == id) return true;
+        }
+
+        return false;
+    }
+
+    private static bool IsLastProjectSibling(string path, string parentFolder, bool foldersOnly)
+    {
+        List<string> siblings = GetProjectChildren(parentFolder, foldersOnly);
         if (siblings.Count == 0) return true;
         return siblings[siblings.Count - 1] == path;
     }
 
-    private static List<string> GetProjectChildren(string folder)
+    private static List<string> GetProjectChildren(string folder, bool foldersOnly)
     {
         folder = NormalizeAssetPath(folder);
-        if (projectChildrenCache.TryGetValue(folder, out List<string> cached))
+        string cacheKey = foldersOnly ? folder + "|f" : folder + "|a";
+        if (projectChildrenCache.TryGetValue(cacheKey, out List<string> cached))
             return cached;
 
         var folders = new List<string>();
@@ -873,22 +1030,25 @@ public class HierarchyTool : EditorWindow
                 folders.Add(NormalizeAssetPath(subFolders[i]));
             folders.Sort(StringComparer.OrdinalIgnoreCase);
 
-            string[] guids = AssetDatabase.FindAssets(string.Empty, new[] { folder });
-            for (int i = 0; i < guids.Length; i++)
+            if (!foldersOnly)
             {
-                string path = NormalizeAssetPath(AssetDatabase.GUIDToAssetPath(guids[i]));
-                if (string.IsNullOrEmpty(path)) continue;
-                if (AssetDatabase.IsValidFolder(path)) continue;
-                if (GetParentFolder(path) != folder) continue;
-                assets.Add(path);
+                string[] guids = AssetDatabase.FindAssets(string.Empty, new[] { folder });
+                for (int i = 0; i < guids.Length; i++)
+                {
+                    string path = NormalizeAssetPath(AssetDatabase.GUIDToAssetPath(guids[i]));
+                    if (string.IsNullOrEmpty(path)) continue;
+                    if (AssetDatabase.IsValidFolder(path)) continue;
+                    if (GetParentFolder(path) != folder) continue;
+                    assets.Add(path);
+                }
+                assets.Sort(StringComparer.OrdinalIgnoreCase);
             }
-            assets.Sort(StringComparer.OrdinalIgnoreCase);
         }
 
         var result = new List<string>(folders.Count + assets.Count);
         result.AddRange(folders);
         result.AddRange(assets);
-        projectChildrenCache[folder] = result;
+        projectChildrenCache[cacheKey] = result;
         return result;
     }
 
@@ -1233,7 +1393,7 @@ public class HierarchyTool : EditorWindow
         showSeparators = EditorPrefs.GetBool(KeyShowSeparators, true);
         showMissingScripts = EditorPrefs.GetBool(KeyShowMissingScripts, true);
         maxSuffixIcons = EditorPrefs.GetInt(KeyMaxSuffixIcons, 6);
-        useCustomFoldout = EditorPrefs.GetBool(KeyCustomFoldout, true);
+        useCustomFoldout = EditorPrefs.GetBool(KeyCustomFoldout, false);
 
         string lineColorHex = EditorPrefs.GetString(KeyLineColor, "#" + ColorUtility.ToHtmlStringRGBA(DefaultHierarchyLineColor));
         if (ColorUtility.TryParseHtmlString(lineColorHex, out Color pColor)) lineColor = pColor;

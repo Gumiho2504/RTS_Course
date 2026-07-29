@@ -112,6 +112,14 @@ public class ConsoleTool : EditorWindow
         @"(Assets[/\\][^(:]+?\.(?:cs|js|boo)):(\d+)",
         RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
+    private static readonly Regex exceptionTypeRegex = new Regex(
+        @"^(?:Burst\s+)?(?<type>[\w.]+(?:Exception|Error))\b",
+        RegexOptions.Compiled);
+
+    private static readonly Regex burstHintRegex = new Regex(
+        @"\b(?<class>[A-Z][\w]*)\.(?<method>\w+)\s*\(",
+        RegexOptions.Compiled);
+
     private Vector2 listScroll;
     private Vector2 detailScroll;
     private Vector2 settingsScroll;
@@ -249,29 +257,70 @@ public class ConsoleTool : EditorWindow
         entry.filePath = "";
         entry.lineNumber = 0;
 
-        if (string.IsNullOrEmpty(entry.stackTrace))
-            return;
+        string stack = entry.stackTrace ?? string.Empty;
+        string message = entry.message ?? string.Empty;
 
-        Match fileMatch = fileRegex.Match(entry.stackTrace);
+        Match fileMatch = fileRegex.Match(stack);
+        if (!fileMatch.Success)
+            fileMatch = fileRegex.Match(message);
         if (fileMatch.Success)
         {
             entry.filePath = fileMatch.Groups[1].Value.Replace('\\', '/');
             int.TryParse(fileMatch.Groups[2].Value, out entry.lineNumber);
         }
 
-        string[] lines = entry.stackTrace.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+        if (TryParseCallerFromText(stack, entry))
+            return;
+
+        if (TryParseCallerFromText(message, entry))
+            return;
+
+        // Burst / native errors often only expose the exception type in the message
+        Match ex = exceptionTypeRegex.Match(message.Trim());
+        if (ex.Success)
+        {
+            string typeName = ex.Groups["type"].Value;
+            int dot = typeName.LastIndexOf('.');
+            entry.className = dot >= 0 ? typeName.Substring(dot + 1) : typeName;
+            entry.methodName = "-";
+        }
+    }
+
+    private static bool TryParseCallerFromText(string text, LogEntry entry)
+    {
+        if (string.IsNullOrEmpty(text))
+            return false;
+
+        string[] lines = text.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
         for (int i = 0; i < lines.Length; i++)
         {
             string line = lines[i].Trim();
             if (string.IsNullOrEmpty(line) || IsInternalStackFrame(line)) continue;
 
             Match match = callerRegex.Match(line);
+            if (!match.Success)
+                match = burstHintRegex.Match(line);
             if (!match.Success) continue;
 
-            entry.className = match.Groups["class"].Value;
-            entry.methodName = match.Groups["method"].Value;
-            return;
+            string className = match.Groups["class"].Value;
+            string methodName = match.Groups["method"].Value;
+            if (string.IsNullOrEmpty(className) || string.IsNullOrEmpty(methodName)) continue;
+            if (IsNoiseCaller(className, methodName)) continue;
+
+            entry.className = className;
+            entry.methodName = methodName;
+            return true;
         }
+
+        return false;
+    }
+
+    private static bool IsNoiseCaller(string className, string methodName)
+    {
+        if (className == "Debug" || className == "Logger" || className == "Assert") return true;
+        if (className == "Burst" || className.StartsWith("Burst", StringComparison.Ordinal)) return true;
+        if (methodName == "Invoke" || methodName == "MoveNext") return false;
+        return false;
     }
 
     private static bool IsInternalStackFrame(string line)
@@ -280,7 +329,8 @@ public class ConsoleTool : EditorWindow
                || line.IndexOf("UnityEngine.Logger", StringComparison.Ordinal) >= 0
                || line.IndexOf("UnityEngine.UnityLogWriter", StringComparison.Ordinal) >= 0
                || line.IndexOf("System.Diagnostics", StringComparison.Ordinal) >= 0
-               || line.IndexOf("UnityEditor.EditorApplication", StringComparison.Ordinal) >= 0;
+               || line.IndexOf("UnityEditor.EditorApplication", StringComparison.Ordinal) >= 0
+               || line.IndexOf("Unity.Burst.CompilerServices", StringComparison.Ordinal) >= 0;
     }
 
     private static void ProcessPendingLogs()
@@ -441,6 +491,8 @@ public class ConsoleTool : EditorWindow
             {
                 alignment = TextAnchor.MiddleLeft,
                 clipping = TextClipping.Clip,
+                wordWrap = false,
+                richText = false,
                 fontSize = 12,
                 padding = new RectOffset(4, 4, 0, 0)
             };
@@ -472,7 +524,9 @@ public class ConsoleTool : EditorWindow
             {
                 alignment = TextAnchor.MiddleCenter,
                 fontSize = 10,
-                clipping = TextClipping.Clip
+                clipping = TextClipping.Clip,
+                wordWrap = false,
+                richText = false
             };
         }
 
@@ -786,39 +840,103 @@ public class ConsoleTool : EditorWindow
 
         if (timeW > 1f)
         {
-            cellStyle.normal.textColor = softColor;
-            GUI.Label(new Rect(x, rowRect.y, timeW, RowHeight), entry.time.ToString("HH:mm:ss.fff", CultureInfo.InvariantCulture), cellStyle);
+            DrawClippedLabel(
+                new Rect(x, rowRect.y, timeW, RowHeight),
+                entry.time.ToString("HH:mm:ss.fff", CultureInfo.InvariantCulture),
+                cellStyle,
+                softColor);
             x += timeW;
         }
 
         Rect typeRect = new Rect(x + 2f, rowRect.y + 5f, Mathf.Max(24f, typeW - 8f), RowHeight - 10f);
         EditorGUI.DrawRect(typeRect, new Color(accent.r, accent.g, accent.b, 0.22f));
-        badgeStyle.normal.textColor = isSelected ? selectionTextColor : accent;
-        GUI.Label(typeRect, GetTypeLabel(entry.type), badgeStyle);
+        DrawClippedLabel(typeRect, GetTypeLabel(entry.type), badgeStyle, isSelected ? selectionTextColor : accent);
         x += typeW;
 
         bool classFocused = !string.IsNullOrEmpty(classFilter) && classFilter == entry.className;
-        cellStyle.normal.textColor = classFocused ? new Color(0.45f, 0.9f, 1f, 1f) : textColor;
-        GUI.Label(new Rect(x, rowRect.y, classW, RowHeight), entry.className ?? "-", cellStyle);
+        DrawClippedLabel(
+            new Rect(x, rowRect.y, classW, RowHeight),
+            entry.className ?? "-",
+            cellStyle,
+            classFocused ? new Color(0.45f, 0.9f, 1f, 1f) : textColor);
         x += classW;
 
         bool methodFocused = !string.IsNullOrEmpty(methodFilter) && methodFilter == entry.methodName;
-        cellStyle.normal.textColor = methodFocused ? new Color(0.45f, 0.9f, 1f, 1f) : softColor;
-        GUI.Label(new Rect(x, rowRect.y, methodW, RowHeight), entry.methodName ?? "-", cellStyle);
+        DrawClippedLabel(
+            new Rect(x, rowRect.y, methodW, RowHeight),
+            entry.methodName ?? "-",
+            cellStyle,
+            methodFocused ? new Color(0.45f, 0.9f, 1f, 1f) : softColor);
         x += methodW;
 
-        cellStyle.normal.textColor = isSelected ? selectionTextColor : accent;
-        string message = (entry.message ?? string.Empty).Replace('\n', ' ');
+        string message = (entry.message ?? string.Empty).Replace('\r', ' ').Replace('\n', ' ').Replace('\t', ' ');
         if (collapse && displayCount > 1)
             message = $"({displayCount}) {message}";
-        GUI.Label(new Rect(x, rowRect.y, messageW, RowHeight), message, cellStyle);
+        DrawClippedLabel(
+            new Rect(x, rowRect.y, messageW, RowHeight),
+            message,
+            cellStyle,
+            isSelected ? selectionTextColor : accent);
         x += messageW;
 
         if (countW > 1f)
         {
-            badgeStyle.normal.textColor = softColor;
-            GUI.Label(new Rect(x, rowRect.y, countW, RowHeight), displayCount > 1 ? displayCount.ToString() : string.Empty, badgeStyle);
+            DrawClippedLabel(
+                new Rect(x, rowRect.y, countW, RowHeight),
+                displayCount > 1 ? displayCount.ToString() : string.Empty,
+                badgeStyle,
+                softColor);
         }
+    }
+
+    private static void DrawClippedLabel(Rect rect, string text, GUIStyle style, Color color)
+    {
+        if (rect.width < 2f || Event.current.type != EventType.Repaint)
+            return;
+
+        Color previous = style.normal.textColor;
+        style.normal.textColor = color;
+
+        // Hard clip so long paths cannot paint over neighboring rows/columns
+        GUI.BeginClip(rect);
+        try
+        {
+            string display = TruncateToWidth(text, style, rect.width - 4f);
+            GUI.Label(new Rect(0f, 0f, rect.width, rect.height), display, style);
+        }
+        finally
+        {
+            GUI.EndClip();
+            style.normal.textColor = previous;
+        }
+    }
+
+    private static string TruncateToWidth(string text, GUIStyle style, float maxWidth)
+    {
+        if (string.IsNullOrEmpty(text) || maxWidth <= 8f)
+            return string.Empty;
+
+        if (style.CalcSize(new GUIContent(text)).x <= maxWidth)
+            return text;
+
+        const string ellipsis = "…";
+        float ellipsisW = style.CalcSize(new GUIContent(ellipsis)).x;
+        float budget = maxWidth - ellipsisW;
+        if (budget <= 0f)
+            return ellipsis;
+
+        // Binary search keeps very long Burst/native paths from crushing the UI
+        int low = 0;
+        int high = text.Length;
+        while (low < high)
+        {
+            int mid = (low + high + 1) / 2;
+            float w = style.CalcSize(new GUIContent(text.Substring(0, mid))).x;
+            if (w <= budget) low = mid;
+            else high = mid - 1;
+        }
+
+        return low <= 0 ? ellipsis : text.Substring(0, low) + ellipsis;
     }
 
     private void ShowEntryContextMenu(LogEntry entry)
