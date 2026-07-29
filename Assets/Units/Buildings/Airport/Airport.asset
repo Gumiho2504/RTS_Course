@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3fc77b51dbcb45278d3f1592b5d07cd, type: 3}
   m_Name: Airport
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.BuildingUnitSO
-  <Name>k__BackingField: Unit
+  <Name>k__BackingField: Airport
   <BuildTime>k__BackingField: 5
   <Icon>k__BackingField: {fileID: 21300000, guid: b947cd2ebe26be8448a6f7c04aabc5e5, type: 3}
   <Cost>k__BackingField: {fileID: 11400000, guid: f749046be6087416fbfb787e1ef8c711, type: 2}

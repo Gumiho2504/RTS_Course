@@ -25,7 +25,10 @@ namespace Gumiho_Rts.Units
         public delegate void HeathUpdatedEvent(AbstractCommandable commandable, int lastHealth, int newHealth);
         public event HeathUpdatedEvent OnHealthUpdated;
 
-
+        protected virtual void Awake()
+        {
+            UnitSO = UnitSO.Clone() as UnitSO;
+        }
 
         protected virtual void Start()
         {
@@ -37,6 +40,7 @@ namespace Gumiho_Rts.Units
         protected virtual void OnDestroy()
         {
             Bus<UpgradeResearchedEvent>.OnEvent[Owner] -= HandleUpgradeResearched;
+            Bus<UnitDeathEvent>.Raise(Owner, new UnitDeathEvent(this));
         }
         
     

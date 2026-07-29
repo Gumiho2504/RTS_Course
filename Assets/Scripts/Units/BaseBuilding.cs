@@ -34,8 +34,9 @@ namespace Gumiho_Rts.Units
         [field: SerializeField] public BuildingUnitSO BuildingSO { get; private set; }
         [SerializeField] private NavMeshObstacle navMeshObstacle;
         [SerializeField] private Material primaryMaterial;
-        protected void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             BuildingSO = UnitSO as BuildingUnitSO;
             MaxHealth = BuildingSO.Health;
         }
@@ -173,9 +174,10 @@ namespace Gumiho_Rts.Units
             MainMeshRenderer.material = BuildingSO.BuildingGhostPlacement;
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
             Bus<UnitDeathEvent>.OnEvent[Owner] -= HandleUnitDeath;
+            base.OnDestroy();
         }
 
     }

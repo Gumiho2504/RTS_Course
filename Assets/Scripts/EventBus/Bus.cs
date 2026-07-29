@@ -34,7 +34,7 @@ namespace Gumiho_Rts.EventBus
         {
             foreach(Owner owner in Enum.GetValues(typeof(Owner)))
             {
-                OnEvent[owner] += handler;
+                OnEvent[owner] -= handler;
             }
         }
     }

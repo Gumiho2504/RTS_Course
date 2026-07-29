@@ -35,8 +35,10 @@ namespace Gumiho_Rts.Units
         protected const string BUILDING_SO = "BuildingSO";
         protected const string BUILDING_UNDER_CONSTRUCTION = "BuildingUnderConstruction";
 
-        protected virtual void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+            
             Agent = GetComponent<NavMeshAgent>();
 
             unitSO = UnitSO as Unit;
@@ -117,7 +119,21 @@ namespace Gumiho_Rts.Units
         public void HandleUnitExit(IDamageable damageable)
         {
             List<GameObject> nearbyEnemies = SetNearbyEnemyOnBlackboard();
-            if (!behaviorGraphAgent.GetVariable("TargetGameObject", out BlackboardVariable<GameObject> targetGameObject) || damageable.Transform.gameObject != targetGameObject.Value) return;
+            if (!behaviorGraphAgent.GetVariable("TargetGameObject", out BlackboardVariable<GameObject> targetGameObject))
+                return;
+
+            GameObject currentTarget = targetGameObject.Value;
+            bool targetMissing = currentTarget == null;
+
+            bool exitedWasTarget = false;
+            if (damageable is Object unityObject && unityObject != null)
+            {
+                exitedWasTarget = currentTarget == damageable.Transform.gameObject;
+            }
+
+            if (!targetMissing && !exitedWasTarget)
+                return;
+
             if (nearbyEnemies.Count > 0)
             {
                 behaviorGraphAgent.SetVariableValue("TargetGameObject", nearbyEnemies[0]);
@@ -125,14 +141,24 @@ namespace Gumiho_Rts.Units
             else
             {
                 behaviorGraphAgent.SetVariableValue<GameObject>("TargetGameObject", null);
-                behaviorGraphAgent.SetVariableValue("TargetLocation", damageable.Transform.position);
-                //Debug.Log($"<color=blue> Set TargetLocation: {damageable.Transform.position}</color>");
+                if (damageable is Object alive && alive != null)
+                {
+                    behaviorGraphAgent.SetVariableValue("TargetLocation", damageable.Transform.position);
+                }
             }
         }
 
         private List<GameObject> SetNearbyEnemyOnBlackboard()
         {
-            List<GameObject> nearbyEnemies = DamageableSensor.Damageables.ConvertAll(damageable => damageable.Transform.gameObject);
+            List<GameObject> nearbyEnemies = new();
+            foreach (IDamageable damageable in DamageableSensor.Damageables)
+            {
+                if (damageable is Object unityObject && unityObject != null)
+                {
+                    nearbyEnemies.Add(damageable.Transform.gameObject);
+                }
+            }
+
             nearbyEnemies.Sort(new ClosestGameObjectCompare(transform.position));
 
             behaviorGraphAgent.SetVariableValue("NearbyEnemies", nearbyEnemies);
@@ -153,15 +179,15 @@ namespace Gumiho_Rts.Units
         }
 
 
-        protected virtual void OnDestroy()
+        protected override void OnDestroy()
         {
-            Bus<UnitDeathEvent>.Raise(Owner, new UnitDeathEvent(this));
-
             if (DamageableSensor != null)
             {
                 DamageableSensor.OnUnitEnter -= HandleUnitEnter;
                 DamageableSensor.OnUnitExit -= HandleUnitExit;
             }
+
+            base.OnDestroy();
         }
 
 

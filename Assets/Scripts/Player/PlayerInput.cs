@@ -118,7 +118,10 @@ namespace Gumiho_Rts
         private void HandleUnitDeath(UnitDeathEvent args)
         {
             selectableUnits.Remove(args.Unit);
-            AliveUnits.Remove(args.Unit);
+            if (args.Unit is AbstractUnit unit)
+            {
+                AliveUnits.Remove(unit);
+            }
         }
 
         // Update is called once per frame
