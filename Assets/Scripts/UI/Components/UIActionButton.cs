@@ -35,6 +35,7 @@ namespace Gumiho_Rts.UI.Components
           
 
             button.interactable = selectedUnits.Any(commandable => !command.IsLocked(new CommandContext(commandable, new RaycastHit())));
+            button.onClick.RemoveAllListeners();
             button.onClick.AddListener(onClick);
             isActive = true;
             if (tooltip != null)

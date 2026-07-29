@@ -40,10 +40,19 @@ namespace Gumiho_Rts.Commands
             }
         }
 
-        public override bool IsLocked(CommandContext context) => !HasEnoughSupply(context) || !BuildingSO.TechTree.IsUnlocked(context.Owner,BuildingSO);
+        public override bool IsLocked(CommandContext context)
+        {
+            if (BuildingSO == null || BuildingSO.Cost == null || BuildingSO.TechTree == null)
+                return true;
+
+            return !HasEnoughSupply(context) || !BuildingSO.TechTree.IsUnlocked(context.Owner, BuildingSO);
+        }
 
         private bool HasEnoughSupply(CommandContext context)
         {
+            if (BuildingSO == null || BuildingSO.Cost == null)
+                return false;
+
             return BuildingSO.Cost.Minerals <= Supplies.Minerals[context.Owner] && BuildingSO.Cost.Gas <= Supplies.Gas[context.Owner];
         }
     }

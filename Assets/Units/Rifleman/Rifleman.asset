@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Rifleman
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.Unit
   <Name>k__BackingField: Unit
+  <IsOneTimeUnlock>k__BackingField: 0
   <BuildTime>k__BackingField: 24
   <Icon>k__BackingField: {fileID: 21300000, guid: 44214f5ac3bd91f449743d6968d0d116, type: 3}
   <Cost>k__BackingField: {fileID: 11400000, guid: fc1e3fea2ffde47acb52c24ec6810792, type: 2}
@@ -22,5 +23,8 @@ MonoBehaviour:
   <Prefab>k__BackingField: {fileID: 1931094961596098796, guid: 89fa1dbd1317d914a9727e0841043e2c, type: 3}
   <Upgrades>k__BackingField:
   - {fileID: 11400000, guid: 67dd8823fb2aded42aacdee40a0437df, type: 2}
+  - {fileID: 11400000, guid: 2e5ea6ec013109d419dce138b59cc2e0, type: 2}
+  - {fileID: 11400000, guid: 3b841d8532c622744a03938140d08e8a, type: 2}
+  - {fileID: 11400000, guid: 3add6a6a544460b478ff383d54342d95, type: 2}
   <AttackConfig>k__BackingField: {fileID: 11400000, guid: 736972092518f8f478f3beb64b3b7e43, type: 2}
   <TransportConfig>k__BackingField: {fileID: 11400000, guid: d167da174e9113041b2f4edd9db88fbe, type: 2}

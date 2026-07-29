@@ -1,6 +1,8 @@
+using System.Linq;
 using Gumiho_Rts.Commands;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
+using RTS_Course.Assets.Scripts.Events;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -28,7 +30,18 @@ namespace Gumiho_Rts.Units
         protected virtual void Start()
         {
             initialCommands = AvailableCommands;
+            Bus<UpgradeResearchedEvent>.OnEvent[Owner] += HandleUpgradeResearched;
         }
+
+
+        protected virtual void OnDestroy()
+        {
+            Bus<UpgradeResearchedEvent>.OnEvent[Owner] -= HandleUpgradeResearched;
+        }
+        
+    
+
+
 
         public virtual void Select()
         {
@@ -85,7 +98,20 @@ namespace Gumiho_Rts.Units
             CurrentHealth = Mathf.Clamp(CurrentHealth + amount, 0, MaxHealth);
             OnHealthUpdated?.Invoke(this, lastHealth, CurrentHealth);
         }
+
+        private void HandleUpgradeResearched(UpgradeResearchedEvent args)
+        {
+            if (args.Owner != Owner || UnitSO == null || UnitSO.Upgrades == null || args.Upgrade == null)
+                return;
+
+            if (UnitSO.Upgrades.Contains(args.Upgrade))
+            {
+                args.Upgrade.Apply(UnitSO);
+            }
+        }
     }
+    
+    
 
 
 }

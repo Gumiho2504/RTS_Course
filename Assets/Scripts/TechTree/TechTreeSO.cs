@@ -20,8 +20,7 @@ namespace Gumiho_Rts.TechTree
 
         private Dictionary<Owner, Dictionary<UnlockableSO, Dependency>> techTrees;
         private Dictionary<Owner, HashSet<UnlockableSO>> unlockedDependencies;
-
-
+        
         public bool IsUnlocked(Owner owner, UnlockableSO unlockableSO) => techTrees[owner].TryGetValue(unlockableSO, out Dependency value) && value.IsUnlocked;
         public bool IsResearched(Owner owner, UnlockableSO unlockableSO) => unlockedDependencies[owner].Contains(unlockableSO);
 

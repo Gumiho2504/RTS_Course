@@ -16,11 +16,14 @@ namespace Gumiho_Rts.Commands
         [field: SerializeField] public UpgradeSO Upgrade { get; private set; }
         public override bool CanHandle(CommandContext context)
         {
-            return context.Commandable is BaseBuilding;
+            return context.Commandable is BaseBuilding building && !building.IsQueueFull;
         }
 
         public override void Handle(CommandContext context)
         {
+            if (!CanHandle(context) || IsLocked(context))
+                return;
+
             BaseBuilding building = context.Commandable as BaseBuilding;
             if (HasEnoughSupply(context))
             {
@@ -30,14 +33,26 @@ namespace Gumiho_Rts.Commands
 
         public override bool IsLocked(CommandContext context)
         {
-            bool isLocked = !HasEnoughSupply(context) || !Upgrade.TechTree.IsUnlocked(context.Owner, Upgrade);
-            if (!isLocked && Upgrade.IsOneTimeUnlock && context.Commandable != null && context.Commandable is BaseBuilding building)
-                isLocked = building.Queue.Contains(Upgrade);
-            return isLocked;
+            if (Upgrade == null || Upgrade.Cost == null || Upgrade.TechTree == null)
+                return true;
 
+            if (context.Commandable is BaseBuilding building)
+            {
+                if (building.IsQueueFull)
+                    return true;
+
+                if (Upgrade.IsOneTimeUnlock && building.Queue.Contains(Upgrade))
+                    return true;
+            }
+
+            return !HasEnoughSupply(context) || !Upgrade.TechTree.IsUnlocked(context.Owner, Upgrade);
         }
+
         public override bool IsAvailable(CommandContext context)
         {
+            if (Upgrade == null || Upgrade.TechTree == null)
+                return false;
+
             if (Upgrade.IsOneTimeUnlock && Upgrade.TechTree.IsResearched(context.Owner, Upgrade))
             {
                 return false;
@@ -47,6 +62,9 @@ namespace Gumiho_Rts.Commands
 
         private bool HasEnoughSupply(CommandContext context)
         {
+            if (Upgrade == null || Upgrade.Cost == null)
+                return false;
+
             return Upgrade.Cost.Minerals <= Supplies.Minerals[context.Owner] && Upgrade.Cost.Gas <= Supplies.Gas[context.Owner];
         }
 

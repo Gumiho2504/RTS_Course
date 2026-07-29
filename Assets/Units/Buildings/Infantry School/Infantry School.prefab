@@ -137,6 +137,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1a9950b3117cd66499d09cff4286da47, type: 2}
   - {fileID: 11400000, guid: 4041f9edcbbfb5e48b63776ce88232c7, type: 2}
   - {fileID: 11400000, guid: a680a521f5ec9b14ca4bd866e5b6bb46, type: 2}
+  - {fileID: 11400000, guid: 1a7c3730eafd5814c905f37d55b9d69a, type: 2}
   <CurrentHealth>k__BackingField: 0
   <MaxHealth>k__BackingField: 0
   initialCommands: []

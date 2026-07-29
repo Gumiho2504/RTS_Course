@@ -62,12 +62,14 @@ namespace Gumiho_Rts.Units
                 DamageableSensor.SetupFrom(unitSO.AttackConfig);
             }
 
-            foreach (UpgradeSO upgrade in unitSO.Upgrades)
+            if (unitSO.Upgrades != null && unitSO.TechTree != null)
             {
-                // we still need to check that it's researched! Coming in a future lecture!
-                if (unitSO.TechTree.IsResearched(Owner, upgrade))
+                foreach (UpgradeSO upgrade in unitSO.Upgrades)
                 {
-                    upgrade.Apply(unitSO);
+                    if (upgrade != null && unitSO.TechTree.IsResearched(Owner, upgrade))
+                    {
+                        upgrade.Apply(unitSO);
+                    }
                 }
             }
 

@@ -13,6 +13,7 @@ namespace Gumiho_Rts.Units
     public class BaseBuilding : AbstractCommandable
     {
         public int QueueSize => buildingQueue.Count;
+        public bool IsQueueFull => buildingQueue.Count >= MAX_QUEUE_SIZE;
         public UnlockableSO[] Queue => buildingQueue.ToArray();
         [field: SerializeField] public float CurrentQueueStartTime { get; private set; }
         [field: SerializeField] public UnlockableSO SOBeingBuilt { get; private set; }
@@ -52,16 +53,25 @@ namespace Gumiho_Rts.Units
             unitBuildingThis = null;
             Bus<UnitDeathEvent>.OnEvent[Owner] -= HandleUnitDeath;
             Bus<BuildingSpawnEvent>.Raise(Owner, new BuildingSpawnEvent(Owner, this));
+
+            if (BuildingSO.Upgrades != null && BuildingSO.TechTree != null)
+            {
+                foreach (UpgradeSO upgrade in BuildingSO.Upgrades)
+                {
+                    if (upgrade != null && BuildingSO.TechTree.IsResearched(Owner, upgrade))
+                    {
+                        upgrade.Apply(BuildingSO);
+                    }
+                }
+            }
+
         }
 
 
         public void BuildUnlockable(UnlockableSO unlockable)
         {
-            if (buildingQueue.Count == MAX_QUEUE_SIZE)
-            {
-                Debug.LogError("BuildUnit called when the queue was already full ! This is not supported!");
+            if (IsQueueFull)
                 return;
-            }
 
             Bus<SupplyEvent>.Raise(Owner, new SupplyEvent(Owner, -unlockable.Cost.Minerals, unlockable.Cost.MineralsSO));
             Bus<SupplyEvent>.Raise(Owner, new SupplyEvent(Owner, -unlockable.Cost.Gas, unlockable.Cost.GasSO));
@@ -121,7 +131,7 @@ namespace Gumiho_Rts.Units
                 }
                 else if (SOBeingBuilt is UpgradeSO upgrade)
                 {
-                    Bus<UpgradeResearchedEvent>.Raise(Owner,new UpgradeResearchedEvent(Owner,upgrade));
+                    Bus<UpgradeResearchedEvent>.Raise(Owner, new UpgradeResearchedEvent(Owner, upgrade));
                 }
 
 
