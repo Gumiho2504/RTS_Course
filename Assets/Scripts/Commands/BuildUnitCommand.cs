@@ -2,11 +2,12 @@ using Gumiho_Rts.Player;
 using Gumiho_Rts.TechTree;
 using Gumiho_Rts.Units;
 using UnityEngine;
+using System;
 
 namespace Gumiho_Rts.Commands
 {
     [CreateAssetMenu(fileName = "Build Unit", menuName = " Buildings/Commands/Build Unit")]
-    public class BuildUnitCommand : BaseCommand
+    public class BuildUnitCommand : BaseCommand,IUnlockableCommand
     {
         [field: SerializeField] public UnitSO Unit { get; private set; }
         public override bool CanHandle(CommandContext context)
@@ -43,6 +44,12 @@ namespace Gumiho_Rts.Commands
 
             return Unit.Cost.Minerals <= Supplies.Minerals[context.Owner] && Unit.Cost.Gas <= Supplies.Gas[context.Owner];
         }
+
+        public  UnlockableSO[] GetUnmetDependencies(Owner owner)
+        {
+            return Unit.TechTree.GetUnmetDependencies(owner, Unit); 
+        }
+
 
     }
 }

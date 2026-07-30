@@ -9,6 +9,7 @@ using Gumiho_Rts.Units;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Gumiho_Rts.TechTree;
 
 namespace Gumiho_Rts.UI.Components
 {
@@ -21,6 +22,12 @@ namespace Gumiho_Rts.UI.Components
         private RectTransform rectTransform;
         private Button button;
 
+        private static readonly string MINARALS_FORMAT = "{0}  <color=#00ACFF>Minerals</color>. ";
+        private static readonly string GAS_FORMAT = "{0}  <color=#3BEA60>Gas</color>. ";
+        private static readonly string DEPENDENCY_FORMAT_NO_COMMA = "<color=#AC0000>{0}</color>. ";
+        private static readonly string DEPENDENCY_FORMAT_COMMA = "<color=#AC0000>{0}</color>, ";
+
+
         private bool isActive = false;
         private void Awake()
         {
@@ -32,7 +39,7 @@ namespace Gumiho_Rts.UI.Components
         {
             SetIcon(command.Icon);
 
-          
+
 
             button.interactable = selectedUnits.Any(commandable => !command.IsLocked(new CommandContext(commandable, new RaycastHit())));
             button.onClick.RemoveAllListeners();
@@ -106,13 +113,30 @@ namespace Gumiho_Rts.UI.Components
             {
                 if (supplyCostSO.Minerals > 0)
                 {
-                    tooltipText += $"{supplyCostSO.Minerals}  Minerals. ";
+                    tooltipText += String.Format(MINARALS_FORMAT, supplyCostSO.Minerals);
                 }
                 if (supplyCostSO.Gas > 0)
                 {
-                    tooltipText += $"{supplyCostSO.Gas}  Gas. ";
+                    tooltipText += String.Format(GAS_FORMAT, supplyCostSO.Gas);
                 }
             }
+
+            if (command.IsLocked(new CommandContext(Owner.Player1, null, new RaycastHit()))
+            && command is IUnlockableCommand unlockableCommand)
+            {
+                UnlockableSO[] dependencies = unlockableCommand.GetUnmetDependencies(Owner.Player1);
+                if (dependencies.Count() > 0)
+                {
+                    tooltipText += "\nRequires: ";
+                }
+                for (int i = 0; i < dependencies.Length; i++)
+                {
+                    tooltipText += i == dependencies.Length - 1 ? String.Format(DEPENDENCY_FORMAT_NO_COMMA, dependencies[i].Name)
+                     : String.Format(DEPENDENCY_FORMAT_COMMA, dependencies[i].Name);
+                }
+
+            }
+
             return tooltipText;
         }
     }

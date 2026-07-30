@@ -26,6 +26,15 @@ namespace Gumiho_Rts.TechTree
                 && value.IsUnlocked;
         }
 
+        public UnlockableSO[] GetUnmetDependencies(Owner owner, UnlockableSO unlockableSO)
+        {
+            EnsureInitialized();
+            return techTrees.TryGetValue(owner, out var ownerTree)
+                && ownerTree.TryGetValue(unlockableSO, out Dependency value)
+                ? value.GetUnmetDependencies()
+                : Array.Empty<UnlockableSO>();
+        }
+
         public bool IsResearched(Owner owner, UnlockableSO unlockableSO)
         {
             EnsureInitialized();
@@ -72,7 +81,7 @@ namespace Gumiho_Rts.TechTree
 
         private void HandleBuildingDeath(BuildingDeathEvent args)
         {
-   
+
             if (!techTrees.TryGetValue(args.Owner, out var ownerTree))
                 return;
 
@@ -137,6 +146,12 @@ namespace Gumiho_Rts.TechTree
             {
                 Dependencies = new HashSet<UnlockableSO>(unlockable.UnlockRequirements.Where(r => r != null));
                 metDependencies = new Dictionary<UnlockableSO, int>(Dependencies.Count);
+            }
+
+            public UnlockableSO[] GetUnmetDependencies()
+            {
+                Dictionary<UnlockableSO, int> metDependencies = this.metDependencies;
+                return Dependencies.Where(d => !metDependencies.ContainsKey(d)).ToArray();
             }
 
             public void UnlockDependency(UnlockableSO dependency)
