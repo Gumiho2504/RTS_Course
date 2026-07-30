@@ -14,6 +14,7 @@ namespace Gumiho_Rts.Commands
     public class ResearchUpgradeCommand : BaseCommand
     {
         [field: SerializeField] public UpgradeSO Upgrade { get; private set; }
+        private Dictionary<Owner, BaseBuilding.QueueUpdatedEvent> updateQueue = new();
         public override bool CanHandle(CommandContext context)
         {
             return context.Commandable is BaseBuilding building && !building.IsQueueFull;
@@ -28,11 +29,33 @@ namespace Gumiho_Rts.Commands
             if (HasEnoughSupply(context))
             {
                 building.BuildUnlockable(Upgrade);
+                if (updateQueue.TryAdd(context.Owner, GetQueueUpdatedFunction(context.Owner, building)))
+                {
+                    building.OnQueueUpdated += updateQueue[context.Owner];
+                }
             }
+        }
+
+
+
+        private void HandleQueueUpdated(Owner owner, BaseBuilding baseBuilding, UnlockableSO[] unitsInQueue)
+        {
+            Debug.Log($"Handle Queue Update in {Name}");
+            if (!unitsInQueue.Contains(Upgrade))
+            {
+                baseBuilding.OnQueueUpdated -= updateQueue[owner];
+                updateQueue.Remove(owner);
+            }
+        }
+        
+        private BaseBuilding.QueueUpdatedEvent GetQueueUpdatedFunction(Owner owner, BaseBuilding baseBuilding)
+        {
+            return (unlockables) =>  HandleQueueUpdated(owner, baseBuilding, unlockables);
         }
 
         public override bool IsLocked(CommandContext context)
         {
+            
             if (Upgrade == null || Upgrade.Cost == null || Upgrade.TechTree == null)
                 return true;
 
@@ -41,7 +64,7 @@ namespace Gumiho_Rts.Commands
                 if (building.IsQueueFull)
                     return true;
 
-                if (Upgrade.IsOneTimeUnlock && building.Queue.Contains(Upgrade))
+                if (Upgrade.IsOneTimeUnlock && updateQueue.ContainsKey(context.Owner))
                     return true;
             }
 
