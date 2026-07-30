@@ -38,6 +38,7 @@ namespace Gumiho_Rts.TechTree
             EnsureInitialized();
             Bus<BuildingSpawnEvent>.RegisterForAll(HandleBuildingSpawn);
             Bus<UpgradeResearchedEvent>.RegisterForAll(HandleUpgradeResearched);
+            Bus<BuildingDeathEvent>.RegisterForAll(HandleBuildingDeath);
         }
 
         private void OnDisable()
@@ -46,6 +47,7 @@ namespace Gumiho_Rts.TechTree
             unlockedDependencies = null;
             Bus<BuildingSpawnEvent>.UnregisterForAll(HandleBuildingSpawn);
             Bus<UpgradeResearchedEvent>.UnregisterForAll(HandleUpgradeResearched);
+            Bus<BuildingDeathEvent>.UnregisterForAll(HandleBuildingDeath);
         }
 
         private void EnsureInitialized()
@@ -66,6 +68,19 @@ namespace Gumiho_Rts.TechTree
             {
                 value.UnlockDependency(args.Unit.BuildingSO);
             }
+        }
+
+        private void HandleBuildingDeath(BuildingDeathEvent args)
+        {
+   
+            if (!techTrees.TryGetValue(args.Owner, out var ownerTree))
+                return;
+
+            foreach (var (_, value) in ownerTree)
+            {
+                value.LoseDependency(args.Unit.BuildingSO);
+            }
+
         }
 
         private void HandleUpgradeResearched(UpgradeResearchedEvent args)
@@ -112,7 +127,6 @@ namespace Gumiho_Rts.TechTree
                 }
             }
         }
-
         private readonly struct Dependency
         {
             public HashSet<UnlockableSO> Dependencies { get; }
@@ -135,6 +149,16 @@ namespace Gumiho_Rts.TechTree
                     metDependencies[dependency]++;
                 }
             }
+            public void LoseDependency(UnlockableSO dependency)
+            {
+                if (dependency == null)
+                    return;
+
+                if (dependency.IsOneTimeUnlock || !metDependencies.TryGetValue(dependency, out int count)) return;
+                if (count > 0) metDependencies[dependency] = count;
+                else metDependencies.Remove(dependency);
+            }
         }
     }
+
 }

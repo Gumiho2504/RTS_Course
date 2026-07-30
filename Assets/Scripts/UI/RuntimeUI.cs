@@ -30,6 +30,7 @@ namespace Gumiho_Rts.UI
             Bus<UnitLoadEvent>.OnEvent[Owner.Player1] += HandleUnitLoadEvent;
             Bus<BuildingSpawnEvent>.OnEvent[Owner.Player1] += HandleBuildingSpawn;
             Bus<UpgradeResearchedEvent>.OnEvent[Owner.Player1] += HandleUpgradeResearched;
+            Bus<BuildingDeathEvent>.OnEvent[Owner.Player1] += HandleBuildingDeath;
             // Bus<UnitUnloadEvent>.OnEvent += HandleUnitUnloadEvent;
 
         }
@@ -56,6 +57,7 @@ namespace Gumiho_Rts.UI
             Bus<UnitUnloadEvent>.OnEvent[Owner.Player1] -= HandleUnitUnloadEvent;
             Bus<BuildingSpawnEvent>.OnEvent[Owner.Player1] -= HandleBuildingSpawn;
             Bus<UpgradeResearchedEvent>.OnEvent[Owner.Player1] -= HandleUpgradeResearched;
+            Bus<BuildingDeathEvent>.OnEvent[Owner.Player1] -= HandleBuildingDeath;
         }
 
 
@@ -105,10 +107,16 @@ namespace Gumiho_Rts.UI
 
         private void HandleBuildingSpawn(BuildingSpawnEvent args)
         {
-             if(selectableUnits.Count ==1 && selectableUnits.First() is Worker)
+            if (selectableUnits.Count == 1 && selectableUnits.First() is Worker)
             {
                 actionUI.EnableFor(selectableUnits);
             }
+        }
+
+        private void HandleBuildingDeath(BuildingDeathEvent args)
+        {
+            selectableUnits.Remove(args.Unit);
+            RefreshUI();
         }
 
 

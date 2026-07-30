@@ -176,8 +176,11 @@ namespace Gumiho_Rts.Units
 
         protected override void OnDestroy()
         {
-            Bus<UnitDeathEvent>.OnEvent[Owner] -= HandleUnitDeath;
             base.OnDestroy();
+            Bus<UnitDeathEvent>.OnEvent[Owner] -= HandleUnitDeath;
+
+            Bus<BuildingDeathEvent>.Raise(Owner, new BuildingDeathEvent(Owner, this));
+
         }
 
     }
