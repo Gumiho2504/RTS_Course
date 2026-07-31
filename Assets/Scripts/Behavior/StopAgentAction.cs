@@ -16,21 +16,21 @@ namespace Gumiho_Rts.Behavoir
 
         protected override Status OnStart()
         {
-            if (Agent.Value.TryGetComponent(out NavMeshAgent agent))
+            if (Agent.Value != null && Agent.Value.TryGetComponent(out NavMeshAgent agent))
             {
-                if (agent.TryGetComponent<Animator>(out Animator animator))
+                if (agent.TryGetComponent(out Animator animator))
                 {
-
                     animator.SetFloat(AnimationConstants.SPEED, 0);
                 }
 
-                //  agent.Stop();
+                if (agent.enabled && agent.isOnNavMesh)
+                {
+                    agent.isStopped = true;
+                    agent.ResetPath();
+                    agent.velocity = Vector3.zero;
+                }
 
-                agent.isStopped = true;
-                agent.ResetPath();
-                agent.velocity = Vector3.zero;
                 return Status.Success;
-
             }
             Debug.Log("Stop Agent Failed");
             return Status.Failure;
