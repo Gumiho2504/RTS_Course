@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Infantry School
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.BuildingUnitSO
   <Name>k__BackingField: Infantry School
+  <IsOneTimeUnlock>k__BackingField: 0
   <BuildTime>k__BackingField: 5
   <Icon>k__BackingField: {fileID: 21300000, guid: 9913c672e9ced57439a2369b346459fe, type: 3}
   <Cost>k__BackingField: {fileID: 11400000, guid: 5a8b8701f54dd844486ed57392bd3133, type: 2}
@@ -22,4 +23,5 @@ MonoBehaviour:
   <Health>k__BackingField: 600
   <Prefab>k__BackingField: {fileID: 5175054564074698786, guid: c3932362a5b6dcf4ab5981f279eb5a71, type: 3}
   <Upgrades>k__BackingField: []
+  <SightConfig>k__BackingField: {fileID: 11400000, guid: 09c23493eb9c5f147a02894d60bfef85, type: 2}
   <BuildingGhostPlacement>k__BackingField: {fileID: 2100000, guid: df83892de47974b2d8f424ae85ebe3ee, type: 2}

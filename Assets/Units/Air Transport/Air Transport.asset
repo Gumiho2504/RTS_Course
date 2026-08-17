@@ -13,11 +13,15 @@ MonoBehaviour:
   m_Name: Air Transport
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.Unit
   <Name>k__BackingField: Air Transport
+  <IsOneTimeUnlock>k__BackingField: 0
   <BuildTime>k__BackingField: 60
   <Icon>k__BackingField: {fileID: 21300000, guid: 4d0944a6c62020d4f955f5b7174bb96f, type: 3}
   <Cost>k__BackingField: {fileID: 11400000, guid: 836528e1e58942048a69b925ae383c64, type: 2}
+  <TechTree>k__BackingField: {fileID: 0}
   <unlockRequirements>k__BackingField: []
   <Health>k__BackingField: 200
   <Prefab>k__BackingField: {fileID: 1076983579694789324, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
+  <Upgrades>k__BackingField: []
+  <SightConfig>k__BackingField: {fileID: 11400000, guid: 2cbe4c8495f92f84a9dea8ae68f0106c, type: 2}
   <AttackConfig>k__BackingField: {fileID: 0}
   <TransportConfig>k__BackingField: {fileID: 11400000, guid: dba3adb4de28eb1438f7df1da059a0cd, type: 2}

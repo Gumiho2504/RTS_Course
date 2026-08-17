@@ -11,6 +11,7 @@ namespace Gumiho_Rts.Units
     public abstract class AbstractCommandable : MonoBehaviour, ISelectable, IDamageable
     {
         [SerializeField] protected DecalProjector decalProjector;
+        [SerializeField] protected Transform VisionTransform; 
         [field: SerializeField] public bool IsSelected { get; protected set; }
         [field: SerializeField] public UnitSO UnitSO { get; private set; }
         [field: SerializeField] public Owner Owner { get; set; }
@@ -32,6 +33,12 @@ namespace Gumiho_Rts.Units
 
         protected virtual void Start()
         {
+            if(UnitSO.SightConfig != null && VisionTransform != null)
+            {
+                float size = UnitSO.SightConfig.SightRadius * 2;
+                VisionTransform.localScale = new Vector3(size,size,size);
+                VisionTransform.gameObject.SetActive(Owner == Owner.Player1);
+            }
             initialCommands = AvailableCommands;
             Bus<UpgradeResearchedEvent>.OnEvent[Owner] += HandleUpgradeResearched;
         }
