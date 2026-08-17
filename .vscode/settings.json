@@ -75,6 +75,8 @@
     "damageables",
     "demageable",
     "Gumiho",
+    "Hideable",
+    "hideables",
     "interactable",
     "Lerp",
     "Mathf",

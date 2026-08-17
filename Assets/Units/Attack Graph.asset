@@ -22,7 +22,7 @@ MonoBehaviour:
   - rid: 3802055158260564080
   - rid: 3802055158260564081
   - rid: 3802055159307567582
-  m_VersionTimestamp: 639185153245046812
+  m_VersionTimestamp: 639225756263506783
   m_SerializedVersion: 2
   m_DebugInfo: {fileID: 5318356795883151982}
   m_RuntimeGraph: {fileID: 4482304044093578475}
@@ -876,8 +876,8 @@ MonoBehaviour:
           rid: 863174483610436165
         BlackboardGroupReferences: []
         Root:
-          rid: 3802055163926807476
-        m_VersionTimestamp: 639185153245046812
+          rid: 4766670271530664433
+        m_VersionTimestamp: 639225756263506783
     - rid: 863174483610436165
       type: {class: BlackboardReference, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -933,7 +933,7 @@ MonoBehaviour:
           m_Value1: 15235169743946127838
         Name: NearbyEnemies
         m_Value: []
-    - rid: 3802055163926807476
+    - rid: 4766670271530664433
       type: {class: Start, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -944,10 +944,10 @@ MonoBehaviour:
         m_Parent:
           rid: -2
         m_Child:
-          rid: 3802055163926807477
+          rid: 4766670271530664434
         Repeat: 1
         AllowMultipleRepeatsPerTick: 0
-    - rid: 3802055163926807477
+    - rid: 4766670271530664434
       type: {class: RestartModifier, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -956,15 +956,15 @@ MonoBehaviour:
         Graph:
           rid: 863174483610436164
         m_Parent:
-          rid: 3802055163926807476
+          rid: 4766670271530664433
         m_Child:
-          rid: 3802055163926807478
+          rid: 4766670271530664435
         m_Conditions:
-        - rid: 3802055163926807479
-        - rid: 3802055163926807480
+        - rid: 4766670271530664436
+        - rid: 4766670271530664437
         m_RequiresAllConditions: 0
         m_ObserverType: 0
-    - rid: 3802055163926807478
+    - rid: 4766670271530664435
       type: {class: BranchingConditionComposite, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -973,36 +973,36 @@ MonoBehaviour:
         Graph:
           rid: 863174483610436164
         m_Parent:
-          rid: 3802055163926807477
+          rid: 4766670271530664434
         m_Children:
-        - rid: 3802055163926807481
-        - rid: 3802055163926807482
+        - rid: 4766670271530664438
+        - rid: 4766670271530664439
         m_RegisteredObservers: []
         m_Conditions:
-        - rid: 3802055163926807483
+        - rid: 4766670271530664440
         m_RequiresAllConditions: 0
         True:
-          rid: 3802055163926807481
+          rid: 4766670271530664438
         False:
-          rid: 3802055163926807482
+          rid: 4766670271530664439
         m_CurrentChild:
           rid: -2
         m_ObserverType: 0
-    - rid: 3802055163926807479
+    - rid: 4766670271530664436
       type: {class: VariableValueChangedCondition, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         Graph:
           rid: 863174483610436164
         Variable:
           rid: 3802055163926806680
-    - rid: 3802055163926807480
+    - rid: 4766670271530664437
       type: {class: VariableValueChangedCondition, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         Graph:
           rid: 863174483610436164
         Variable:
           rid: 3802055163926806682
-    - rid: 3802055163926807481
+    - rid: 4766670271530664438
       type: {class: AgentMoveToTargetLocationAction, ns: Gumiho_Rts.Behavoir, asm: Assembly-CSharp}
       data:
         ID:
@@ -1011,12 +1011,12 @@ MonoBehaviour:
         Graph:
           rid: 863174483610436164
         m_Parent:
-          rid: 3802055163926807478
+          rid: 4766670271530664435
         Agent:
           rid: 3802055163926806679
         TargetLocation:
           rid: 3802055163926806682
-    - rid: 3802055163926807482
+    - rid: 4766670271530664439
       type: {class: AttackTargetAction, ns: Gumiho_Rts.Behavoir, asm: Assembly-CSharp}
       data:
         ID:
@@ -1025,7 +1025,7 @@ MonoBehaviour:
         Graph:
           rid: 863174483610436164
         m_Parent:
-          rid: 3802055163926807478
+          rid: 4766670271530664435
         Self:
           rid: 3802055163926806679
         Target:
@@ -1034,7 +1034,7 @@ MonoBehaviour:
           rid: 3802055163926806681
         NearbyEnemies:
           rid: 3802055163926806683
-    - rid: 3802055163926807483
+    - rid: 4766670271530664440
       type: {class: IsGameObjectNullCondition, ns: Gumiho_Rts.Behavoir, asm: Assembly-CSharp}
       data:
         Graph:

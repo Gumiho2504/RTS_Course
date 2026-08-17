@@ -1,17 +1,19 @@
+using System;
 using System.Linq;
 using Gumiho_Rts.Commands;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
+using Gumiho_Rts.Player;
 using RTS_Course.Assets.Scripts.Events;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
 namespace Gumiho_Rts.Units
 {
-    public abstract class AbstractCommandable : MonoBehaviour, ISelectable, IDamageable
+    public abstract class AbstractCommandable : MonoBehaviour, ISelectable, IDamageable, IHideable
     {
         [SerializeField] protected DecalProjector decalProjector;
-        [SerializeField] protected Transform VisionTransform; 
+        [SerializeField] protected Transform VisionTransform;
         [field: SerializeField] public bool IsSelected { get; protected set; }
         [field: SerializeField] public UnitSO UnitSO { get; private set; }
         [field: SerializeField] public Owner Owner { get; set; }
@@ -21,7 +23,13 @@ namespace Gumiho_Rts.Units
         [field: SerializeField] public BaseCommand[] AvailableCommands { get; private set; }
         [field: SerializeField] public int CurrentHealth { get; protected set; }
         [field: SerializeField] public int MaxHealth { get; protected set; }
+        [field: SerializeField] public bool IsVisitable { get; private set; } = true;
+
+
+
         [field: SerializeField] private BaseCommand[] initialCommands;
+        private Renderer[] renderers = Array.Empty<Renderer>();
+        private ParticleSystem[] particleSystems = Array.Empty<ParticleSystem>();
 
         public delegate void HeathUpdatedEvent(AbstractCommandable commandable, int lastHealth, int newHealth);
         public event HeathUpdatedEvent OnHealthUpdated;
@@ -29,14 +37,16 @@ namespace Gumiho_Rts.Units
         protected virtual void Awake()
         {
             UnitSO = UnitSO.Clone() as UnitSO;
+            renderers = GetComponentsInChildren<Renderer>();
+            particleSystems = GetComponentsInChildren<ParticleSystem>();
         }
 
         protected virtual void Start()
         {
-            if(UnitSO.SightConfig != null && VisionTransform != null)
+            if (UnitSO.SightConfig != null && VisionTransform != null)
             {
                 float size = UnitSO.SightConfig.SightRadius * 2;
-                VisionTransform.localScale = new Vector3(size,size,size);
+                VisionTransform.localScale = new Vector3(size, size, size);
                 VisionTransform.gameObject.SetActive(Owner == Owner.Player1);
             }
             initialCommands = AvailableCommands;
@@ -49,8 +59,8 @@ namespace Gumiho_Rts.Units
             Bus<UpgradeResearchedEvent>.OnEvent[Owner] -= HandleUpgradeResearched;
             Bus<UnitDeathEvent>.Raise(Owner, new UnitDeathEvent(this));
         }
-        
-    
+
+
 
 
 
@@ -110,6 +120,48 @@ namespace Gumiho_Rts.Units
             OnHealthUpdated?.Invoke(this, lastHealth, CurrentHealth);
         }
 
+        public void SetVisitable(bool isVisitable)
+        {
+            if (isVisitable == IsVisitable) return;
+            IsVisitable = isVisitable;
+            if (IsVisitable)
+            {
+                OnGainVisibility();
+            }
+            else
+            {
+                OnLoseVisibility();
+            }
+        }
+
+        private void OnGainVisibility()
+        {
+            foreach (var renderer in renderers)
+            {
+                renderer.enabled = true;
+            }
+
+            foreach (var particle in particleSystems)
+            {
+                particle.gameObject.SetActive(true);
+            }
+        }
+
+
+        private void OnLoseVisibility()
+        {
+            foreach (var renderer in renderers)
+            {
+                renderer.enabled = false;
+            }
+
+            foreach (var particle in particleSystems)
+            {
+                particle.gameObject.SetActive(false);
+            }
+        }
+
+
         private void HandleUpgradeResearched(UpgradeResearchedEvent args)
         {
             if (args.Owner != Owner || UnitSO == null || UnitSO.Upgrades == null || args.Upgrade == null)
@@ -121,8 +173,8 @@ namespace Gumiho_Rts.Units
             }
         }
     }
-    
-    
+
+
 
 
 }
