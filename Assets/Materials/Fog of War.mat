@@ -95,6 +95,7 @@ Material:
     - _AlphaToMask: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
+    - _Blur_Amount: 0.25
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
@@ -105,7 +106,7 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 0
-    - _ExplorFogAlpha: 0.25
+    - _ExplorFogAlpha: 0.66
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0

@@ -134,7 +134,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Texture2DMaterialSlot",
     "m_ObjectId": "1a1528acd74c43b0b90ef020e26dc635",
     "m_Id": 0,
-    "m_DisplayName": "_HistoryTex",
+    "m_DisplayName": "_FrameCopyTex",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -259,10 +259,10 @@
     "m_Guid": {
         "m_GuidSerialized": "c0709e9f-e182-4bb6-9782-d44be07f2d3c"
     },
-    "m_Name": "_HistoryTex",
+    "m_Name": "_FrameCopyTex",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "_HistoryTex",
-    "m_DefaultReferenceName": "_HistoryTex",
+    "m_RefNameGeneratedByDisplayName": "_FrameCopyTex",
+    "m_DefaultReferenceName": "_FrameCopyTex",
     "m_OverrideReferenceName": "_FrameCopyTex",
     "m_GeneratePropertyBlock": false,
     "m_UseCustomSlotLabel": false,
@@ -478,10 +478,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 542.0,
-            "y": 406.0,
+            "x": 541.9999389648438,
+            "y": 405.9999694824219,
             "width": 208.0,
-            "height": 433.0
+            "height": 433.0000305175781
         }
     },
     "m_Slots": [
