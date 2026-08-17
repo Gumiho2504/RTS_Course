@@ -7,7 +7,7 @@ using System;
 namespace Gumiho_Rts.Commands
 {
     [CreateAssetMenu(fileName = "Build Unit", menuName = " Buildings/Commands/Build Unit")]
-    public class BuildUnitCommand : BaseCommand,IUnlockableCommand
+    public class BuildUnitCommand : BaseCommand, IUnlockableCommand
     {
         [field: SerializeField] public UnitSO Unit { get; private set; }
         public override bool CanHandle(CommandContext context)
@@ -45,9 +45,12 @@ namespace Gumiho_Rts.Commands
             return Unit.Cost.Minerals <= Supplies.Minerals[context.Owner] && Unit.Cost.Gas <= Supplies.Gas[context.Owner];
         }
 
-        public  UnlockableSO[] GetUnmetDependencies(Owner owner)
+        public UnlockableSO[] GetUnmetDependencies(Owner owner)
         {
-            return Unit.TechTree.GetUnmetDependencies(owner, Unit); 
+            if (Unit == null || Unit.TechTree == null)
+                return Array.Empty<UnlockableSO>();
+
+            return Unit.TechTree.GetUnmetDependencies(owner, Unit);
         }
 
 

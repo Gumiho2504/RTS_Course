@@ -127,7 +127,7 @@ namespace Gumiho_Rts
         // Update is called once per frame
         void Update()
         {
-            HandlePanning();
+            //HandlePanning();
             HandleZooming();
             HandleRotation();
             HandleGhostAction();

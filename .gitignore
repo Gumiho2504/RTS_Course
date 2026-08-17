@@ -14,6 +14,8 @@
 /Packages/
 Assets/Samples/
 Assets/Samples.meta
+ Assets/UI/Fonts & Materials/Dogfish SDF.asset
+ ProjectSettings/EditorBuildSettings.asset
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
 /[Mm]emoryCaptures/

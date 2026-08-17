@@ -19,8 +19,8 @@
   <Project Path="Unity.InferenceEngine.Editor.Visualizer.csproj" />
   <Project Path="Unity.AI.Material.csproj" />
   <Project Path="Unity.VisualScripting.Flow.Editor.csproj" />
-  <Project Path="Unity.Behavior.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Unity.Behavior.csproj" />
   <Project Path="Unity.VisualStudio.Editor.csproj" />
   <Project Path="Unity.InputSystem.csproj" />
   <Project Path="Unity.AI.Animate.csproj" />
