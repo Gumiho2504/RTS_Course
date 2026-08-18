@@ -21,11 +21,11 @@ namespace Gumiho_Rts.Environment
 
         public bool IsVisitable { get; private set; }
 
-      
+
 
         private Renderer[] renderers = Array.Empty<Renderer>();
         private ParticleSystem[] particleSystems = Array.Empty<ParticleSystem>();
-
+        private Placeholder culledVisual;
 
         void Awake()
         {
@@ -36,7 +36,7 @@ namespace Gumiho_Rts.Environment
         void Start()
         {
             Amount = Supply.MaxAmount;
-            Bus<SupplySpawnEvent>.Raise(Owner.Unowned,new SupplySpawnEvent(this));
+            Bus<SupplySpawnEvent>.Raise(Owner.Unowned, new SupplySpawnEvent(this));
         }
 
         void OnDestroy()
@@ -84,6 +84,7 @@ namespace Gumiho_Rts.Environment
 
         private void OnGainVisibility()
         {
+
             foreach (var renderer in renderers)
             {
                 renderer.enabled = true;
@@ -93,11 +94,16 @@ namespace Gumiho_Rts.Environment
             {
                 particle.gameObject.SetActive(true);
             }
-        }
 
+            if (culledVisual != null)
+            {
+                culledVisual.gameObject.SetActive(false);
+            }
+        }
 
         private void OnLoseVisibility()
         {
+
             foreach (var renderer in renderers)
             {
                 renderer.enabled = false;
@@ -106,6 +112,34 @@ namespace Gumiho_Rts.Environment
             foreach (var particle in particleSystems)
             {
                 particle.gameObject.SetActive(false);
+            }
+            if (culledVisual == null)
+            {
+                MeshRenderer mainMeshRenderer = GetComponentInChildren<MeshRenderer>();
+                Transform originalRendererTransform = mainMeshRenderer.transform;
+                GameObject culledGO = new GameObject($"Culled {name} Visuals")
+                {
+                    layer = LayerMask.GetMask("TransparentFX"),
+                    transform =
+                    {
+                        position = originalRendererTransform.position,
+                        rotation = originalRendererTransform.rotation,
+                        localScale = originalRendererTransform.localScale
+                    }
+                };
+
+                culledVisual = culledGO.AddComponent<Placeholder>();
+                culledVisual.Owner = Owner.Unowned;
+                culledVisual.ParentObject = gameObject;
+
+                MeshFilter meshFilter = culledGO.AddComponent<MeshFilter>();
+                meshFilter.mesh = mainMeshRenderer.GetComponent<MeshFilter>().mesh;
+                MeshRenderer meshRenderer = culledGO.AddComponent<MeshRenderer>();
+                meshRenderer.material = mainMeshRenderer.material;
+            }
+            else
+            {
+                culledVisual.gameObject.SetActive(true);
             }
         }
 

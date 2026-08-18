@@ -31,6 +31,9 @@ namespace Gumiho_Rts.Player
 
             Bus<SupplySpawnEvent>.OnEvent[Owner.Unowned] += HandleSupplySpawn;
             Bus<SupplyDepletedEvent>.OnEvent[Owner.Unowned] += HandleSupplyDepleted;
+
+            Bus<PlaceholderSpawnEvent>.RegisterForAll(HandlePlaceholderSpawn);
+            Bus<PlaceholderDestroyEvent>.RegisterForAll(HandlePlaceholderDestroy);
         }
 
 
@@ -44,6 +47,9 @@ namespace Gumiho_Rts.Player
 
             Bus<SupplySpawnEvent>.OnEvent[Owner.Unowned] += HandleSupplySpawn;
             Bus<SupplyDepletedEvent>.OnEvent[Owner.Unowned] += HandleSupplyDepleted;
+
+            Bus<PlaceholderSpawnEvent>.UnregisterForAll(HandlePlaceholderSpawn);
+            Bus<PlaceholderDestroyEvent>.UnregisterForAll(HandlePlaceholderDestroy);
         }
 
 
@@ -101,6 +107,16 @@ namespace Gumiho_Rts.Player
         private void HandleSupplyDepleted(SupplyDepletedEvent args)
         {
             hideables.Remove(args.Supply);
+        }
+
+        private void HandlePlaceholderSpawn(PlaceholderSpawnEvent args)
+        {
+            hideables.Add(args.Placeholder);
+        }
+        
+        private void HandlePlaceholderDestroy(PlaceholderDestroyEvent args)
+        {
+            hideables.Remove(args.Placeholder);
         }
 
 

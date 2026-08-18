@@ -134,7 +134,7 @@ namespace Gumiho_Rts.Units
             }
         }
 
-        private void OnGainVisibility()
+        protected virtual void OnGainVisibility()
         {
             foreach (var renderer in renderers)
             {
@@ -148,7 +148,7 @@ namespace Gumiho_Rts.Units
         }
 
 
-        private void OnLoseVisibility()
+        protected virtual void OnLoseVisibility()
         {
             foreach (var renderer in renderers)
             {

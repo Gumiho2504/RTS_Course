@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
+using Gumiho_Rts.Player;
 using Gumiho_Rts.TechTree;
 using RTS_Course.Assets.Scripts.Events;
 using UnityEngine;
@@ -28,6 +29,7 @@ namespace Gumiho_Rts.Units
 
         [field: SerializeField] public MeshRenderer MainMeshRenderer { get; private set; }
 
+        private Placeholder culledVisual;
         private IBuildingBuilder unitBuildingThis;
         private List<UnlockableSO> buildingQueue = new(MAX_QUEUE_SIZE);
         private const int MAX_QUEUE_SIZE = 5;
@@ -181,6 +183,46 @@ namespace Gumiho_Rts.Units
 
             Bus<BuildingDeathEvent>.Raise(Owner, new BuildingDeathEvent(Owner, this));
 
+        }
+
+        protected override void OnGainVisibility()
+        {
+            base.OnGainVisibility();
+            if(culledVisual != null)
+            {
+                culledVisual.gameObject.SetActive(false);
+            }
+        }
+
+        protected override void OnLoseVisibility()
+        {
+            base.OnLoseVisibility();
+            if(culledVisual == null)
+            {
+                Transform originalRendererTransform = MainMeshRenderer.transform;
+             GameObject   culledObject = new ($"Culled {BuildingSO.Name} Visuals")
+                {
+                    layer = LayerMask.GetMask("TransparentFX"),
+                    transform =
+                    {
+                        position = originalRendererTransform.position,
+                        rotation = originalRendererTransform.rotation,
+                        localScale = originalRendererTransform.localScale
+                    }
+                };
+                culledVisual = culledObject.AddComponent<Placeholder>();
+                culledVisual.Owner = Owner;
+                culledVisual.ParentObject = gameObject;
+                
+                MeshFilter meshFilter = culledObject.AddComponent<MeshFilter>();
+                meshFilter.mesh = MainMeshRenderer.GetComponent<MeshFilter>().mesh;
+                MeshRenderer meshRenderer = culledObject.AddComponent<MeshRenderer>();
+                meshRenderer.material = MainMeshRenderer.material;
+            }
+            else
+            {
+                culledVisual.gameObject.SetActive(true);
+            }
         }
 
     }
