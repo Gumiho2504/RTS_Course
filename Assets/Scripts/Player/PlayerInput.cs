@@ -47,6 +47,10 @@ namespace Gumiho_Rts
         private static readonly int TINT = Shader.PropertyToID("_Tint");
         private static readonly int FRESNEL = Shader.PropertyToID("_FresnelColor");
 
+        [Space(10)]
+    
+        [SerializeField] private bool IsHandlePanning = false;
+
         private void Awake()
         {
             if (!cinemachineCamera.TryGetComponent(out cinemachineFollow))
@@ -127,7 +131,7 @@ namespace Gumiho_Rts
         // Update is called once per frame
         void Update()
         {
-            //HandlePanning();
+            if (IsHandlePanning) HandlePanning();
             HandleZooming();
             HandleRotation();
             HandleGhostAction();

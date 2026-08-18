@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
+using Gumiho_Rts.Player;
 using UnityEngine;
 
 namespace Gumiho_Rts.Units
@@ -9,15 +10,16 @@ namespace Gumiho_Rts.Units
     [RequireComponent(typeof(SphereCollider))]
     public class DamageableSensor : MonoBehaviour
     {
-        private HashSet<IDamageable> damageables = new();
+        private HashSet<IDamageable> visitableDamageables = new();
         public List<IDamageable> Damageables
         {
             get
             {
                 PruneDestroyed();
-                return damageables.ToList();
+                return visitableDamageables.ToList();
             }
         }
+        private HashSet<IDamageable> allDamageables = new();
         public Owner Owner { get; set; }
 
         public delegate void UnitDetectionEvent(IDamageable damageable);
@@ -33,27 +35,67 @@ namespace Gumiho_Rts.Units
 
         void OnTriggerEnter(Collider other)
         {
-            if (other != null && other.TryGetComponent<IDamageable>(out IDamageable damageable) && damageable.Owner != Owner)
+            if (other != null && other.TryGetComponent(out IDamageable damageable) && damageable.Owner != Owner)
             {
-                if (damageables.Add(damageable))
+                allDamageables.Add(damageable);
+
+                if (collider.TryGetComponent(out IHideable hideable))
                 {
-                    if (damageables.Count == 1)
+                    hideable.OnVisibilityChange += HandleVisibilityChange;
+                    if (hideable.IsVisitable)
                     {
-                        Bus<UnitDeathEvent>.RegisterForAll(HandleUnitDeath);
+                        if (visitableDamageables.Add(damageable))
+                        {
+                            OnUnitEnter?.Invoke(damageable);
+                        }
                     }
-                    OnUnitEnter?.Invoke(damageable);
                 }
+                else
+                {
+                    if (visitableDamageables.Add(damageable))
+                    {
+
+                        OnUnitEnter?.Invoke(damageable);
+                    }
+                }
+
+            }
+            if (allDamageables.Count == 1)
+            {
+                Bus<UnitDeathEvent>.RegisterForAll(HandleUnitDeath);
             }
         }
 
         void OnTriggerExit(Collider other)
         {
-            if (other != null && other.TryGetComponent<IDamageable>(out IDamageable damageable) && damageables.Remove(damageable))
+            if (other != null && other.TryGetComponent(out IDamageable damageable) && visitableDamageables.Remove(damageable)
+            && allDamageables.Remove(damageable))
             {
                 OnUnitExit?.Invoke(damageable);
-                if (damageables.Count == 0)
+                if(collider.TryGetComponent(out IHideable hideable))
+                {
+                    hideable.OnVisibilityChange -= HandleVisibilityChange;
+                }
+                if (allDamageables.Count == 1)
                 {
                     Bus<UnitDeathEvent>.UnregisterForAll(HandleUnitDeath);
+                }
+            }
+        }
+        private void HandleVisibilityChange(IHideable hideable, bool isVisible)
+        {
+            IDamageable damageable = hideable.Transform.GetComponent<IDamageable>();
+            if (damageable != null)
+            {
+                if (isVisible)
+                {
+                    visitableDamageables.Add(damageable);
+                    OnUnitEnter?.Invoke(damageable);
+                }
+                else
+                {
+                    visitableDamageables.Remove(damageable);
+                    OnUnitExit?.Invoke(damageable);
                 }
             }
         }
@@ -63,10 +105,15 @@ namespace Gumiho_Rts.Units
             if (args.Unit == null)
                 return;
 
-            if (damageables.Remove(args.Unit))
+            else
+            {
+                visitableDamageables.Remove(args.Unit);
+            }
+
+            if (allDamageables.Remove(args.Unit))
             {
                 OnUnitExit?.Invoke(args.Unit);
-                if (damageables.Count == 0)
+                if (allDamageables.Count == 0)
                 {
                     Bus<UnitDeathEvent>.UnregisterForAll(HandleUnitDeath);
                 }
@@ -75,7 +122,7 @@ namespace Gumiho_Rts.Units
 
         private void PruneDestroyed()
         {
-            damageables.RemoveWhere(IsDestroyed);
+            visitableDamageables.RemoveWhere(IsDestroyed);
         }
 
         private static bool IsDestroyed(IDamageable damageable)
@@ -90,7 +137,17 @@ namespace Gumiho_Rts.Units
 
         void OnDestroy()
         {
+
+            foreach (var damageable in allDamageables)
+            {
+                if (collider.TryGetComponent(out IHideable hideable))
+                {
+                    hideable.OnVisibilityChange -= HandleVisibilityChange;
+                }
+            }
             Bus<UnitDeathEvent>.UnregisterForAll(HandleUnitDeath);
+
+
         }
     }
 }

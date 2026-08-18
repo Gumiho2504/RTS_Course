@@ -27,6 +27,8 @@ namespace Gumiho_Rts.Environment
         private ParticleSystem[] particleSystems = Array.Empty<ParticleSystem>();
         private Placeholder culledVisual;
 
+        public event IHideable.VisibilityChangeEvent OnVisibilityChange;
+
         void Awake()
         {
             renderers = GetComponentsInChildren<Renderer>();
@@ -72,6 +74,7 @@ namespace Gumiho_Rts.Environment
         {
             if (isVisitable == IsVisitable) return;
             IsVisitable = isVisitable;
+            OnVisibilityChange?.Invoke(this, isVisitable);
             if (IsVisitable)
             {
                 OnGainVisibility();

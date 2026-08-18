@@ -33,6 +33,7 @@ namespace Gumiho_Rts.Units
 
         public delegate void HeathUpdatedEvent(AbstractCommandable commandable, int lastHealth, int newHealth);
         public event HeathUpdatedEvent OnHealthUpdated;
+        public event IHideable.VisibilityChangeEvent OnVisibilityChange;
 
         protected virtual void Awake()
         {
@@ -124,6 +125,7 @@ namespace Gumiho_Rts.Units
         {
             if (isVisitable == IsVisitable) return;
             IsVisitable = isVisitable;
+            OnVisibilityChange?.Invoke(this, isVisitable);
             if (IsVisitable)
             {
                 OnGainVisibility();
