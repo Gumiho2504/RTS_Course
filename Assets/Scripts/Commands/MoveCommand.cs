@@ -22,7 +22,9 @@ namespace Gumiho_Rts.Commands
             var unit = context.Commandable as AbstractUnit;
 
 
-            if (context.Hit.collider != null && context.Hit.collider.TryGetComponent(out AbstractCommandable commandable))
+            if (context.Hit.collider != null && context.Hit.collider.TryGetComponent(out AbstractCommandable commandable)
+            && commandable.IsVisitable
+            )
             {
                 unit.Move(commandable.transform);
                 return;

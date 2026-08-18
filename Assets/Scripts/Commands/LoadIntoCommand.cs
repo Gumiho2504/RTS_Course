@@ -9,9 +9,10 @@ namespace Gumiho_Rts.Commands
         public override bool CanHandle(CommandContext context)
         {
             //Debug.Log($"<color=blue>{context.Commandable is ITransportable} - {context.Hit.collider != null} - {context.Hit.collider.TryGetComponent(out ITransporter _)}</color>");
-            return context.Commandable is ITransportable
+            return context.Commandable is ITransportable transportable
                 && context.Hit.collider != null
-                && context.Hit.collider.TryGetComponent(out ITransporter _);
+                && context.Hit.collider.TryGetComponent(out ITransporter transporter)
+                && transporter.Owner == transportable.Owner;
         }
 
         public override void Handle(CommandContext context)

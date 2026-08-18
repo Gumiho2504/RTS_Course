@@ -1,4 +1,5 @@
 using System.Linq;
+using Gumiho_Rts.Player;
 using Gumiho_Rts.Units;
 using UnityEngine;
 
@@ -33,6 +34,13 @@ namespace Gumiho_Rts.Commands
         /// <returns></returns> <summary>
         public virtual bool IsAvailable(CommandContext context) => true;
         public bool AllRestrictionsPass(Vector3 point) => Restrictions.Length == 0 || Restrictions.All(restriction => restriction.CanPlace(point));
+
+        /// <summary>
+        /// Whether or not the collider is visible  
+        /// </summary>
+        /// <param name="collider"></param>
+        /// <returns>True if the collider is visible, false otherwise</returns>
+        public bool IsHitColliderVisible(CommandContext context) => context.Hit.collider != null && context.Hit.collider.TryGetComponent(out IHideable hideable) && hideable.IsVisitable;
     }
 
 }

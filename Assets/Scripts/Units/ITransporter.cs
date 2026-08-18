@@ -11,6 +11,8 @@ namespace Gumiho_Rts.Units
 
         public List<ITransportable> GetLoadedUnits();
 
+        public Owner Owner { get; }
+
         public void Load(ITransportable unit);
         public void Load(ITransportable[] units);
 

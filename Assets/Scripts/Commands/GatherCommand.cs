@@ -29,7 +29,11 @@ namespace Gumiho_Rts.Commands
         {
 
             Worker worker = context.Commandable as Worker;
-            if (context.Hit.collider.TryGetComponent(out GatherableSupply gatherableSupply))
+            if (!IsHitColliderVisible(context))
+            {
+                worker.Move(context.Hit.collider.transform.position);
+            }
+            else if (context.Hit.collider.TryGetComponent(out GatherableSupply gatherableSupply))
             {
                 // Debug.Log("Gather Supplies");
                 worker.Gather(gatherableSupply);

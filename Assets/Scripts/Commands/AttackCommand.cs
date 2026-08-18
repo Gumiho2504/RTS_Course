@@ -1,3 +1,4 @@
+using Gumiho_Rts.Player;
 using Gumiho_Rts.Units;
 using UnityEngine;
 namespace Gumiho_Rts.Commands
@@ -15,7 +16,9 @@ namespace Gumiho_Rts.Commands
         public override void Handle(CommandContext context)
         {
             IAttacker attacker = context.Commandable as IAttacker;
-            if (context.Hit.collider.TryGetComponent<IDamageable>(out IDamageable damageable))
+            if (context.Hit.collider.TryGetComponent<IDamageable>(out IDamageable damageable)
+            && IsHitColliderVisible(context)
+            )
             {
                 attacker.Attack(damageable);
             }
