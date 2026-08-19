@@ -26,7 +26,8 @@ namespace Gumiho_Rts.UI.Containers
 
         public void Disable()
         {
-            gameObject.SetActive(false);
+            if (gameObject != null)
+                gameObject.SetActive(false);
         }
 
         private IEnumerator AnimateBuildingProgress(BaseBuilding building)
