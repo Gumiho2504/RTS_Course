@@ -333,6 +333,9 @@ namespace Gumiho_Rts
                 }
 
             }
+
+            Bus<CommandIssuedEvent>.Raise(Owner.Player1, new CommandIssuedEvent(activeCommand));
+            
             activeCommand = null;
         }
 
@@ -484,6 +487,9 @@ namespace Gumiho_Rts
             if (evt.Button == MouseButton.Right)
             {
                 IssueRightClickCommand(evt.Hit);
+            }else if(evt.Button == MouseButton.Left)
+            {
+                ActivateAction(evt.Hit);
             }
          
         }

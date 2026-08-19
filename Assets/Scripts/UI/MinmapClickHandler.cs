@@ -1,3 +1,4 @@
+using Gumiho_Rts.Commands;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
 
@@ -17,6 +18,7 @@ namespace Gumiho_Rts.UI
 
         private bool isMouseDownOnMinimap = false;
         private RectTransform rectTransform;
+        private BaseCommand activeCommand;
 
         private void Awake()
         {
@@ -26,12 +28,19 @@ namespace Gumiho_Rts.UI
                 Debug.LogError("MinimapRenderer: Minimap camera or camera target is not set");
                 enabled = false;
             }
+
+            Bus<CommandSelectedEvent>.OnEvent[Units.Owner.Player1] += HandleCommandSelected;
+            Bus<CommandIssuedEvent>.OnEvent[Units.Owner.Player1] += HandleCommandIssued;
+
         }
+
+        private void HandleCommandSelected(CommandSelectedEvent evt) => activeCommand = evt.Command;
+        private void HandleCommandIssued(CommandIssuedEvent evt) => activeCommand = null; 
 
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Left)
+            if (eventData.button == PointerEventData.InputButton.Left && activeCommand != null)
             {
                 isMouseDownOnMinimap = true;
                 MoveVirtualCamera(eventData.position); ;
@@ -50,6 +59,7 @@ namespace Gumiho_Rts.UI
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 isMouseDownOnMinimap = false;
+                  RaisClickEvent(eventData.position, MouseButton.Left);
             }
             else if (eventData.button == PointerEventData.InputButton.Right)
             {
