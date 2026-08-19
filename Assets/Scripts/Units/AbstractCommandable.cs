@@ -14,6 +14,7 @@ namespace Gumiho_Rts.Units
     {
         [SerializeField] protected DecalProjector decalProjector;
         [SerializeField] protected Transform VisionTransform;
+        [SerializeField] protected Renderer MinimapRenderer;
         [field: SerializeField] public bool IsSelected { get; protected set; }
         [field: SerializeField] public UnitSO UnitSO { get; private set; }
         [field: SerializeField] public Owner Owner { get; set; }
@@ -35,6 +36,8 @@ namespace Gumiho_Rts.Units
         public event HeathUpdatedEvent OnHealthUpdated;
         public event IHideable.VisibilityChangeEvent OnVisibilityChange;
 
+        private static readonly int COLOR_ID = Shader.PropertyToID("_BaseColor");
+
         protected virtual void Awake()
         {
             UnitSO = UnitSO.Clone() as UnitSO;
@@ -51,6 +54,11 @@ namespace Gumiho_Rts.Units
                 VisionTransform.gameObject.SetActive(Owner == Owner.Player1);
             }
             initialCommands = AvailableCommands;
+
+            if (MinimapRenderer != null)
+            {
+                MinimapRenderer.material.SetColor(COLOR_ID,Owner == Owner.Player1 ? Color.green : Color.red);
+            }
             Bus<UpgradeResearchedEvent>.OnEvent[Owner] += HandleUpgradeResearched;
         }
 
