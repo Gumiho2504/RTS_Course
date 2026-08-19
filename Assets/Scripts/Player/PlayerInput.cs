@@ -48,7 +48,7 @@ namespace Gumiho_Rts
         private static readonly int FRESNEL = Shader.PropertyToID("_FresnelColor");
 
         [Space(10)]
-    
+
         [SerializeField] private bool IsHandlePanning = false;
 
         private void Awake()
@@ -66,6 +66,8 @@ namespace Gumiho_Rts
             Bus<CommandSelectedEvent>.OnEvent[Owner.Player1] += HandleActionSelected;
             Bus<UnitDeathEvent>.OnEvent[Owner.Player1] += HandleUnitDeath;
 
+            Bus<MinimapClickEvent>.OnEvent[Owner.Player1] += HandleMinimapClick;
+
         }
 
 
@@ -77,6 +79,7 @@ namespace Gumiho_Rts
             Bus<UnitSpawnEvent>.OnEvent[Owner.Player1] -= HandleUnitSpawned;
             Bus<CommandSelectedEvent>.OnEvent[Owner.Player1] -= HandleActionSelected;
             Bus<UnitDeathEvent>.OnEvent[Owner.Player1] -= HandleUnitDeath;
+            Bus<MinimapClickEvent>.OnEvent[Owner.Player1] -= HandleMinimapClick;
 
 
         }
@@ -244,7 +247,7 @@ namespace Gumiho_Rts
 
         private void HandleRightMuseClick()
         {
-            if (selectableUnits.Count == 0) return;
+            if (selectableUnits.Count == 0 || EventSystem.current.IsPointerOverGameObject()) return;
             // if (activeCommand == null && !wasMouseDownOnUI) return;
 
             // Debug.Log($"<color=blue>Handle Right Click {activeCommand.name}</color>");
@@ -253,42 +256,7 @@ namespace Gumiho_Rts
             Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
             if (Mouse.current.rightButton.wasReleasedThisFrame && Physics.Raycast(ray, out RaycastHit hit, maxDistance: float.MaxValue, layerMask: floorLayerMask | interactableLayerMask))
             {
-
-                // find applicable command
-
-                // issue command to all units
-
-                print("Clicked on " + hit.transform.name);
-                List<AbstractUnit> abstractUnits = new(selectableUnits.Count);
-                foreach (ISelectable selectable in selectableUnits)
-                {
-                    if (selectable is AbstractUnit abstractUnit)
-                    {
-                        abstractUnits.Add(abstractUnit);
-                    }
-                }
-
-
-                for (int i = 0; i < abstractUnits.Count; i++)
-                {
-                    CommandContext context = new CommandContext(abstractUnits[i], hit, i, MouseButton.Right);
-
-                    foreach (var command in GetAvailableCommands(abstractUnits[i]))
-                    {
-                        if (command.CanHandle(context))
-                        {
-                            command.Handle(context);
-                            if (command.IsSingleUnitCommand)
-                            {
-                                return;
-                            }
-                            break;
-                        }
-                    }
-
-
-
-                }
+                IssueRightClickCommand(hit);
             }
         }
         private List<BaseCommand> GetAvailableCommands(AbstractUnit unit)
@@ -510,8 +478,53 @@ namespace Gumiho_Rts
             }
             return moveData;
         }
-    }
 
+        private void HandleMinimapClick(MinimapClickEvent evt)
+        {
+            if (evt.Button == MouseButton.Right)
+            {
+                IssueRightClickCommand(evt.Hit);
+            }
+         
+        }
+
+        private void IssueRightClickCommand(RaycastHit hit)
+        {
+            // find applicable command
+
+            // issue command to all units
+
+            print("Clicked on " + hit.transform.name);
+            List<AbstractUnit> abstractUnits = new(selectableUnits.Count);
+            foreach (ISelectable selectable in selectableUnits)
+            {
+                if (selectable is AbstractUnit abstractUnit)
+                {
+                    abstractUnits.Add(abstractUnit);
+                }
+            }
+
+
+            for (int i = 0; i < abstractUnits.Count; i++)
+            {
+                CommandContext context = new CommandContext(abstractUnits[i], hit, i, MouseButton.Right);
+
+                foreach (var command in GetAvailableCommands(abstractUnits[i]))
+                {
+                    if (command.CanHandle(context))
+                    {
+                        command.Handle(context);
+                        if (command.IsSingleUnitCommand)
+                        {
+                            return;
+                        }
+                        break;
+                    }
+                }
+
+            }
+        }
+    }
 
 
 }

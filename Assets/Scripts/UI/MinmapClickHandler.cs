@@ -1,6 +1,10 @@
+using Gumiho_Rts.EventBus;
+using Gumiho_Rts.Events;
+
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 
 namespace Gumiho_Rts.UI
 {
@@ -47,6 +51,10 @@ namespace Gumiho_Rts.UI
             {
                 isMouseDownOnMinimap = false;
             }
+            else if (eventData.button == PointerEventData.InputButton.Right)
+            {
+                RaisClickEvent(eventData.position, MouseButton.Right);
+            }
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -60,15 +68,29 @@ namespace Gumiho_Rts.UI
         {
             if (!isMouseDownOnMinimap) return;
 
+            if (RaycastFromMousePostion(mousePosition, out RaycastHit hit))
+            {
+                cameraTrarget.position = hit.point;
+            }
+        }
+
+        private bool RaycastFromMousePostion(Vector2 mousePosition, out RaycastHit hit)
+        {
             float widthMultiplier = minimapCamera.scaledPixelWidth / rectTransform.rect.width;
             float heightMultiplier = minimapCamera.scaledPixelHeight / rectTransform.rect.height;
 
             Vector2 convertedMousePosition = new Vector2(mousePosition.x * widthMultiplier, mousePosition.y * heightMultiplier);
 
             Ray ray = minimapCamera.ScreenPointToRay(convertedMousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, floorLayerMask))
+            return Physics.Raycast(ray, out hit, float.MaxValue, floorLayerMask);
+
+        }
+
+        private void RaisClickEvent(Vector2 mousePosition, MouseButton button)
+        {
+            if(RaycastFromMousePostion(mousePosition, out RaycastHit hit))
             {
-                cameraTrarget.position = hit.point;
+                Bus<MinimapClickEvent>.Raise(Units.Owner.Player1,new MinimapClickEvent(button,hit));
             }
         }
 
