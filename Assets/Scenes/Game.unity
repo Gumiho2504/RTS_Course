@@ -5742,7 +5742,7 @@ MonoBehaviour:
   floorLayerMask:
     serializedVersion: 2
     m_Bits: 272
-  height: 3
+  height: 0
 --- !u!120 &426190588
 LineRenderer:
   serializedVersion: 2

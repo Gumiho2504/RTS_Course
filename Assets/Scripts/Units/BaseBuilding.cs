@@ -202,7 +202,7 @@ namespace Gumiho_Rts.Units
                 Transform originalRendererTransform = MainMeshRenderer.transform;
              GameObject   culledObject = new ($"Culled {BuildingSO.Name} Visuals")
                 {
-                    layer = LayerMask.GetMask("TransparentFX"),
+                    layer = LayerMask.NameToLayer("Supplies"),
                     transform =
                     {
                         position = originalRendererTransform.position,
