@@ -5,12 +5,14 @@ using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
 using Gumiho_Rts.Units;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 namespace Gumiho_Rts.Player
 {
     [RequireComponent(typeof(Camera))]
     public class FogVisibilityManager : MonoBehaviour
     {
+        public static FogVisibilityManager Instance { get; private set; }
         private Camera fogOfWarCamera;
 
         private Texture2D visionTexture;
@@ -19,6 +21,9 @@ namespace Gumiho_Rts.Player
         private HashSet<IHideable> hideables = new(1000);
         void Awake()
         {
+
+            IntailizationSingleton();
+
             fogOfWarCamera = GetComponent<Camera>();
             visionTexture = new Texture2D(fogOfWarCamera.targetTexture.width, fogOfWarCamera.targetTexture.height);
             textureRect = new Rect(0, 0, visionTexture.width, visionTexture.height);
@@ -34,6 +39,17 @@ namespace Gumiho_Rts.Player
 
             Bus<PlaceholderSpawnEvent>.RegisterForAll(HandlePlaceholderSpawn);
             Bus<PlaceholderDestroyEvent>.RegisterForAll(HandlePlaceholderDestroy);
+        }
+
+        private void IntailizationSingleton()
+        {
+            if (Instance != null)
+            {
+                Debug.LogError("FogVisibilityManager already exists!");
+                enabled = false;
+                return;
+            }
+            Instance = this;
         }
 
 
@@ -66,6 +82,13 @@ namespace Gumiho_Rts.Player
             {
                 SetUnitVisibilityStatus(hideable);
             }
+        }
+
+        public bool IsVisible(Vector3 position)
+        {
+            Vector3 screenPoint = fogOfWarCamera.WorldToScreenPoint(position);
+            Color visibilityColor = visionTexture.GetPixel((int)screenPoint.x, (int)screenPoint.y);
+            return visibilityColor.r > 0.9f;
         }
 
         private void HandleUnitDeath(UnitDeathEvent args)
@@ -113,7 +136,7 @@ namespace Gumiho_Rts.Player
         {
             hideables.Add(args.Placeholder);
         }
-        
+
         private void HandlePlaceholderDestroy(PlaceholderDestroyEvent args)
         {
             hideables.Remove(args.Placeholder);
@@ -130,10 +153,8 @@ namespace Gumiho_Rts.Player
 
         private void SetUnitVisibilityStatus(IHideable hideable)
         {
-            Vector3 screenPoint = fogOfWarCamera.WorldToScreenPoint(hideable.Transform.position);
-            Color visibilityColor = visionTexture.GetPixel((int)screenPoint.x, (int)screenPoint.y);
-            //  Debug.Log($"Determined {commandable.name} is {(visibilityColor.r > 0.9f ? "Visible! " : "Not visitable")}");
-            hideable.SetVisitable(visibilityColor.r > 0.9f);
+
+            hideable.SetVisitable(IsVisible(hideable.Transform.position));
         }
     }
 }

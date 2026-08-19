@@ -17,7 +17,7 @@ namespace Gumiho_Rts.Environment
 
         [field: SerializeField] public bool IsBusy { get; private set; }
 
-        public Transform Transform => transform;
+        public Transform Transform => this == null ? null : transform;
 
         public bool IsVisitable { get; private set; }
 

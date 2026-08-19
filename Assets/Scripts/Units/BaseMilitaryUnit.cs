@@ -8,7 +8,7 @@ namespace Gumiho_Rts.Units
         protected override void Start()
         {
             base.Start();
-            behaviorGraphAgent.SetVariableValue(COMMAND,UnitCommand.Attack);
+           // behaviorGraphAgent.SetVariableValue(COMMAND,UnitCommand.Attack);
         }
 
         public void LoadInto(ITransporter transporter)

@@ -1,3 +1,4 @@
+using Gumiho_Rts.Player;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -22,6 +23,7 @@ namespace Gumiho_Rts.Commands
            {
                OverlapStyle.Sphere => Physics.OverlapSphereNonAlloc(position, Radius, hitColliders, LayerMask),
                OverlapStyle.Box => Physics.OverlapBoxNonAlloc(position, Extents, hitColliders, Quaternion.identity, LayerMask),
+               OverlapStyle.Vision => FogVisibilityManager.Instance.IsVisible(position) ? 1 : 0,
                _ => throw new System.NotImplementedException(),
            };
             if (MustBeFullOnNavMesh)
@@ -45,7 +47,7 @@ namespace Gumiho_Rts.Commands
         }
         public enum OverlapStyle
         {
-            Sphere,Box
+            Sphere,Box,Vision
         }
     }
 }

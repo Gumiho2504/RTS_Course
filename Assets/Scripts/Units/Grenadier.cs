@@ -40,7 +40,7 @@ namespace Gumiho_Rts.Units
 
             IDamageable damageable = null;
 
-            if (behaviorGraphAgent.GetVariable("TargetGameObject", out BlackboardVariable<GameObject> targetVariable) && targetVariable != null)
+            if (behaviorGraphAgent.GetVariable("TargetGameObject", out BlackboardVariable<GameObject> targetVariable) && targetVariable != null && targetVariable.Value != null)
             {
                 endPosition = targetVariable.Value.transform.position + Vector3.up;
                 damageable = targetVariable.Value.GetComponent<IDamageable>();
@@ -77,7 +77,11 @@ namespace Gumiho_Rts.Units
 
         private void ApplyDamage(Vector3 endPosition, IDamageable damageable)
         {
-            damageable?.TakeDamage(unitSO.AttackConfig.Damage);
+            if (damageable != null && damageable.Transform != null)
+            {
+                damageable?.TakeDamage(unitSO.AttackConfig.Damage);
+            }
+
             if (unitSO.AttackConfig.IsAreaOfEffect)
             {
                 int hits = Physics.OverlapSphereNonAlloc(endPosition, unitSO.AttackConfig.AreaOfEffectRadius, enemyColliders, unitSO.AttackConfig.DamageableLayers);
@@ -85,7 +89,7 @@ namespace Gumiho_Rts.Units
                 {
                     if (enemyColliders[i].TryGetComponent<IDamageable>(out IDamageable nearbyEnemy) && nearbyEnemy != damageable)
                     {
-                        nearbyEnemy?.TakeDamage(unitSO.AttackConfig.CalculateAreaOfEffectDamage(endPosition,nearbyEnemy.Transform.position));
+                        nearbyEnemy?.TakeDamage(unitSO.AttackConfig.CalculateAreaOfEffectDamage(endPosition, nearbyEnemy.Transform.position));
                     }
                 }
             }
@@ -94,8 +98,10 @@ namespace Gumiho_Rts.Units
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            Destroy(grenade);
-            Destroy(explosionParticle.gameObject);
+            if (grenade != null)
+                Destroy(grenade);
+            if (explosionParticle != null)
+                Destroy(explosionParticle.gameObject);
         }
     }
 }

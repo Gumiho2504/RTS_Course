@@ -6,7 +6,7 @@ namespace Gumiho_Rts.Player
     using UnityEngine;
     public class Placeholder : MonoBehaviour, IHideable
     {
-        public Transform Transform => transform;
+        public Transform Transform => this == null ? null : transform;
         public bool IsVisitable { get; private set; }
         public Owner Owner { get; set; }
         public GameObject ParentObject { get; set; }
