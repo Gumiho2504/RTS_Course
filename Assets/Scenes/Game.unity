@@ -14302,7 +14302,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineFollow
   TrackerSettings:
     BindingMode: 4
-    PositionDamping: {x: 1, y: 1, z: 1}
+    PositionDamping: {x: 0, y: 0, z: 0}
     AngularDampingMode: 0
     RotationDamping: {x: 1, y: 1, z: 1}
     QuaternionDamping: 1
@@ -16241,6 +16241,8 @@ GameObject:
   - component: {fileID: 1215342792}
   - component: {fileID: 1215342794}
   - component: {fileID: 1215342795}
+  - component: {fileID: 1215342797}
+  - component: {fileID: 1215342796}
   m_Layer: 5
   m_Name: Minimap
   m_TagString: Untagged
@@ -16302,6 +16304,36 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!114 &1215342796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1215342791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58d35267ef817234cac909fe2890a1e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.UI.MinimapRenderer
+  minimapCamera: {fileID: 1404827132}
+  cameraTrarget: {fileID: 807663195}
+  floorLayerMask:
+    serializedVersion: 2
+    m_Bits: 16
+--- !u!114 &1215342797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1215342791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventTrigger
+  m_Delegates: []
 --- !u!1001 &1234137415
 PrefabInstance:
   m_ObjectHideFlags: 0
