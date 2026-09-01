@@ -164,6 +164,8 @@ MonoBehaviour:
     <StartTime>k__BackingField: 0
     <Progress>k__BackingField: 0
     <State>k__BackingField: 3
+  collider: {fileID: 2422821575361291847}
+  cancelBuildingCommand: {fileID: 11400000, guid: 97cbe75b2338b421b904ebd79c168616, type: 2}
   <MainMeshRenderer>k__BackingField: {fileID: 3002833620398643107}
   <BuildingSO>k__BackingField: {fileID: 11400000, guid: a415944b25cff4bf1ae228e14f1ba2ce, type: 2}
   navMeshObstacle: {fileID: 8238219775677384266}

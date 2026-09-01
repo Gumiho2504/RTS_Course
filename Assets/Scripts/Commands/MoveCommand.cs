@@ -30,6 +30,16 @@ namespace Gumiho_Rts.Commands
                 return;
             }
 
+
+            unit.Move(GetSmartMoveLocation(context));
+
+
+        }
+        public override bool IsLocked(CommandContext context) => false;
+
+        public Vector3 GetSmartMoveLocation(CommandContext context)
+        {
+            if(context.Commandable is not AbstractUnit unit) return context.Hit.point;
             if (context.UnitIndex == 0)
             {
                 unitsOnLayer = 0;
@@ -45,8 +55,6 @@ namespace Gumiho_Rts.Commands
                         hit.point.z + Mathf.Sin(radiusOffset * unitsOnLayer) * circleRadius
                     );
 
-            unit.Move(targetPosition);
-
             unitsOnLayer++;
             if (unitsOnLayer >= maxUnitsLayer)
             {
@@ -57,7 +65,7 @@ namespace Gumiho_Rts.Commands
                 maxUnitsLayer = Mathf.FloorToInt(2 * Mathf.PI * circleRadius / (unit.AgentRadius * radiusMultiplier));
                 radiusOffset = 2 * Mathf.PI / maxUnitsLayer;
             }
+            return targetPosition;
         }
-        public override bool IsLocked(CommandContext context) => false;
     }
 }

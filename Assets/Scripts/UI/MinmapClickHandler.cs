@@ -34,8 +34,14 @@ namespace Gumiho_Rts.UI
 
         }
 
+        private void OnDestroy()
+        {
+            Bus<CommandSelectedEvent>.OnEvent[Units.Owner.Player1] -= HandleCommandSelected;
+            Bus<CommandIssuedEvent>.OnEvent[Units.Owner.Player1] -= HandleCommandIssued;
+        }
+
         private void HandleCommandSelected(CommandSelectedEvent evt) => activeCommand = evt.Command;
-        private void HandleCommandIssued(CommandIssuedEvent evt) => activeCommand = null; 
+        private void HandleCommandIssued(CommandIssuedEvent evt) => activeCommand = null;
 
 
         public void OnPointerDown(PointerEventData eventData)
@@ -43,6 +49,7 @@ namespace Gumiho_Rts.UI
             if (eventData.button == PointerEventData.InputButton.Left && activeCommand != null)
             {
                 isMouseDownOnMinimap = true;
+              //  print("<color=yellow>OnPointerDown</color=yellow>");
                 MoveVirtualCamera(eventData.position); ;
             }
         }
@@ -59,7 +66,8 @@ namespace Gumiho_Rts.UI
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 isMouseDownOnMinimap = false;
-                  RaisClickEvent(eventData.position, MouseButton.Left);
+                //print("<color=yellow>OnPointerUp</color=yellow>");
+                RaisClickEvent(eventData.position, MouseButton.Left);
             }
             else if (eventData.button == PointerEventData.InputButton.Right)
             {
@@ -77,7 +85,7 @@ namespace Gumiho_Rts.UI
         private void MoveVirtualCamera(Vector2 mousePosition)
         {
             if (!isMouseDownOnMinimap) return;
-
+            print("<color=yellow>MoveVirtualCamera</color=yellow>");
             if (RaycastFromMousePostion(mousePosition, out RaycastHit hit))
             {
                 cameraTrarget.position = hit.point;
@@ -98,11 +106,11 @@ namespace Gumiho_Rts.UI
 
         private void RaisClickEvent(Vector2 mousePosition, MouseButton button)
         {
-            if(RaycastFromMousePostion(mousePosition, out RaycastHit hit))
+            if (RaycastFromMousePostion(mousePosition, out RaycastHit hit))
             {
-                Bus<MinimapClickEvent>.Raise(Units.Owner.Player1,new MinimapClickEvent(button,hit));
+                Bus<MinimapClickEvent>.Raise(Units.Owner.Player1, new MinimapClickEvent(button, hit));
             }
         }
 
     }
-}
+}f

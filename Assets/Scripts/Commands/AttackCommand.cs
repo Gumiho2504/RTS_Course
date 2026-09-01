@@ -6,6 +6,7 @@ namespace Gumiho_Rts.Commands
     [CreateAssetMenu(fileName = "Attack", menuName = "Units/Commands/Attack")]
     public class AttackCommand : BaseCommand
     {
+        [SerializeField] private MoveCommand moveCommand;
         public override bool CanHandle(CommandContext context)
         {
             //Debug.Log($"Handle Attack Command IAttacker: {context.Commandable is IAttacker}| Hit:{context.Hit.collider != null} |{context.Hit.transform.name}|Damageable{context.Hit.collider.TryGetComponent<IDamageable>(out IDamageable _)}");
@@ -21,6 +22,9 @@ namespace Gumiho_Rts.Commands
             )
             {
                 attacker.Attack(damageable);
+            }else if (moveCommand != null)
+            {
+                attacker.Attack(moveCommand.GetSmartMoveLocation(context));
             }
             else
             {

@@ -53,7 +53,8 @@ namespace Gumiho_Rts.Units
                 VisionTransform.localScale = new Vector3(size, size, size);
                 VisionTransform.gameObject.SetActive(Owner == Owner.Player1);
             }
-            initialCommands = AvailableCommands;
+            initialCommands = UnitSO.Prefab.GetComponent<AbstractCommandable>().AvailableCommands;
+            SetCommandOverride(null);
 
             if (MinimapRenderer != null)
             {

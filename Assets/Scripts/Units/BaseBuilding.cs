@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Gumiho_Rts.Commands;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
 using Gumiho_Rts.Player;
@@ -19,6 +20,8 @@ namespace Gumiho_Rts.Units
         [field: SerializeField] public float CurrentQueueStartTime { get; private set; }
         [field: SerializeField] public UnlockableSO SOBeingBuilt { get; private set; }
         [field: SerializeField] public BuildingProgress Progress { get; private set; } = new BuildingProgress(0, 0, BuildingProgress.BuildingState.Destroy);
+        [SerializeField] private new Collider collider;
+        [SerializeField] private CancelBuildingCommand cancelBuildingCommand;
 
 
         public delegate void QueueUpdatedEvent(UnlockableSO[] unitsInQueue);
@@ -66,6 +69,11 @@ namespace Gumiho_Rts.Units
                         upgrade.Apply(BuildingSO);
                     }
                 }
+            }
+
+            if (collider != null)
+            {
+                collider.enabled = true;
             }
 
         }
@@ -150,6 +158,7 @@ namespace Gumiho_Rts.Units
             unitBuildingThis = buildingBuilder;
             Owner = buildingBuilder.Owner;
             //   Debug.Log("<color=green> BaseBuilding Start Build");
+            SetCommandOverride(new BaseCommand[] { cancelBuildingCommand });
 
 
 
@@ -158,8 +167,31 @@ namespace Gumiho_Rts.Units
             {
                 Heal(1);
             }
+
+            if (collider != null)
+            {
+                collider.enabled = true;
+            }
+
+
             Bus<UnitDeathEvent>.OnEvent[Owner] -= HandleUnitDeath;
             Bus<UnitDeathEvent>.OnEvent[Owner] += HandleUnitDeath;
+        }
+
+        public void CancelBuilding()
+        {
+            if (unitBuildingThis != null)
+            {
+                unitBuildingThis.CancelBuilding();
+            }
+            else
+            {
+                Destroy(this);
+
+                Bus<SupplyEvent>.Raise(Owner, new SupplyEvent(Owner, Mathf.FloorToInt(UnitSO.Cost.Minerals * 0.75f), UnitSO.Cost.MineralsSO));
+                Bus<SupplyEvent>.Raise(Owner, new SupplyEvent(Owner, Mathf.FloorToInt(UnitSO.Cost.Gas * 0.75f), UnitSO.Cost.GasSO));
+
+            }
         }
 
         private void HandleUnitDeath(UnitDeathEvent args)
@@ -188,7 +220,7 @@ namespace Gumiho_Rts.Units
         protected override void OnGainVisibility()
         {
             base.OnGainVisibility();
-            if(culledVisual != null)
+            if (culledVisual != null)
             {
                 culledVisual.gameObject.SetActive(false);
             }
@@ -197,10 +229,10 @@ namespace Gumiho_Rts.Units
         protected override void OnLoseVisibility()
         {
             base.OnLoseVisibility();
-            if(culledVisual == null)
+            if (culledVisual == null)
             {
                 Transform originalRendererTransform = MainMeshRenderer.transform;
-             GameObject   culledObject = new ($"Culled {BuildingSO.Name} Visuals")
+                GameObject culledObject = new($"Culled {BuildingSO.Name} Visuals")
                 {
                     layer = LayerMask.NameToLayer("Supplies"),
                     transform =
@@ -213,7 +245,7 @@ namespace Gumiho_Rts.Units
                 culledVisual = culledObject.AddComponent<Placeholder>();
                 culledVisual.Owner = Owner;
                 culledVisual.ParentObject = gameObject;
-                
+
                 MeshFilter meshFilter = culledObject.AddComponent<MeshFilter>();
                 meshFilter.mesh = MainMeshRenderer.GetComponent<MeshFilter>().mesh;
                 MeshRenderer meshRenderer = culledObject.AddComponent<MeshRenderer>();
@@ -223,6 +255,17 @@ namespace Gumiho_Rts.Units
             {
                 culledVisual.gameObject.SetActive(true);
             }
+        }
+
+        public override void Deselect()
+        {
+            base.Deselect();
+            
+            if (Progress.State != BuildingProgress.BuildingState.Completed)
+            {
+                SetCommandOverride(new BaseCommand[] { cancelBuildingCommand });
+            }
+
         }
 
     }

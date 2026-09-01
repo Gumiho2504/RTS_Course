@@ -286,7 +286,7 @@ namespace Gumiho_Rts
             Ray ray = camera.ScreenPointToRay(mouseVector);
             //  Debug.Log($"{Physics.Raycast(ray, out RaycastHit ht, float.MaxValue, layerMask: floorLayerMask | interactableLayerMask)} | {ht.transform.name} | {ht.transform.TryGetComponent(out GatherableSupply s)} | {s}");
 
-            if (activeCommand == null && Physics.Raycast(ray, out RaycastHit hit, maxDistance: 100f, layerMask: selectableUnityLayerMask | interactableLayerMask)
+            if (activeCommand == null && addedUnits.Count == 0 && Physics.Raycast(ray, out RaycastHit hit, maxDistance: 100f, layerMask: selectableUnityLayerMask | interactableLayerMask)
             && hit.transform.TryGetComponent(out ISelectable selectable))
             {
 

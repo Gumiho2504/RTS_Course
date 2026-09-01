@@ -25,7 +25,11 @@ namespace Gumiho_Rts.Commands
 
         public override bool IsLocked(CommandContext context)
         {
-            return false;
+            if (context.Commandable is ITransporter transporter)
+            {
+                return transporter.UsedCapacity >= transporter.Capacity;
+            }
+            return true;
         }
     }
 }

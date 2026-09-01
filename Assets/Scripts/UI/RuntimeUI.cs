@@ -107,10 +107,10 @@ namespace Gumiho_Rts.UI
 
         private void HandleBuildingSpawn(BuildingSpawnEvent args)
         {
-            if (selectableUnits.Count == 1 && selectableUnits.First() is Worker)
-            {
-                actionUI.EnableFor(selectableUnits);
-            }
+            // if (selectableUnits.Count == 1 && selectableUnits.First() is Worker)
+            // {
+            actionUI.EnableFor(selectableUnits);
+            // }
         }
 
         private void HandleBuildingDeath(BuildingDeathEvent args)

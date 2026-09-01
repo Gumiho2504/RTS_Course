@@ -9,13 +9,20 @@ namespace Gumiho_Rts.Commands
     {
         public override bool CanHandle(CommandContext context)
         {
-            return context.Commandable is IBuildingBuilder && context.MouseButton == UnityEngine.InputSystem.LowLevel.MouseButton.Left;
+            return context.Commandable is BaseBuilding || (context.Commandable is IBuildingBuilder && context.MouseButton == UnityEngine.InputSystem.LowLevel.MouseButton.Left);
         }
 
         public override void Handle(CommandContext context)
         {
-            IBuildingBuilder building = context.Commandable as IBuildingBuilder;
-            building.CancelBuilding();
+            if (context.Commandable is BaseBuilding building)
+            {
+                building.CancelBuilding();
+            }
+            else if (context.Commandable is IBuildingBuilder builder)
+            {
+                builder.CancelBuilding();
+            }
+
         }
         public override bool IsLocked(CommandContext context) => false;
 
