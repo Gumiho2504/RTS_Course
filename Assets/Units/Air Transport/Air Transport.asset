@@ -23,5 +23,6 @@ MonoBehaviour:
   <Prefab>k__BackingField: {fileID: 1076983579694789324, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
   <Upgrades>k__BackingField: []
   <SightConfig>k__BackingField: {fileID: 11400000, guid: 2cbe4c8495f92f84a9dea8ae68f0106c, type: 2}
+  <PopulationConfig>k__BackingField: {fileID: 11400000, guid: 802438845ebaee8468ac2e5b32623a91, type: 2}
   <AttackConfig>k__BackingField: {fileID: 0}
   <TransportConfig>k__BackingField: {fileID: 11400000, guid: dba3adb4de28eb1438f7df1da059a0cd, type: 2}

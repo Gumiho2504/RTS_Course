@@ -58,8 +58,14 @@ namespace Gumiho_Rts.Units
 
             if (MinimapRenderer != null)
             {
-                MinimapRenderer.material.SetColor(COLOR_ID,Owner == Owner.Player1 ? Color.green : Color.red);
+                MinimapRenderer.material.SetColor(COLOR_ID, Owner == Owner.Player1 ? Color.green : Color.red);
             }
+
+            // if (UnitSO.PopulationConfig != null)
+            // {
+            //     Bus<PopulationEvent>.Raise(Owner, new PopulationEvent(Owner, UnitSO.PopulationConfig.PopulationCost, UnitSO.PopulationConfig.PopulationSupply));
+            // }
+
             Bus<UpgradeResearchedEvent>.OnEvent[Owner] += HandleUpgradeResearched;
         }
 

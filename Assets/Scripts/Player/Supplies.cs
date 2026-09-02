@@ -28,8 +28,6 @@ namespace Gumiho_Rts.Player
             Population = new Dictionary<Owner, int>();
             PopulationLimit = new Dictionary<Owner, int>();
 
-
-
             foreach (Owner owner in Enum.GetValues(typeof(Owner)))
             {
                 Minerals.Add(owner, 0);
@@ -40,12 +38,14 @@ namespace Gumiho_Rts.Player
             }
 
             Bus<SupplyEvent>.RegisterForAll(HandleSupplyEvent);
+            Bus<PopulationEvent>.RegisterForAll(HandlePopulationEvent);
         }
 
         private void OnDestroy()
         {
 
             Bus<SupplyEvent>.UnregisterForAll(HandleSupplyEvent);
+            Bus<PopulationEvent>.UnregisterForAll(HandlePopulationEvent);
         }
         private void HandleSupplyEvent(SupplyEvent args)
         {
@@ -61,6 +61,27 @@ namespace Gumiho_Rts.Player
                 if (Owner.Player1 == args.Owner)
                     gasText.SetText(Gas[args.Owner].ToString());
             }
+        }
+        private static readonly string POPULATION_FORMAT = "{0}/{1}";
+        private static readonly string ERROR_POPULATION_FORMAT = "<color=red>{0}</color>/{1}";
+        private void HandlePopulationEvent(PopulationEvent args)
+        {
+            Population[args.Owner] += args.PopulationChange;
+            PopulationLimit[args.Owner] += args.PopulationLimitChange;
+            if (Owner.Player1 == args.Owner)
+            {
+                int currentPopulation = Population[args.Owner];
+                int maxPopulation = PopulationLimit[args.Owner];
+                if(currentPopulation <= maxPopulation)
+                {
+                    populationText.SetText(string.Format(POPULATION_FORMAT, currentPopulation, maxPopulation));
+                }
+                else
+                {
+                    populationText.SetText(string.Format(ERROR_POPULATION_FORMAT, currentPopulation.ToString(), maxPopulation.ToString()));
+                }
+            }
+                
         }
     }
 }

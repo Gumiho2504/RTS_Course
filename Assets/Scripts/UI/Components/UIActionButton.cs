@@ -22,10 +22,11 @@ namespace Gumiho_Rts.UI.Components
         private RectTransform rectTransform;
         private Button button;
 
-        private static readonly string MINARALS_FORMAT = "{0}  <color=#00ACFF>Minerals</color>. ";
+        private static readonly string MINERALS_FORMAT = "{0}  <color=#00ACFF>Minerals</color>. ";
         private static readonly string GAS_FORMAT = "{0}  <color=#3BEA60>Gas</color>. ";
         private static readonly string DEPENDENCY_FORMAT_NO_COMMA = "<color=#AC0000>{0}</color>. ";
         private static readonly string DEPENDENCY_FORMAT_COMMA = "<color=#AC0000>{0}</color>, ";
+        private static readonly string POPULATION_FORMAT = "{0} <color=#eeeeee>Population</color>  ";
 
 
         private bool isActive = false;
@@ -100,25 +101,33 @@ namespace Gumiho_Rts.UI.Components
         {
             string tooltipText = command.Name + "\n";
             SupplyCostSO supplyCostSO = null;
+            PopulationConfigSO populationConfigSO = null;
+
+
             if (command is BuildBuildingCommand buildBuildingCommand)
             {
-                supplyCostSO = buildBuildingCommand.BuildingSO.Cost;
-
+                supplyCostSO = buildBuildingCommand.BuildingSO.Cost; 
             }
             else if (command is BuildUnitCommand buildUnitCommand)
             {
                 supplyCostSO = buildUnitCommand.Unit.Cost;
+                populationConfigSO = buildUnitCommand.Unit.PopulationConfig;
             }
             if (supplyCostSO != null)
             {
                 if (supplyCostSO.Minerals > 0)
                 {
-                    tooltipText += String.Format(MINARALS_FORMAT, supplyCostSO.Minerals);
+                    tooltipText += String.Format(MINERALS_FORMAT, supplyCostSO.Minerals);
                 }
                 if (supplyCostSO.Gas > 0)
                 {
                     tooltipText += String.Format(GAS_FORMAT, supplyCostSO.Gas);
                 }
+            }
+
+            if(populationConfigSO != null && populationConfigSO.PopulationCost > 0)
+            {
+                tooltipText += string.Format(POPULATION_FORMAT,populationConfigSO.PopulationCost);
             }
 
             if (command.IsLocked(new CommandContext(Owner.Player1, null, new RaycastHit()))

@@ -15,6 +15,7 @@ namespace Gumiho_Rts.Units
             copy.AttackConfig = AttackConfig == null ? null : Instantiate(AttackConfig);
             copy.TransportConfig = TransportConfig == null ? null : Instantiate(TransportConfig);
             copy.SightConfig = SightConfig == null ? null : Instantiate(SightConfig);
+            copy.PopulationConfig = PopulationConfig == null ? null : Instantiate(PopulationConfig);
 
             return copy;
         }

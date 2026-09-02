@@ -38,7 +38,7 @@ namespace Gumiho_Rts.Units
         protected override void Awake()
         {
             base.Awake();
-            
+
             Agent = GetComponent<NavMeshAgent>();
 
             unitSO = UnitSO as Unit;
@@ -74,6 +74,10 @@ namespace Gumiho_Rts.Units
                     }
                 }
             }
+
+            Bus<PopulationEvent>.Raise(Owner, new PopulationEvent(Owner,
+                    0,
+                    unitSO.PopulationConfig.PopulationSupply));
 
         }
 

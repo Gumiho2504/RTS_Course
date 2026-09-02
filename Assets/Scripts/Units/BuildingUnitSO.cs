@@ -10,6 +10,7 @@ namespace Gumiho_Rts.Units
         {
             BuildingUnitSO copy = base.Clone() as BuildingUnitSO;
             copy.SightConfig = SightConfig == null ? null : Instantiate(SightConfig);
+            copy.PopulationConfig = PopulationConfig == null ? null : Instantiate(PopulationConfig);
             return copy;
         }
     }

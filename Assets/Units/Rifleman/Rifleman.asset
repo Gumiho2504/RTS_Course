@@ -27,5 +27,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3b841d8532c622744a03938140d08e8a, type: 2}
   - {fileID: 11400000, guid: 3add6a6a544460b478ff383d54342d95, type: 2}
   <SightConfig>k__BackingField: {fileID: 11400000, guid: 35cf8cec533878a46823d7415478d20c, type: 2}
+  <PopulationConfig>k__BackingField: {fileID: 11400000, guid: c5ef9f759a598a340b4ba3893abc2b59, type: 2}
   <AttackConfig>k__BackingField: {fileID: 11400000, guid: 736972092518f8f478f3beb64b3b7e43, type: 2}
   <TransportConfig>k__BackingField: {fileID: 11400000, guid: d167da174e9113041b2f4edd9db88fbe, type: 2}

@@ -39,6 +39,8 @@ namespace Gumiho_Rts.Units
         [field: SerializeField] public BuildingUnitSO BuildingSO { get; private set; }
         [SerializeField] private NavMeshObstacle navMeshObstacle;
         [SerializeField] private Material primaryMaterial;
+
+        private bool unitHasSubtractPopulationCost = false;
         protected override void Awake()
         {
             base.Awake();
@@ -71,10 +73,17 @@ namespace Gumiho_Rts.Units
                 }
             }
 
+            if (UnitSO.PopulationConfig != null)
+            {
+                Bus<PopulationEvent>.Raise(Owner, new PopulationEvent(Owner, UnitSO.PopulationConfig.PopulationCost, UnitSO.PopulationConfig.PopulationSupply));
+            }
+
             if (collider != null)
             {
                 collider.enabled = true;
             }
+
+
 
         }
 
@@ -109,6 +118,10 @@ namespace Gumiho_Rts.Units
             buildingQueue.RemoveAt(index);
             if (index == 0)
             {
+                if (unlockableSO is UnitSO unitSO && unitSO.PopulationConfig != null && unitHasSubtractPopulationCost)
+                    Bus<PopulationEvent>.Raise(Owner, new PopulationEvent(Owner,
+                            unitSO.PopulationConfig.PopulationCost,
+                            0));
                 StopAllCoroutines();
                 if (buildingQueue.Count > 0) StartCoroutine(DoBuildUnits());
                 else OnQueueUpdated?.Invoke(buildingQueue.ToArray());
@@ -129,11 +142,29 @@ namespace Gumiho_Rts.Units
                 CurrentQueueStartTime = Time.time;
 
                 OnQueueUpdated?.Invoke(buildingQueue.ToArray());
+                unitHasSubtractPopulationCost = false;
+
+                bool isUnit = SOBeingBuilt is UnitSO;
+                if (isUnit)
+                {
+                    UnitSO unitSO = SOBeingBuilt as UnitSO;
+                    while (Supplies.Population[Owner] + unitSO.PopulationConfig.PopulationCost > Supplies.PopulationLimit[Owner])
+                    {
+                        yield return null;
+                        CurrentQueueStartTime = Time.time;
+                    }
+
+                    Bus<PopulationEvent>.Raise(Owner, new PopulationEvent(Owner,
+                        unitSO.PopulationConfig.PopulationCost,
+                        0));
+                    unitHasSubtractPopulationCost = true;
+                }
 
                 yield return new WaitForSeconds(SOBeingBuilt.BuildTime);
 
-                if (SOBeingBuilt is UnitSO unitSO)
+                if (isUnit)
                 {
+                    UnitSO unitSO = SOBeingBuilt as UnitSO;
                     GameObject instance = Instantiate(unitSO.Prefab, transform.position, Quaternion.identity);
                     if (instance.TryGetComponent(out AbstractCommandable commandable))
                     {
@@ -148,6 +179,7 @@ namespace Gumiho_Rts.Units
 
                 buildingQueue.RemoveAt(0);
             }
+            unitHasSubtractPopulationCost = false;
             OnQueueUpdated?.Invoke(buildingQueue.ToArray());
 
         }
@@ -260,7 +292,7 @@ namespace Gumiho_Rts.Units
         public override void Deselect()
         {
             base.Deselect();
-            
+
             if (Progress.State != BuildingProgress.BuildingState.Completed)
             {
                 SetCommandOverride(new BaseCommand[] { cancelBuildingCommand });

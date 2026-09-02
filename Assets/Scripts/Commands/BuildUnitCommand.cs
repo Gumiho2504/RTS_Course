@@ -19,10 +19,14 @@ namespace Gumiho_Rts.Commands
 
         public override void Handle(CommandContext context)
         {
-            if (!CanHandle(context) || IsLocked(context))
-                return;
+            // if (!CanHandle(context) || IsLocked(context))
+            //     return;
 
             BaseBuilding building = (BaseBuilding)context.Commandable;
+
+            if(!HasEnoughSupply(context) || (building.QueueSize == 0 && !HasEnoughPopulation(context)))
+                return;
+
             building.BuildUnlockable(Unit);
         }
 
@@ -34,7 +38,7 @@ namespace Gumiho_Rts.Commands
             if (context.Commandable is BaseBuilding building && building.IsQueueFull)
                 return true;
 
-            return !HasEnoughSupply(context) || !Unit.TechTree.IsUnlocked(context.Owner, Unit);
+            return !HasEnoughSupply(context) || !Unit.TechTree.IsUnlocked(context.Owner, Unit) || (context.Commandable is BaseBuilding _building && _building.QueueSize == 0 && !HasEnoughPopulation(context));
         }
 
         private bool HasEnoughSupply(CommandContext context)
@@ -51,6 +55,13 @@ namespace Gumiho_Rts.Commands
                 return Array.Empty<UnlockableSO>();
 
             return Unit.TechTree.GetUnmetDependencies(owner, Unit);
+        }
+
+        private bool HasEnoughPopulation(CommandContext context)
+        {
+            if (Unit.PopulationConfig == null) return true;
+            int newPopulation = Unit.PopulationConfig.PopulationCost + Supplies.Population[context.Owner];
+            return newPopulation <= Supplies.PopulationLimit[context.Owner];
         }
 
 
