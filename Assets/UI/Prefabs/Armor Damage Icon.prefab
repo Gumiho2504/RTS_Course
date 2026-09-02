@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8810813777082331533}
   - component: {fileID: 2057281526577778240}
   - component: {fileID: 5353011645875316519}
+  - component: {fileID: 1801998692999102963}
   m_Layer: 5
   m_Name: Armor Damage Icon
   m_TagString: Untagged
@@ -79,6 +80,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1801998692999102963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 52138930813371874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f4b002d84921754b8cc3abb3780b530, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.UI.Components.StatIcon
+  upgradeLabel: {fileID: 5345928508485223958}
+  amountLabel: {fileID: 4089526309284811479}
+  tooltip: {fileID: 6525886929276528011}
+  icon: {fileID: 355082885956338300}
 --- !u!1 &437394629219096951
 GameObject:
   m_ObjectHideFlags: 0
@@ -301,6 +318,7 @@ GameObject:
   - component: {fileID: 1679870657894237570}
   - component: {fileID: 6429747956725189699}
   - component: {fileID: 2336459994290566589}
+  - component: {fileID: 6525886929276528011}
   m_Layer: 5
   m_Name: Tooltip
   m_TagString: Untagged
@@ -366,6 +384,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 10
+--- !u!114 &6525886929276528011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5245368203399756044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 291b97b21e7844b89b1f7dfa027232dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.UI.Components.Tooltip
+  <Rect>k__BackingField: {fileID: 1679870657894237570}
+  <HoverDelay>k__BackingField: 0.5
+  text: {fileID: 4170755229565182962}
 --- !u!1 &6255073719340885734
 GameObject:
   m_ObjectHideFlags: 0

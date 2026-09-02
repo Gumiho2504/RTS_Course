@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b470385a99d0fae47b546ee6acee9992, type: 3}
   m_Name: Worker Attack Config
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.AttackConfigSO
+  <Icon>k__BackingField: {fileID: 21300000, guid: 4be4d75da3282e64fbab743c34270c88, type: 3}
   <AttackRange>k__BackingField: 1.5
   <AttackDelay>k__BackingField: 1
   <Damage>k__BackingField: 5

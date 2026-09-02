@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b470385a99d0fae47b546ee6acee9992, type: 3}
   m_Name: Riffleman Attack Config
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.AttackConfigSO
+  <Icon>k__BackingField: {fileID: 21300000, guid: c733cf57b895c374da5e25ba49b63a46, type: 3}
   <AttackRange>k__BackingField: 4
   <AttackDelay>k__BackingField: 1
   <Damage>k__BackingField: 5
