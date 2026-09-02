@@ -19,6 +19,7 @@ namespace Gumiho_Rts.UI
         [SerializeField] private SingleUnitSelectedUI singleUnitSelectedUI;
         [SerializeField] private UnitTransportUI unitTransportUI;
         [SerializeField] private MultipleUnitsSelectedUI multipleUnitsSelectedUI;
+        [SerializeField] private ControlGroupUI controlGroupUI;
 
 
         private HashSet<AbstractCommandable> selectableUnits = new(12);
@@ -46,6 +47,7 @@ namespace Gumiho_Rts.UI
             buildingSelectedUI.Disable();
             unitTransportUI.Disable();
             multipleUnitsSelectedUI.Disable();
+          //  controlGroupUI.Disable();
 
         }
 
@@ -125,6 +127,7 @@ namespace Gumiho_Rts.UI
 
         private void RefreshUI()
         {
+            controlGroupUI.EnableFor(selectableUnits);
             if (selectableUnits.Count > 0)
             {
                 actionUI.EnableFor(selectableUnits);

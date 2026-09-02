@@ -6398,6 +6398,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 495401751}
+  - component: {fileID: 495401753}
   - component: {fileID: 495401752}
   m_Layer: 5
   m_Name: Control Groups Container
@@ -6461,6 +6462,39 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &495401753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 495401750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edf15f5b8b4f1f8498f98b4a95682018, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.UI.Containers.ControlGroupUI
+  controlGroupHotKeys:
+  - <Key>k__BackingField: 41
+    <Group>k__BackingField: {fileID: 1934122797}
+  - <Key>k__BackingField: 42
+    <Group>k__BackingField: {fileID: 733033841}
+  - <Key>k__BackingField: 43
+    <Group>k__BackingField: {fileID: 1541195248}
+  - <Key>k__BackingField: 44
+    <Group>k__BackingField: {fileID: 1981734704}
+  - <Key>k__BackingField: 45
+    <Group>k__BackingField: {fileID: 1775644414}
+  - <Key>k__BackingField: 46
+    <Group>k__BackingField: {fileID: 967386764}
+  - <Key>k__BackingField: 47
+    <Group>k__BackingField: {fileID: 682666986}
+  - <Key>k__BackingField: 48
+    <Group>k__BackingField: {fileID: 1401523160}
+  - <Key>k__BackingField: 49
+    <Group>k__BackingField: {fileID: 896313464}
+  - <Key>k__BackingField: 50
+    <Group>k__BackingField: {fileID: 3327223654149646777}
 --- !u!1001 &495807561
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7830,6 +7864,7 @@ MonoBehaviour:
   singleUnitSelectedUI: {fileID: 1315305436}
   unitTransportUI: {fileID: 388342856}
   multipleUnitsSelectedUI: {fileID: 1334450997}
+  controlGroupUI: {fileID: 495401753}
 --- !u!114 &640315636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8842,6 +8877,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6774689828320721616, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
   m_PrefabInstance: {fileID: 682666984}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &682666986 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1106930342111913323, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
+  m_PrefabInstance: {fileID: 682666984}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78ced24105346c34b8521bc77b9a7832, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.UI.Components.ControlGroup
 --- !u!1001 &688684373
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9575,7 +9621,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6774689828320721616, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 170.5
+      value: 70.5
       objectReference: {fileID: 0}
     - target: {fileID: 6774689828320721616, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -9603,6 +9649,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6774689828320721616, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
   m_PrefabInstance: {fileID: 733033836}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &733033841 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1106930342111913323, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
+  m_PrefabInstance: {fileID: 733033836}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78ced24105346c34b8521bc77b9a7832, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.UI.Components.ControlGroup
 --- !u!1 &734299575
 GameObject:
   m_ObjectHideFlags: 0
@@ -12048,6 +12105,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6774689828320721616, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
   m_PrefabInstance: {fileID: 896313459}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &896313464 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1106930342111913323, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
+  m_PrefabInstance: {fileID: 896313459}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78ced24105346c34b8521bc77b9a7832, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.UI.Components.ControlGroup
 --- !u!1001 &901737963
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13036,6 +13104,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6774689828320721616, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
   m_PrefabInstance: {fileID: 967386762}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &967386764 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1106930342111913323, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
+  m_PrefabInstance: {fileID: 967386762}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78ced24105346c34b8521bc77b9a7832, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.UI.Components.ControlGroup
 --- !u!1001 &969510058
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18167,8 +18246,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1334450995}
-  - component: {fileID: 1334450996}
   - component: {fileID: 1334450997}
+  - component: {fileID: 1334450996}
   m_Layer: 5
   m_Name: Multi-Unit Container
   m_TagString: Untagged
@@ -19590,6 +19669,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6774689828320721616, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
   m_PrefabInstance: {fileID: 1401523158}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1401523160 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1106930342111913323, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
+  m_PrefabInstance: {fileID: 1401523158}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78ced24105346c34b8521bc77b9a7832, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.UI.Components.ControlGroup
 --- !u!1001 &1404083626
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21683,6 +21773,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6774689828320721616, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
   m_PrefabInstance: {fileID: 1541195243}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1541195248 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1106930342111913323, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
+  m_PrefabInstance: {fileID: 1541195243}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78ced24105346c34b8521bc77b9a7832, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.UI.Components.ControlGroup
 --- !u!1001 &1550900492
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25205,6 +25306,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6774689828320721616, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
   m_PrefabInstance: {fileID: 1775644412}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1775644414 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1106930342111913323, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
+  m_PrefabInstance: {fileID: 1775644412}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78ced24105346c34b8521bc77b9a7832, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.UI.Components.ControlGroup
 --- !u!1001 &1777986581
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27490,6 +27602,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6774689828320721616, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
   m_PrefabInstance: {fileID: 1934122792}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1934122797 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1106930342111913323, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
+  m_PrefabInstance: {fileID: 1934122792}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78ced24105346c34b8521bc77b9a7832, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.UI.Components.ControlGroup
 --- !u!1 &1936917053
 GameObject:
   m_ObjectHideFlags: 0
@@ -28117,6 +28240,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6774689828320721616, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
   m_PrefabInstance: {fileID: 1981734699}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1981734704 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1106930342111913323, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
+  m_PrefabInstance: {fileID: 1981734699}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78ced24105346c34b8521bc77b9a7832, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.UI.Components.ControlGroup
 --- !u!1001 &2002331252
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29935,6 +30069,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
+--- !u!114 &3327223654149646777 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1106930342111913323, guid: 7acb4596e5267ea4e83644abedc24f88, type: 3}
+  m_PrefabInstance: {fileID: 3327223654149646776}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78ced24105346c34b8521bc77b9a7832, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.UI.Components.ControlGroup
 --- !u!1001 &4078638921636675609
 PrefabInstance:
   m_ObjectHideFlags: 0
