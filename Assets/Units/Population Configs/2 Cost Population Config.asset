@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: 2 Cost Population Config
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.PopulationConfigSO
   <PopulationCost>k__BackingField: 2
-  <PopulationSupply>k__BackingField: 0
+  <PopulationSupply>k__BackingField: 1

@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd6191b0bd99c314e929736e8d3288e9, type: 3}
   m_Name: Building Unit Sight Config
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Units.SightConfigSO
-  <SightRadius>k__BackingField: 7
+  <SightRadius>k__BackingField: 10
