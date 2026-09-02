@@ -14,7 +14,7 @@ namespace Gumiho_Rts.UI.Components
         {
             this.text.SetText(text);
             Vector2 preferredSize = this.text.GetPreferredValues();
-            Rect.sizeDelta = new Vector2(preferredSize.x + 50f, Rect.sizeDelta.y + 25);
+            Rect.sizeDelta = new Vector2(preferredSize.x + 50f, Rect.sizeDelta.y );
         }
         public void Show() => gameObject.SetActive(true);
         public void Hide() => gameObject.SetActive(false);

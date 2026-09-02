@@ -9,7 +9,7 @@ namespace Gumiho_Rts.UI.Components
 {
     public class UnitTransportUI : MonoBehaviour, IUIElement<ITransporter>
     {
-        [SerializeField] private UIUnitButton[] loadedUnitButton;
+        [SerializeField] private UITransportableUnitButton[] loadedUnitButton;
         [SerializeField] private TextMeshProUGUI capacityText;
 
         private ITransporter transporter;
@@ -36,7 +36,7 @@ namespace Gumiho_Rts.UI.Components
                 int index = i;
 
                 ITransportable unit = loadedUnits[index];
-                UIUnitButton unitButton = loadedUnitButton[index];
+                UITransportableUnitButton unitButton = loadedUnitButton[index];
 
                 unitButton.EnableFor(unit, () => HandleClick(unit, index));
 
@@ -46,7 +46,7 @@ namespace Gumiho_Rts.UI.Components
 
         private void HandleClick(ITransportable unit, int index)
         {
-           if(transporter.Unload(unit))
+            if (transporter.Unload(unit))
             {
                 loadedUnitButton[index].Disable();
             }

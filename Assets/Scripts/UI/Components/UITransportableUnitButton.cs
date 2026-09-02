@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace Gumiho_Rts.UI.Components
 {
     [RequireComponent(typeof(Button))]
-    public class UIUnitButton : MonoBehaviour, IUIElement<ITransportable, UnityAction>
+    public class UITransportableUnitButton : MonoBehaviour, IUIElement<ITransportable, UnityAction>
     {
         [SerializeField] private Image icon;
         private Button button;

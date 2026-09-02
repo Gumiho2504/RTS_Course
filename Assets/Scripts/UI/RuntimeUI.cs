@@ -18,6 +18,7 @@ namespace Gumiho_Rts.UI
         [SerializeField] private UnitIconUI unitIconUI;
         [SerializeField] private SingleUnitSelectedUI singleUnitSelectedUI;
         [SerializeField] private UnitTransportUI unitTransportUI;
+        [SerializeField] private MultipleUnitsSelectedUI multipleUnitsSelectedUI;
 
 
         private HashSet<AbstractCommandable> selectableUnits = new(12);
@@ -44,6 +45,7 @@ namespace Gumiho_Rts.UI
             singleUnitSelectedUI.Disable();
             buildingSelectedUI.Disable();
             unitTransportUI.Disable();
+            multipleUnitsSelectedUI.Disable();
 
         }
 
@@ -129,6 +131,7 @@ namespace Gumiho_Rts.UI
 
                 if (selectableUnits.Count == 1)
                 {
+                    multipleUnitsSelectedUI.Disable();
                     ResolveUnitSingleSelectedUI();
                 }
                 else
@@ -137,6 +140,7 @@ namespace Gumiho_Rts.UI
                     singleUnitSelectedUI.Disable();
                     buildingSelectedUI.Disable();
                     unitTransportUI.Disable();
+                    multipleUnitsSelectedUI.EnableFor(selectableUnits);
                 }
 
             }
@@ -154,6 +158,7 @@ namespace Gumiho_Rts.UI
             unitIconUI.Disable();
             singleUnitSelectedUI.Disable();
             unitTransportUI.Disable();
+             multipleUnitsSelectedUI.Disable();
         }
 
         private void ResolveUnitSingleSelectedUI()
