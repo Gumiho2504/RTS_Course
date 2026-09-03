@@ -6,13 +6,13 @@ namespace GameDevTV.RTS.Units
     [RequireComponent(typeof(Animator))]
     public class HoldGunIK : MonoBehaviour
     {
-        [SerializeField] private Transform leftHandIKTarget;
-        [SerializeField] private Transform rightHandIKTarget;
-        [SerializeField] private Transform leftElbowIKTarget;
-        [SerializeField] private Transform rightElbowIKTarget;
+        [SerializeField] public Transform leftHandIKTarget;
+        [SerializeField] public Transform rightHandIKTarget;
+        [SerializeField] public Transform leftElbowIKTarget;
+        [SerializeField] public Transform rightElbowIKTarget;
 
-        [SerializeField][Range(0, 1f)] private float handIKAmount = 1f;
-        [SerializeField][Range(0, 1f)] private float elbowIKAmount = 1f;
+        [SerializeField][Range(0, 1f)] public float handIKAmount = 1f;
+        [SerializeField][Range(0, 1f)] public float elbowIKAmount = 1f;
 
         private Animator animator;
 

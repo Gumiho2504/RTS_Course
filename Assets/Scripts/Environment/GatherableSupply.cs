@@ -16,6 +16,7 @@ namespace Gumiho_Rts.Environment
         [field: SerializeField] public int Amount { get; private set; }
 
         [field: SerializeField] public bool IsBusy { get; private set; }
+        [field:SerializeField] public GameObject HeldPrefab {get;private set;}
 
         public Transform Transform => this == null ? null : transform;
 

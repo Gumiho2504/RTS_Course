@@ -6,7 +6,7 @@ using System;
 
 namespace Gumiho_Rts.Commands
 {
-    [CreateAssetMenu(fileName = "Build Unit", menuName = " Buildings/Commands/Build Unit")]
+    [CreateAssetMenu(fileName = "Build Unit", menuName = "Buildings/Commands/Build Unit", order = 120)]
     public class BuildUnitCommand : BaseCommand, IUnlockableCommand
     {
         [field: SerializeField] public UnitSO Unit { get; private set; }
@@ -24,7 +24,7 @@ namespace Gumiho_Rts.Commands
 
             BaseBuilding building = (BaseBuilding)context.Commandable;
 
-            if(!HasEnoughSupply(context) || (building.QueueSize == 0 && !HasEnoughPopulation(context)))
+            if (!HasEnoughSupply(context) || (building.QueueSize == 0 && !HasEnoughPopulation(context)))
                 return;
 
             building.BuildUnlockable(Unit);

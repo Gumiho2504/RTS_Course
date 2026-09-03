@@ -88,6 +88,7 @@ MonoBehaviour:
   <Supply>k__BackingField: {fileID: 11400000, guid: 077dc110d0da34fd981c575ca14abde6, type: 2}
   <Amount>k__BackingField: 0
   <IsBusy>k__BackingField: 0
+  <HeldPrefab>k__BackingField: {fileID: 1956645554379166031, guid: 9814c7e3294124e42875011b4b4b029f, type: 3}
 --- !u!1001 &2685076412139502142
 PrefabInstance:
   m_ObjectHideFlags: 0

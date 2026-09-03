@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Gumiho_Rts.Commands;
+using Gumiho_Rts.Environment;
 using Gumiho_Rts.EventBus;
 using Gumiho_Rts.Events;
 using Gumiho_Rts.Player;
@@ -31,6 +32,26 @@ namespace Gumiho_Rts.Units
         public event HealthUpdatedEvent OnHealthUpdated;
 
         [field: SerializeField] public MeshRenderer MainMeshRenderer { get; private set; }
+
+        [SerializeField] private LineRenderer rallyPointLineRenderer;
+        private RallyPoint rallyPoint;
+        public RallyPoint RallyPoint
+        {
+            get => rallyPoint;
+            set
+            {
+                if (rallyPointLineRenderer != null)
+                {
+                    rallyPointLineRenderer.enabled = value.IsSet;
+                    rallyPointLineRenderer.positionCount = 2;
+                    rallyPointLineRenderer.SetPositions(new[]
+                    {
+                        transform.position,value.Point
+                    });
+                }
+                rallyPoint = value;
+            }
+        }
 
         private Placeholder culledVisual;
         private IBuildingBuilder unitBuildingThis;
@@ -170,6 +191,8 @@ namespace Gumiho_Rts.Units
                     {
                         commandable.Owner = Owner;
                     }
+
+                    MoveRallyPoint(instance);
                 }
                 else if (SOBeingBuilt is UpgradeSO upgrade)
                 {
@@ -182,6 +205,26 @@ namespace Gumiho_Rts.Units
             unitHasSubtractPopulationCost = false;
             OnQueueUpdated?.Invoke(buildingQueue.ToArray());
 
+        }
+
+        private void MoveRallyPoint(GameObject instance)
+        {
+            if (!rallyPoint.IsSet || !instance.TryGetComponent(out IMoveable moveable)) return;
+            if (rallyPoint.Target == null)
+            {
+                moveable.Move(rallyPoint.Point);
+            }
+            else
+            {
+                if (instance.TryGetComponent(out Worker worker) && rallyPoint.Target.TryGetComponent(out GatherableSupply supply))
+                {
+                    worker.Gather(supply);
+                }
+                else
+                {
+                    moveable.Move(rallyPoint.Target.transform);
+                }
+            }
         }
 
         public void StartBuilding(IBuildingBuilder buildingBuilder)
@@ -289,9 +332,23 @@ namespace Gumiho_Rts.Units
             }
         }
 
+        public override void Select()
+        {
+            base.Select();
+             if (rallyPointLineRenderer != null)
+            {
+                rallyPointLineRenderer.enabled = true;
+            }
+        }
+
         public override void Deselect()
         {
             base.Deselect();
+
+            if (rallyPointLineRenderer != null)
+            {
+                rallyPointLineRenderer.enabled = false;
+            }
 
             if (Progress.State != BuildingProgress.BuildingState.Completed)
             {

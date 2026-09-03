@@ -5,6 +5,7 @@ using UnityEngine;
 using Action = Unity.Behavior.Action;
 using Unity.Properties;
 using Gumiho_Rts.Utilities;
+using GameDevTV.RTS.Units;
 namespace Gumiho_Rts.Behavoir
 {
 
@@ -17,9 +18,12 @@ namespace Gumiho_Rts.Behavoir
         [SerializeReference] public BlackboardVariable<int> Amount;
         [SerializeReference] public BlackboardVariable<GatherableSupply> GatherableSupply;
         [SerializeReference] public BlackboardVariable<SupplySO> SupplySO;
+        [SerializeReference] public BlackboardVariable<GameObject> HeldSupply;
+        [SerializeReference] public BlackboardVariable<ParticleSystem> ParticleSystem;
 
         private float enterTime;
         private Animator animator;
+        //private ParticleSystem particleSystem;
 
         protected override Status OnStart()
         {
@@ -30,14 +34,20 @@ namespace Gumiho_Rts.Behavoir
                 animator.SetBool(AnimationConstants.IS_GATHERING, true);
             }
 
+
             GatherableSupply.Value.BeginGather();
             SupplySO.Value = GatherableSupply.Value.Supply;
+            ParticleSystem.Value.gameObject.SetActive(true);
             //Debug.Log($"Start Success - ${GatherableSupply.Value.IsBusy}- ${Time.time.ToString()}");
             return Status.Running;
         }
 
         protected override Status OnUpdate()
         {
+            Quaternion lookRotation = Quaternion.LookRotation((GatherableSupply.Value.transform.position - Unit.Value.transform.position).normalized);
+            lookRotation = Quaternion.Euler(0,lookRotation.eulerAngles.y,0);
+            Unit.Value.transform.rotation = lookRotation;
+
             if (GatherableSupply.Value.Supply.BaseGatherTime + enterTime <= Time.time)
             {
                 //                Debug.Log($"End Success - ${GatherableSupply.Value.IsBusy}- ${Time.time.ToString()}");
@@ -54,7 +64,23 @@ namespace Gumiho_Rts.Behavoir
             if (GatherableSupply.Value == null) return;
             if (CurrentStatus == Status.Success)
             {
+                ParticleSystem.Value.gameObject.SetActive(false);
                 Amount.Value = GatherableSupply.Value.EndGather();
+                GameObject heldModel = GameObject.Instantiate(GatherableSupply.Value.HeldPrefab, Unit.Value.transform, false);
+                heldModel.transform.localPosition = new Vector3(0, 1.25f, 0.32f);
+                HeldSupply.Value = heldModel;
+
+                if(Unit.Value.TryGetComponent(out HoldGunIK holdGunIK))
+                {
+                    holdGunIK.leftHandIKTarget = heldModel.transform.Find("LeftHandTarget");
+                    holdGunIK.rightHandIKTarget = heldModel.transform.Find("RightHandTarget");
+                    holdGunIK.leftElbowIKTarget =heldModel.transform.Find("LeftElbowTarget");
+                    holdGunIK.rightElbowIKTarget = heldModel.transform.Find("RightElbowTarget");
+
+                    holdGunIK.elbowIKAmount = 1;
+                    holdGunIK.handIKAmount = 1;
+                }
+
             }
             else
             {
