@@ -30,6 +30,8 @@ namespace Gumiho_Rts
         [SerializeField][ColorUsage(showAlpha: true, hdr: true)] private Color availableToPlaceTintColor = new(0.2f, 0.65f, 1, 2);
         [SerializeField][ColorUsage(showAlpha: true, hdr: true)] private Color availableToPlaceFresnelColor = new(4, 1.7f, 0, 2);
 
+        [SerializeField] private Renderer clickIndicator;
+
         private CinemachineFollow cinemachineFollow;
         private float zoomStartTime;
         private float rotationStartTime;
@@ -46,6 +48,7 @@ namespace Gumiho_Rts
         private MeshRenderer ghostRenderer;
         private static readonly int TINT = Shader.PropertyToID("_Tint");
         private static readonly int FRESNEL = Shader.PropertyToID("_FresnelColor");
+        private static readonly int CLICK_TIME = Shader.PropertyToID("_ClickTime");
 
         [Space(10)]
 
@@ -297,6 +300,7 @@ namespace Gumiho_Rts
             && Physics.Raycast(ray, out hit, float.MaxValue, layerMask: floorLayerMask | interactableLayerMask))
             {
                 ActivateAction(hit);
+                ShowClick(hit.point);
                 // foreach(var selectableUnit  in selectableUnits)
                 // {
                 //     if(selectableUnit is AbstractUnit unit)
@@ -335,7 +339,7 @@ namespace Gumiho_Rts
             }
 
             Bus<CommandIssuedEvent>.Raise(Owner.Player1, new CommandIssuedEvent(activeCommand));
-            
+
             activeCommand = null;
         }
 
@@ -487,11 +491,12 @@ namespace Gumiho_Rts
             if (evt.Button == MouseButton.Right)
             {
                 IssueRightClickCommand(evt.Hit);
-            }else if(evt.Button == MouseButton.Left)
+            }
+            else if (evt.Button == MouseButton.Left)
             {
                 ActivateAction(evt.Hit);
             }
-         
+
         }
 
         private void IssueRightClickCommand(RaycastHit hit)
@@ -529,6 +534,14 @@ namespace Gumiho_Rts
                 }
 
             }
+
+            ShowClick(hit.point);
+        }
+
+        private void ShowClick(Vector3 position)
+        {
+            clickIndicator.transform.position = position;
+            clickIndicator.material.SetFloat(CLICK_TIME, Time.time);
         }
     }
 
