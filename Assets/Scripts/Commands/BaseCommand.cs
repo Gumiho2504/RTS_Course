@@ -2,12 +2,14 @@ using System.Linq;
 using Gumiho_Rts.Player;
 using Gumiho_Rts.Units;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Gumiho_Rts.Commands
 {
     public abstract class BaseCommand : ScriptableObject, ICommand
     {
         [field: SerializeField] public string Name { get; private set; } = " Command";
+        [field: SerializeField] public Key HotKey { get; private set; } = Key.None;
         [field: SerializeField] public Sprite Icon { get; private set; }
         [field: SerializeField][field: Range(-1, 8)] public int Slot { get; private set; }
         [field: SerializeField] public bool RequiresClickToActivate { get; private set; } = true;

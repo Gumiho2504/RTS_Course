@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Gumiho_Rts.TechTree;
+using UnityEngine.InputSystem;
 
 namespace Gumiho_Rts.UI.Components
 {
@@ -27,20 +28,38 @@ namespace Gumiho_Rts.UI.Components
         private static readonly string DEPENDENCY_FORMAT_NO_COMMA = "<color=#AC0000>{0}</color>. ";
         private static readonly string DEPENDENCY_FORMAT_COMMA = "<color=#AC0000>{0}</color>, ";
         private static readonly string POPULATION_FORMAT = "{0} <color=#eeeeee>Population</color>  ";
+        private static readonly string HOTKEY_FORMAT = "(<color=#FFFF00>{0}</color>)\n";
 
 
+        private bool wasAssignedThisFrame;
         private bool isActive = false;
+        private Key hotKey;
         private void Awake()
         {
             button = GetComponent<Button>();
             rectTransform = GetComponent<RectTransform>();
         }
 
+        private void Update()
+        {
+            if (button.interactable
+                    && !wasAssignedThisFrame
+                    && hotKey != Key.None
+                    && Keyboard.current[hotKey].wasReleasedThisFrame
+            )
+            {
+                button.onClick?.Invoke();
+            }
+
+            wasAssignedThisFrame = false;
+        }
+
         public void EnableFor(BaseCommand command, IEnumerable<AbstractCommandable> selectedUnits, UnityAction onClick)
         {
             SetIcon(command.Icon);
 
-
+            hotKey = command.HotKey;
+            wasAssignedThisFrame = true;
 
             button.interactable = selectedUnits.Any(commandable => !command.IsLocked(new CommandContext(commandable, new RaycastHit())));
             button.onClick.RemoveAllListeners();
@@ -99,14 +118,23 @@ namespace Gumiho_Rts.UI.Components
         }
         private string GetTooltipText(BaseCommand command)
         {
-            string tooltipText = command.Name + "\n";
+            string tooltipText = command.Name;
+
+            if (command.HotKey != Key.None)
+            {
+                tooltipText += string.Format(HOTKEY_FORMAT, command.HotKey);
+            }
+            else
+            {
+                tooltipText += "\n";
+            }
+
             SupplyCostSO supplyCostSO = null;
             PopulationConfigSO populationConfigSO = null;
 
-
             if (command is BuildBuildingCommand buildBuildingCommand)
             {
-                supplyCostSO = buildBuildingCommand.BuildingSO.Cost; 
+                supplyCostSO = buildBuildingCommand.BuildingSO.Cost;
             }
             else if (command is BuildUnitCommand buildUnitCommand)
             {
@@ -125,9 +153,9 @@ namespace Gumiho_Rts.UI.Components
                 }
             }
 
-            if(populationConfigSO != null && populationConfigSO.PopulationCost > 0)
+            if (populationConfigSO != null && populationConfigSO.PopulationCost > 0)
             {
-                tooltipText += string.Format(POPULATION_FORMAT,populationConfigSO.PopulationCost);
+                tooltipText += string.Format(POPULATION_FORMAT, populationConfigSO.PopulationCost);
             }
 
             if (command.IsLocked(new CommandContext(Owner.Player1, null, new RaycastHit()))

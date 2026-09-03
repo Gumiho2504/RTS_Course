@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Unload All Units
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Commands.UnloadAllUnitsCommand
   <Name>k__BackingField: Unload Unit
+  <HotKey>k__BackingField: 35
   <Icon>k__BackingField: {fileID: 21300000, guid: d10fe192d72e15c4686485dc1abeb418, type: 3}
   <Slot>k__BackingField: 7
   <RequiresClickToActivate>k__BackingField: 0

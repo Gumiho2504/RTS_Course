@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Build Airport
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Commands.BuildBuildingCommand
   <Name>k__BackingField: Build Airport
+  <HotKey>k__BackingField: 15
   <Icon>k__BackingField: {fileID: 21300000, guid: b947cd2ebe26be8448a6f7c04aabc5e5, type: 3}
   <Slot>k__BackingField: 3
   <RequiresClickToActivate>k__BackingField: 1

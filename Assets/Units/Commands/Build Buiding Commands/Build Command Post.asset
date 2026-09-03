@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Build Command Post
   m_EditorClassIdentifier: Assembly-CSharp::Gumiho_Rts.Commands.BuildBuildingCommand
   <Name>k__BackingField: Build Command Post
+  <HotKey>k__BackingField: 17
   <Icon>k__BackingField: {fileID: 21300000, guid: dfebbdf93f58d764ab9aa4d54edd629e, type: 3}
   <Slot>k__BackingField: 0
   <RequiresClickToActivate>k__BackingField: 1
@@ -21,5 +22,4 @@ MonoBehaviour:
   <Restrictions>k__BackingField:
   - {fileID: 11400000, guid: 1ec3308ae40f94e6e886cebc808b5a80, type: 2}
   - {fileID: 11400000, guid: 28c9a47aed62049908e2404a5168f56a, type: 2}
-  techTree: {fileID: 11400000, guid: 0dabc96478a255241bdd9e73c545c52e, type: 2}
   <BuildingSO>k__BackingField: {fileID: 11400000, guid: 4806c17484ea44fc291bb4d4ab047493, type: 2}
